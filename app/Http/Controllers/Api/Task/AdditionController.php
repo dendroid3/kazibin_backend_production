@@ -145,8 +145,8 @@ class AdditionController extends Controller
         $task -> difficulty = $request -> difficulty;
         $task -> push();
 
-        $takers = explode('_', $task -> takers);
-        if(count($takers) > 1){
+        if($request -> broadcast_on_telegram == false){
+            $takers = explode('_', $task -> takers);
             foreach ($takers as $taker) {
                 if($taker){
                     $offer = new Taskoffer();
@@ -184,7 +184,7 @@ class AdditionController extends Controller
         . "Amount: "
         . "<b>" . $task->full_pay . "</b> \n  \n"
         //change this url to the one you are serving this app on + "/view/"
-        . "http://192.168.0.102:8000/view/"
+        . "http://192.168.0.101:8000/view/"
         . $task -> id;
 
         Telegram::sendMessage([
