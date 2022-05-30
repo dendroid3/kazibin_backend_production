@@ -11,9 +11,9 @@ class Log extends Model
 {
     use HasFactory, TraitUuid;
     protected $fillable = [
-            'user_id',
-            'foreign_id',
-            'code',
-            'message'
+        'user_id',
+        'foreign_id',
+        'code',
+        'message'
     ];
 }

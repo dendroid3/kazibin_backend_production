@@ -115,30 +115,30 @@ class FetchController extends Controller
         /*
             The following are optional filters to sort through tasks
         */
-        if($request['type']){
-            $type_filter = ['type', '=', $request['type']];
-            array_push($query, $type_filter);
-        }
+        // if(!$request['type']){
+        //     $type_filter = ['type', '=', $request['type']];
+        //     array_push($query, $type_filter);
+        // }
 
-        if($request['min_full_pay']){
-            $min_full_pay_filter = ['full_pay', '>=', $request['min_full_pay']];
-            array_push($query, $min_full_pay_filter);
-        };
+        // if($request['min_full_pay']){
+        //     $min_full_pay_filter = ['full_pay', '>=', $request['min_full_pay']];
+        //     array_push($query, $min_full_pay_filter);
+        // };
 
-        if($request['max_full_pay']){
-            $max_full_pay_filter = ['full_pay', '<=', $request['max_full_pay']];
-            array_push($query, $max_full_pay_filter);
-        }
+        // if($request['max_full_pay']){
+        //     $max_full_pay_filter = ['full_pay', '<=', $request['max_full_pay']];
+        //     array_push($query, $max_full_pay_filter);
+        // }
 
-        if($request['unit']){
-            $unit_filter = ['unit', '=', $request['unit']];
-            array_push($query, $unit_filter);
-        }
+        // if($request['unit']){
+        //     $unit_filter = ['unit', '=', $request['unit']];
+        //     array_push($query, $unit_filter);
+        // }
 
-        if($request['max_pay_day']){
-            $max_pay_day_filter = ['pay_day', '<=', $request['max_pay_day']];
-            array_push($query, $max_pay_day_filter);
-        }
+        // if($request['max_pay_day']){
+        //     $max_pay_day_filter = ['pay_day', '<=', $request['max_pay_day']];
+        //     array_push($query, $max_pay_day_filter);
+        // }
 
         return $query;
     }

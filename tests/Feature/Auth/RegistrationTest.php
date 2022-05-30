@@ -18,24 +18,26 @@ class RegistrationTest extends TestCase
 {
     // use RefreshDatabase;
 
-    public function test_not_all_inputs_are_submited_registration_fails()
-    {
-        $this -> withoutExceptionHandling();
+    // public function test_not_all_inputs_are_submited_registration_fails()
+    // {
+    //     $this -> withoutExceptionHandling();
 
-        $response = $this->post('/api/register', []);
+    //     $response = $this->post('/api/register', []);
 
-        $response->assertStatus(201);
-    }
+    //     $response->assertStatus(201);
+    // }
 
     public function test_username_not_entered_registration_fails()
     {
         $this -> withoutExceptionHandling();
 
         $user = User::factory() -> make([
-                                    'username' => null,
+                                    'username' => null
+                                    // 'test_username_not_entered_registration_failstest_username_not_entered_registration_failstest_username_not_entered_registration_failstest_username_not_entered_registration_failstest_username_not_entered_registration_fails',
                                 ]);
-
         $response = $this->post('/api/register', $user -> toArray());
+        // dd($response);
+
         $this -> assertContains("The username field is required.", [$response->getData() -> errors ->username[0]]);
         $this->assertEquals('201', $response->status());
         $response->assertSessionHasNoErrors();
@@ -231,15 +233,15 @@ class RegistrationTest extends TestCase
         $this -> assertTrue(DB::table('usercodes') ->where('user_id', $registered_user_id)->exists());
     }
 
-    // public function test_user_can_create_profile(){
-    //     $this -> withoutExceptionHandling();
+    public function test_user_can_create_profile(){
+        $this -> withoutExceptionHandling();
 
-    //     $user = User::factory() -> create();
-    //     $response = $this  -> actingAs($user) -> post('/api/create_profile', [
-    //         'level' => 'university',
-    //         'course' => 'course',
-    //         'bio' => 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloremque, molestias, soluta saepe in fugit voluptas ea assumenda dolorum quod, est natus quam quia! Animi tempora fuga odit sapiente aliquam itaque facere unde mollitia culpa at. Illum consequatur impedit iure ex veritatis possimus et, ut similique dolorem, nostrum, ducimus itaque debitis.'
-    //     ]);
-    //     $response->assertStatus(200);
-    // }
+        $user = User::factory() -> create();
+        $response = $this  -> actingAs($user) -> post('/api/create_profile', [
+            'level' => 'university',
+            'course' => 'course',
+            'bio' => 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloremque, molestias, soluta saepe in fugit voluptas ea assumenda dolorum quod, est natus quam quia! Animi tempora fuga odit sapiente aliquam itaque facere unde mollitia culpa at. Illum consequatur impedit iure ex veritatis possimus et, ut similique dolorem, nostrum, ducimus itaque debitis.'
+        ]);
+        $response->assertStatus(200);
+    }
 }

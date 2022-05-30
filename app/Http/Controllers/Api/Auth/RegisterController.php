@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 
 use App\Mail\VerificationEmail;
 use App\Models\User;
+use App\Http\Requests\StoreUserRequest;
 
 class RegisterController extends Controller
 {
@@ -31,7 +32,14 @@ class RegisterController extends Controller
                 'errors' => $validator -> errors()
             ], 201);
         }
-
+        // $validated = 
+        // return 'Ble';
+        // if($request->validated()){
+        //     dd('validated');
+        // } else{
+        //     dd('not validated');
+        // }
+        // dd($request->all());    
         $user = new User;
         $user -> id = Str::orderedUuid() -> toString();
         $user -> username = $request -> username;

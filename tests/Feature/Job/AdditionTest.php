@@ -296,130 +296,131 @@ class AdditionTest extends TestCase
         $step_6_response->assertStatus(201);
     }
 
-    // public function test_addition_step_six_successfully_done_takers_added(){
+    public function test_addition_step_six_successfully_done_takers_added(){
 
-    //     $this -> withoutExceptionHandling();
+        $this -> withoutExceptionHandling();
         
-    //     $token = 'Bearer ' . $this -> createToken();
+        $token = 'Bearer ' . $this -> createToken();
 
-    //     $task = Task::factory() -> make();
-    //     $step_1_response = $this->withHeaders([
-    //         'Accept' => 'application/json',
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => $token,
-    //     ])->json('POST', 'api/create_task/step_1', $task -> toArray());
+        $task = Task::factory() -> make();
+        $step_1_response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+        ])->json('POST', 'api/create_task/step_1', $task -> toArray());
 
-    //     $step_1_response->assertStatus(200);
+        $step_1_response->assertStatus(200);
 
-    //     $step_6_response = $this->withHeaders([
-    //         'Accept' => 'application/json',
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => $token,
-    //     ])->json('POST', 'api/create_task/step_6', [
-    //         'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
-    //         'difficulty' => rand(2,9),
-    //         'takers' => ' ',
-    //     ]);
+        $step_6_response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+        ])->json('POST', 'api/create_task/step_6', [
+            'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
+            'difficulty' => rand(2,9),
+            'takers' => ' ',
+        ]);
 
-    //     $step_6_response->assertStatus(200);
-    // }
+        $step_6_response->assertStatus(200);
+    }
 
-    // public function test_full_flow_with_no_pages(){
+    public function test_full_flow_with_no_pages(){
         
-    //     $this -> withoutExceptionHandling();
-    //     $token = 'Bearer ' . $this -> createToken();
+        $this -> withoutExceptionHandling();
+        $token = 'Bearer ' . $this -> createToken();
 
-    //     //step one
-    //     $task = Task::factory() -> make();
-    //     $step_1_response = $this->withHeaders([
-    //         'Accept' => 'application/json',
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => $token,
-    //     ])->json('POST', 'api/create_task/step_1', $task -> toArray());
+        //step one
+        $task = Task::factory() -> make();
+        $step_1_response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+        ])->json('POST', 'api/create_task/step_1', $task -> toArray());
 
-    //     $step_1_response->assertStatus(200);
+        $step_1_response->assertStatus(200);
 
-    //     //step_two
+        //step_two
         
-    //     $documents = [];
-    //     for ($i=0; $i < 5; $i++) { 
-    //         array_push($documents, UploadedFile::fake()->image('avatar' . $i .'.jpg'));
-    //     }
+        $documents = [];
+        for ($i=0; $i < 5; $i++) { 
+            array_push($documents, UploadedFile::fake()->image('avatar' . $i .'.jpg'));
+        }
 
-    //     $step_2_response = $this->withHeaders([
-    //         'Accept' => 'application/json',
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => $token,
-    //     ])->json('POST', 'api/create_task/step_2', [
-    //         'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
-    //         'documents' => $documents
-    //     ]);
+        $step_2_response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+        ])->json('POST', 'api/create_task/step_2', [
+            'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
+            'documents' => $documents
+        ]);
 
-    //     $step_2_response->assertStatus(200);
+        $step_2_response->assertStatus(200);
 
-    //     for ($i=0; $i < 5; $i++) { 
-    //         $this->assertEquals(1, DB::table('taskfiles') -> where('url', $step_2_response->decodeResponseJson()['task_files'][$i]['url']) -> exists());
-    //     }
+        for ($i=0; $i < 5; $i++) { 
+            $this->assertEquals(1, DB::table('taskfiles') -> where('url', $step_2_response->decodeResponseJson()['task_files'][$i]['url']) -> exists());
+        }
 
-    //     //step_3
+        //step_3
         
-    //     $step_3_response = $this->withHeaders([
-    //         'Accept' => 'application/json',
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => $token,
-    //     ])->json('POST', 'api/create_task/step_3', [
-    //         'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
-    //         'full_pay' => rand(15,50) * 10
-    //     ]);
+        $step_3_response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+        ])->json('POST', 'api/create_task/step_3', [
+            'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
+            'full_pay' => rand(15,50) * 10
+        ]);
 
-    //     $step_3_response->assertStatus(200);
+        $step_3_response->assertStatus(200);
 
-    //     //step 4 | expiry time
+        //step 4 | expiry time
 
-    //     $step_4_response = $this->withHeaders([
-    //         'Accept' => 'application/json',
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => $token,
-    //     ])->json('POST', 'api/create_task/step_4', [
-    //         'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
-    //         'expiry_time' => Carbon::now()->toDateTimeString(),
-    //     ]);
-    //     $step_4_response->assertStatus(200);
+        $step_4_response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+        ])->json('POST', 'api/create_task/step_4', [
+            'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
+            'expiry_time' => Carbon::now()->toDateTimeString(),
+        ]);
+        $step_4_response->assertStatus(200);
 
-    //     //step 5 | pay day
+        //step 5 | pay day
         
-    //     $step_5_response = $this->withHeaders([
-    //         'Accept' => 'application/json',
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => $token,
-    //     ])->json('POST', 'api/create_task/step_5', [
-    //         'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
-    //         'pay_day' => Carbon::now()->toDateTimeString(),
-    //     ]);
+        $step_5_response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+        ])->json('POST', 'api/create_task/step_5', [
+            'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
+            'pay_day' => Carbon::now()->toDateTimeString(),
+        ]);
 
-    //     $step_5_response->assertStatus(200);
+        $step_5_response->assertStatus(200);
 
-    //     //step 6
+        //step 6
         
-    //     $step_6_response = $this->withHeaders([
-    //         'Accept' => 'application/json',
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => $token,
-    //     ])->json('POST', 'api/create_task/step_6', [
-    //         'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
-    //         'difficulty' => rand(2,9),
-    //         'takers' => ' ',
-    //     ]);
+        $step_6_response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+        ])->json('POST', 'api/create_task/step_6', [
+            'broadcast_on_telegram' => true,
+            'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
+            'difficulty' => rand(2,9),
+            'takers' => ' ',
+        ]);
 
-    //     $step_6_response->assertStatus(200);
-    // }
+        $step_6_response->assertStatus(200);
+    }
     
     public function createToken()
     {
         $user = User::factory() -> make(['pass' => 'password']);
 
         $response = $this->post('/api/register', $user -> toArray());
-        
+        // dd($response);
         return $response->decodeResponseJson()['token'];
     }
 

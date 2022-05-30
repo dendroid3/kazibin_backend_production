@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-
+// use Illuminate\Support\Str;
 
 use Carbon\CarbonInterface;
 use Carbon\CarbonInterval;
@@ -19,10 +18,12 @@ use App\Models\Taskfile;
 use App\Models\Taskoffer;
 use App\Models\Log;
 
+use App\Services\Task\AdditionService;
+
 
 class AdditionController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request, AdditionService $addition_service){
         $validator = Validator::make($request->all(), [
             'topic' => ['required', 'min:5', 'bail'],
             'unit' => ['required', 'bail'],
@@ -184,7 +185,7 @@ class AdditionController extends Controller
         . "Amount: "
         . "<b>" . $task->full_pay . "</b> \n  \n"
         //change this url to the one you are serving this app on + "/view/"
-        . "http://192.168.0.101:8000/view/"
+        . "http://192.168.0.103:8000/view/"
         . $task -> id;
 
         Telegram::sendMessage([

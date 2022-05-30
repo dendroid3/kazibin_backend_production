@@ -44,16 +44,17 @@ use App\Models\Taskfile;
         // dd($activity);
 
         // -1001693325642
-        $text = "A new contact us query\n"
-        . "<b>Email Address: </b>\n"
-        . "Denniswanjohi.m@live.com\n"
-        . "<b>Message: </b>\n";
+        // $text = "A new contact us query\n"
+        // . "<b>Email Address: </b>\n"
+        // . "Denniswanjohi.m@live.com\n"
+        // . "<b>Message: </b>\n";
 
-        Telegram::sendMessage([
-            'chat_id' => env('TELEGRAM_CHANNEL_ID', '-1001693325642'),
-            'parse_mode' => 'HTML',
-            'text' => $text
-        ]);
+        // Telegram::sendMessage([
+        //     'chat_id' => env('TELEGRAM_CHANNEL_ID', '-1001693325642'),
+        //     'parse_mode' => 'HTML',
+        //     'text' => $text
+        // ]);
+        return 'Hello';
 
         // echo Carbon::now()->toDateTimeString();
     });

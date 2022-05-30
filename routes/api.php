@@ -10,6 +10,7 @@ Route::post('/verify_email', [App\Http\Controllers\Api\Auth\RegisterController::
 Route::middleware(['auth:api']) -> group(function(){
     Route::post('/create_profile', [App\Http\Controllers\Api\Auth\RegisterController::class, 'createProfile']) -> name('profile.create');
     Route::get('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logoutUser']) -> name('user.logout');
+    Route::get('/getLogs', [App\Http\Controllers\Api\Log\LogsController::class, 'getLogMessages']) -> name('logs.get');
 
     //this group is for urls to add a task
     Route::group(['prefix' => 'create_task', 'middleware' => ['OwnershipCheck']], function(){
