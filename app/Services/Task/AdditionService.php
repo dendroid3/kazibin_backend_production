@@ -6,15 +6,18 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Illuminate\Http\Request;
+use App\Services\SystemLog\LogCreationService;
 use Illuminate\Support\Str;
 
 use App\Models\Task;
 use App\Models\Taskfile;
-use App\Models\Taskoffer;
 
-class AdditionService {
+use App\Services\Offer\OfferService;
 
-  public function stepOne(Request $request){
+class AdditionService 
+{
+
+  public function addInitialTaskDetails(Request $request){
     
     $validator = Validator::make($request->all(), [
       'topic' => ['required', 'min:5', 'bail'],
@@ -24,11 +27,113 @@ class AdditionService {
     ]);
 
     if ($validator->fails()) {
-      return $validator -> errors();
+      return ['validated' => false, 'errors' => $validator -> errors()];
     }
 
-    return ['validated' => true];
+            
+    $task = new Task;
+    $task -> broker_id = Auth::user() -> id;
+    $task -> status = 1;
+    $task -> topic = $request -> topic;
+    $task -> unit = $request -> unit;
+    $task -> type = $request -> type;
+    $task -> instructions = $request -> instructions;
+    $task -> save();
 
+    $task -> code = strtoupper(Str::random(3)) . '-' . strtoupper(Str::random(rand(3,7))); 
+
+    $task -> push();
+
+    return ['validated' => true, 'task' => $task];
+
+  }
+
+  public function addTaskFiles(Request $request){
+
+    $files = $request -> file('documents');
+    $file_urls = array();
+    $i = 0;
+    foreach ($files as $file) {
+        $request->file('documents')[$i]->store('public');
+
+        $task_file = new Taskfile;
+        $task_file -> task_id = $request -> task_id;
+        $task_file -> url = $request -> file('documents')[$i] -> hashName();
+        $task_file -> name =  $request -> file('documents')[$i] -> getClientOriginalName();
+        $task_file -> save();
+
+        array_push($file_urls, $task_file);
+        $i++;
+    }
+
+    return $file_urls;
+  }
+
+  public function addPageCount(Request $request){
+
+    $task = Task::find($request -> task_id);
+    if($request -> full_pay){
+        $task -> full_pay = $request -> full_pay;
+        $task -> pages = null;
+        $task -> page_cost = null;
+    } else {
+        $task -> pages = $request -> pages;
+        $task -> page_cost = $request -> page_cost;
+        $task -> full_pay = ($request -> pages) * ($request -> page_cost);
+    }
+
+    $task -> push();
+
+    return $task;
+  }
+
+  public function addDeadline(Request $request){
+    
+    $task = Task::find($request -> task_id);
+    $task -> expiry_time = $request -> expiry_time;
+    $task -> push();
+
+    return $task;
+  }
+
+  public function addPayInformation(Request $request){
+
+    $task = Task::find($request -> task_id);
+    $task -> pay_day = $request -> pay_day;
+    $task -> push();
+
+    return $task;
+  }
+
+  public function addDifficultyAndTakers(Request $request, OfferService $offer_service, LogCreationService $log_service){
+    $validator = Validator::make($request->all(), [
+          'difficulty' => ['required', 'bail'],
+      ]);
+      
+      if ($validator->fails()) {
+          return  ['validated' => false, 'errors' => $validator -> errors()];
+      }
+
+    $task = Task::find($request -> task_id);
+    $task -> takers = $request -> takers;
+    $task -> difficulty = $request -> difficulty;
+    $task -> push();
+
+    //create task log
+    $log_service -> createTaskLog($task);
+
+    //create offers
+    if($request -> broadcast_on_telegram == false){
+      $takers = explode('_', $request -> takers);
+      foreach ($takers as $taker) {
+        if($taker){
+          $offer_service -> create($task, $log_service, $taker);
+        }
+      }
+    }
+
+
+    return ['validated' => true, 'task' => $task];
   }
 
 }

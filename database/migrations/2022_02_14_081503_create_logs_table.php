@@ -16,6 +16,7 @@ class CreateLogsTable extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
             $table->uuid('user_id');
+            $table->uuid('other_user_id')->nullable();
             $table->longText('foreign_id');
             $table->string('code');
             $table->longText('message');

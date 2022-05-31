@@ -7,22 +7,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+use App\Services\Task\TaskFetchingService;
+
 class FetchController extends Controller
 {
-    public function getAllPostedByMe(){
-        // get all the tasks the broker has ever posted
-        $tasks = DB::table('tasks') -> where('broker_id', Auth::user() -> id) -> get();
-
-        // add file urls to each of the tasks
-        foreach ($tasks as $task){
-            $task -> files = DB::table('taskfiles') -> where('task_id', $task -> id) -> get();
-        }
-
-        // can get other details on the individual tasks here as the need arises
+    public function getAllPostedByMe(TaskFetchingService $fetch_service){
 
         return response() -> json([
-            'tasks' => $tasks
+            'tasks' => $fetch_service -> AllMine()
         ]);
+
     }
 
     public function getAllDoneByMe(){

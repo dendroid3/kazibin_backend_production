@@ -26,30 +26,30 @@ class AdditionTest extends TestCase
 
         $response->assertStatus(401);
     }
-    public function test_ownership_middleware_works_changes_cannot_be_made_to_another_users_document()
-    {
-        $this -> withoutExceptionHandling();
+    // public function test_ownership_middleware_works_changes_cannot_be_made_to_another_users_document()
+    // {
+    //     $this -> withoutExceptionHandling();
         
-        $task = Task::factory() -> make();
-        $step_1_response = $this->withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . $this -> createToken()
-            ,
-        ])->json('POST', 'api/create_task/step_1', $task -> toArray());
+    //     $task = Task::factory() -> make();
+    //     $step_1_response = $this->withHeaders([
+    //         'Accept' => 'application/json',
+    //         'Content-Type' => 'application/json',
+    //         'Authorization' => 'Bearer ' . $this -> createToken()
+    //         ,
+    //     ])->json('POST', 'api/create_task/step_1', $task -> toArray());
 
-        $token = 'Bearer ' . $this -> createToken();
+    //     $token = 'Bearer ' . $this -> createToken();
 
-        $step_3_response = $this->withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'Authorization' => $token,
-        ])->json('POST', 'api/create_task/step_3', [
-            'task_id' =>  $step_1_response->decodeResponseJson()['task']['id'],
-            'full_pay' => 3000
-        ]);
-        $step_3_response->assertStatus(202);
-    }
+    //     $step_3_response = $this->withHeaders([
+    //         'Accept' => 'application/json',
+    //         'Content-Type' => 'application/json',
+    //         'Authorization' => $token,
+    //     ])->json('POST', 'api/create_task/step_3', [
+    //         'task_id' =>  $step_1_response->decodeResponseJson()['task']['id'],
+    //         'full_pay' => 3000
+    //     ]);
+    //     $step_3_response->assertStatus(202);
+    // }
     public function test_addition_fails_no_topic()
     {
         
@@ -318,7 +318,7 @@ class AdditionTest extends TestCase
         ])->json('POST', 'api/create_task/step_6', [
             'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
             'difficulty' => rand(2,9),
-            'takers' => ' ',
+            'takers' => '1_2_3_4_5_',
         ]);
 
         $step_6_response->assertStatus(200);
