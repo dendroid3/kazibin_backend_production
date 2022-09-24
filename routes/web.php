@@ -31,6 +31,10 @@ use Illuminate\Support\Facades\Log;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/home', function () {
+    return view('welcome');
+});
 Route::get('/test_broadcast', function () {
     Log::info(Bid::first() -> task -> broker -> user -> id);
     event(new BidMade(Bid::first(), 'it it OK', Bid::first() -> task -> broker -> user -> id));
