@@ -18,14 +18,14 @@ class RegistrationTest extends TestCase
 {
     // use RefreshDatabase;
 
-    // public function test_not_all_inputs_are_submited_registration_fails()
-    // {
-    //     $this -> withoutExceptionHandling();
+    public function test_not_all_inputs_are_submited_registration_fails()
+    {
+        $this -> withoutExceptionHandling();
 
-    //     $response = $this->post('/api/register', []);
+        $response = $this->post('/api/register', []);
 
-    //     $response->assertStatus(201);
-    // }
+        $response->assertStatus(201);
+    }
 
     public function test_username_not_entered_registration_fails()
     {
@@ -237,11 +237,38 @@ class RegistrationTest extends TestCase
         $this -> withoutExceptionHandling();
 
         $user = User::factory() -> create();
-        $response = $this  -> actingAs($user) -> post('/api/create_profile', [
+
+        
+        $this -> withoutExceptionHandling();
+        $token = 'Bearer ' . $this -> createToken();
+
+        //step one
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+        ])->json('POST', 'api/create_profile', [
             'level' => 'university',
             'course' => 'course',
-            'bio' => 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloremque, molestias, soluta saepe in fugit voluptas ea assumenda dolorum quod, est natus quam quia! Animi tempora fuga odit sapiente aliquam itaque facere unde mollitia culpa at. Illum consequatur impedit iure ex veritatis possimus et, ut similique dolorem, nostrum, ducimus itaque debitis.'
+            'bio' => 'Lorem ipsum dolor sit amet consectetur'
         ]);
+
+
+        // $response = $this  -> actingAs($user) -> post('/api/create_profile', [
+        //     'level' => 'university',
+        //     'course' => 'course',
+        //     'bio' => 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloremque, molestias, soluta saepe in fugit voluptas ea assumenda dolorum quod, est natus quam quia! Animi tempora fuga odit sapiente aliquam itaque facere unde mollitia culpa at. Illum consequatur impedit iure ex veritatis possimus et, ut similique dolorem, nostrum, ducimus itaque debitis.'
+        // ]);
+        // dd($response);
         $response->assertStatus(200);
+    }
+
+    public function createToken()
+    {
+        $user = User::factory() -> make(['pass' => 'password']);
+
+        $response = $this->post('/api/register', $user -> toArray());
+        // dd($response);
+        return $response->decodeResponseJson()['token'];
     }
 }

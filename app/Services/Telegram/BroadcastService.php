@@ -15,6 +15,17 @@ class BroadcastService {
       'text' => $text
     ]);
   }
+  
+  public function braodcastToErrorChannel($error){
+    $text = "<u><b> Error Code: " . $error['error_code'] . "</b></u>\n" .
+    "Error Message: " . $error['message'] . "\n" .
+    "User Phone Number: " . $error['user_phone_number'];
+    Telegram::sendMessage([
+      'chat_id' => env('TELEGRAM_CHANNEL_ID', '-1001693325642'),
+      'parse_mode' => 'HTML',
+      'text' => $text
+    ]);
+  }
 
   public function prepareForBroadcasting($task){
     // dd($task);
@@ -31,8 +42,8 @@ class BroadcastService {
     . "Amount: "
     . "<b>" . $task->full_pay . "</b> \n  \n"
     //change this url to the one you are serving this app on + "/view/"
-    . "http://192.168.0.104:8000/view/"
-    . $task -> id;
+    . "http://192.168.0.103:8080/t/" 
+    . $task -> code;
 
     $this -> braodcastToTaskChannel($text);
   }

@@ -1,0 +1,117 @@
+<?php
+
+namespace App\Services\Auth;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+
+use App\Mail\VerificationEmail;
+
+use App\Models\User;
+
+class RegistrationService {
+  public function create(Request $request)
+  {
+    $validator = Validator::make($request->all(), [
+      'username' => ['required', 'max:25', 'bail'],
+      'phone_number' => ['required', 'unique:users', 'between:9,10', 'bail'],
+      'email' => ['required', 'unique:users',  'bail'],
+      'pass' => ['required', 'min:6'],
+    ]);
+    
+    if ($validator->fails()) {
+        return  ['validated' => false, 'errors' => $validator -> errors()];
+    }
+
+    $user = new User;
+    $user -> id = Str::orderedUuid() -> toString();
+    $user -> username = strtoupper($request -> username);
+    $user -> phone_number = $request -> phone_number;
+    $user -> email = $request -> email;
+    $user -> broker_score = 1;
+    $user -> writer_score = 1;
+    $user -> password = Hash::make($request['pass']);
+    $user -> save();
+
+    
+    /* 
+        We create a unique code that will be used to identify the user on the platform. This negates the need for usernames to be unique or a need for any other unique identifier, 
+        save for the uuid used to identify the user in the database.
+    */
+    if($user){
+      $user -> email_verification = $this -> getRandomString(40);
+      $user -> phone_verification = Str::random(3) . '-' . Str::random(3);
+      $user -> code = strtoupper(Str::random(3)) . '-' . strtoupper(Str::random(3));
+      $user -> push(); 
+    }
+
+    $verification_email = $this->sendVerificationEmail($user);
+    $user -> writer;
+    $user -> broker;
+
+    // dd($user);
+    
+    return [
+      'validated' => true,
+      'user' => $user,
+      'token' => $user ->createToken(env('APP_NAME'))-> accessToken
+    ];
+  }
+
+  public function sendVerificationEmail($user){
+      \Mail::to($user -> email)->send(new \App\Mail\VerficationOfAccount($user));
+  }
+
+  public function isAccountVerified(){
+    return !(Auth::user() -> email_verification);
+  }
+
+  public function verifyEmail(Request $request)
+  {
+    $account = DB::table('users') -> where('email_verification', $request -> email_verification) -> first();
+    if(!$account){
+      return false;
+    }
+    DB::table('users') -> where('email_verification', $request -> email_verification) -> update([
+        'email_verification' => null
+    ]);
+    return true;
+  }
+
+  public function getRandomString($number){
+    // This function is meant to ensure that no two 'email_verification' field data are similar.
+    $random_string = Str::random($number);
+    $exist = DB::table('users')->where('email_verification', $random_string) -> exists();
+    while ($exist) {
+        $this -> getRandomString($number);
+    }
+    return $random_string;
+  }
+
+  public function createProfile(Request $request){
+    $user = User::find(Auth::user()->id);
+    $user -> level = 0;
+    $user -> course = $request -> course;
+    $user -> bio = $request -> bio;
+    $user -> push();
+
+    return $user;
+  }
+
+  public function initialisePasswordReset(Request $request)
+  {
+    $email_exists = DB::table('users') -> where('email', $request -> email) -> exists();
+
+    if($email_exists)
+    {
+      $string = $this -> getRandomString(20);
+      \Mail::to($request -> email)->send(new \App\Mail\VerficationOfAccount($string));
+    }
+  }
+}

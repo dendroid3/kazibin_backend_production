@@ -118,6 +118,7 @@
                             <div class="flex items-center">
                                 <div class="ml-4 text-lg leading-7 font-semibold"><span href="https://laravel.com/docs" class="underline text-gray-900 dark:text-white">Files</span></div>
                             </div>
+                            {{$files[0]->url}}
                         </div>
                         
                         <div class="flex items-top justify-center mx-auto sm:px-12 lg:px-8" id="timer"  style="color: red; font-weight: 900; font-size: 1.25rem;">

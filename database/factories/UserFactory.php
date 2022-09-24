@@ -22,6 +22,10 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'password' => '2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
+            'broker_score' => floor(rand(4,2000)),
+            'writer_score' => floor(rand(4,2000)),
+            'code' => strtoupper(Str::random(2)) . '-' . strtoupper(Str::random(3))
+
         ];
     }
 

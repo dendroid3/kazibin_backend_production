@@ -14,18 +14,19 @@ class TaskFactory extends Factory
      * @return array
      */
     public function definition()
-    {
+    {   $page_cost = rand(150,450);
+        $pages = rand(1,20);
         return [
             'topic' => $this->faker->name(),
-            'unit' => $this->fakeUnit(),
-            'type' => $this->fakeType(),
+            'unit' => 'Physics',
+            'type' => 'Article',
             'instructions' => $this->faker->paragraph(10),
-            'broker_id' => 13, # rand(1,20),
-            // 'pages' =>  rand(1,20),
-            // 'page_cost' =>  rand(150,450),
-            // 'expiry_time' => Carbon::now()->addMinutes(rand(360, 7200))->toDateTimeString(),
-            // 'full_pay' => (floor(rand(8, 100)) * 100),
-            // 'pay_day' => $this -> fakePayDay(),
+            'broker_id' => "b53a475f-e596-4f43-b54b-f2a7efb6f6e6", # rand(1,20),
+            'pages' =>  $pages,
+            'page_cost' => $page_cost,
+            'expiry_time' => Carbon::now()->addMinutes(rand(360, 7200))->toDateTimeString(),
+            'full_pay' => $pages * $page_cost,
+            'pay_day' => $this -> fakePayDay(),
             'status' => 1,
             'code' => $this->fakeCode()
         ];

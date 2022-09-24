@@ -139,6 +139,7 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
+        CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -171,9 +172,10 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // App\Providers\TelescopeServiceProvider::class,
         FruitCake\Cors\CorsServiceProvider::class,
         Telegram\Bot\Laravel\TelegramServiceProvider::class,
     ],
@@ -190,7 +192,7 @@ return [
     */
 
     'aliases' => [
-
+        'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
         'App' => Illuminate\Support\Facades\App::class,
         'Arr' => Illuminate\Support\Arr::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
@@ -232,6 +234,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'OwnershipCheck' => App\Http\Middleware\OwnershipCheck::class,
         'OfferOwnershipCheck' => App\Http\Middleware\OfferOwnershipCheck::class,
+        'canInitiateVerification' => App\Http\Middleware\canInitiateVerification::class,
         'Telegram' => Telegram\Bot\Laravel\Facades\Telegram::class,
     ],
 

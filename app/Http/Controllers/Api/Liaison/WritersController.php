@@ -3,23 +3,32 @@
 namespace App\Http\Controllers\Api\Liaison;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
+
+use App\Services\Liaison\WritersService;
 
 class WritersController extends Controller
 {
-    public function getAll(Request $request){
-        $writers = DB::table('users') -> get();
+    public function getAll(WritersService $writers_service){
+
         return response() -> json([
-            'writers' => $writers
+            'writers' => $writers_service -> getAll()
         ]);
+        
     }
 
-    public function getMyWriters(Request $request){
-        /*
-            Should get my writers.
-            
-        */
+    public function getAllPaginated(WritersService $writers_service){
+
+        return response() -> json(
+            $writers_service -> getAllPaginated()
+        );
+        
+    }
+
+    public function getMyWriters(WritersService $writers_service){
+       
+        return response() -> json([
+            'writers' => $writers_service -> getMyWriters(),
+            'status' => 200
+        ]);
     }
 }

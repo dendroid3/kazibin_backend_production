@@ -9,8 +9,13 @@ use Carbon\Carbon;
 use App\Mail\VerificationEmail;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use App\Models\User;
+use App\Models\Broker;
 use App\Models\Task;
 use App\Models\Taskfile;
+use App\Models\Bid;
+use App\Events\BidMade;
+use App\Events\Loginfor;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +27,29 @@ use App\Models\Taskfile;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/test_broadcast', function () {
+    Log::info(Bid::first() -> task -> broker -> user -> id);
+    event(new BidMade(Bid::first(), 'it it OK', Bid::first() -> task -> broker -> user -> id));
+
+    dd('OK');
+
+});
+
+
+    Route::get('/event', function() {
+        // dispatch::Loginfor();
+
+        event(new Loginfor());
+    });
+    
     Route::get('/view/{id}', function ($id) {
         $task = Task::find($id);
         $files = $task ->Files;
-        $broker = User::find($task -> broker_id);
+        $broker = Broker::find($task -> broker_id) -> user;
         // dd($broker -> id);
         return view('task') -> with('task',$task)
                             -> with('files', $files) 
@@ -37,7 +61,7 @@ use App\Models\Taskfile;
         These are test URLs disregard them
     */
 
-    Route::get('/', function () {
+    // Route::get('/', function () {
         // dd(env('QUEUE_CONNECTION'));
         // echo Str::orderedUuid() -> toString();
         // $activity = Telegram::getUpdates();
@@ -54,10 +78,10 @@ use App\Models\Taskfile;
         //     'parse_mode' => 'HTML',
         //     'text' => $text
         // ]);
-        return 'Hello';
+        // return 'Hello';
 
         // echo Carbon::now()->toDateTimeString();
-    });
+    // });
 
     Route::get('/login', function () {
         echo('log in');

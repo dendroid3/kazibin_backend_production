@@ -25,10 +25,40 @@ class Task extends Model
         'type',
         'takers',
         'code',
-        'difficulty'
+        'difficulty',
+        'invoice_id'
     ];
 
     public function Files(){
         return $this -> hasMany(Taskfile::class);
-     }
+    }
+
+    public function Offers(){
+        return $this -> hasMany(Taskoffer::class);
+    }
+
+    public function Invoice(){
+        return $this -> belongsTo(Invoice::class);
+    }
+
+    public function user(){
+        return $this -> belongsTo(User::class);
+    }
+
+    public function broker(){
+        return $this -> belongsTo(Broker::class);
+    }
+
+    public function writer(){
+        return $this -> belongsTo(Writer::class);
+    }
+
+    public function bids(){
+        return $this -> hasMany(Bid::class);
+    }
+ 
+    public function ratings(){
+        return $this-> hasMany(Rating::class);
+    }
+
 }

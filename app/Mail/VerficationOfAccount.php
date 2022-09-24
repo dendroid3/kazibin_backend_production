@@ -7,20 +7,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class VerificationEmail extends Mailable implements ShouldQueue
+class VerficationOfAccount extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $user;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public $user;
-
     public function __construct($user)
     {
-        $this -> user = $user;
+        $this ->user = $user;
     }
 
     /**

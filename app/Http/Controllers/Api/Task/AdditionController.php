@@ -2,22 +2,15 @@
 
 namespace App\Http\Controllers\Api\Task;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Telegram\Bot\Laravel\Facades\Telegram;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-
-use App\Models\Task;
-use App\Models\Taskfile;
-use App\Models\Taskoffer;
-use App\Models\Log;
 
 use App\Services\Offer\OfferService;
 use App\Services\Task\AdditionService;
 use App\Services\Telegram\BroadcastService;
 use App\Services\SystemLog\LogCreationService;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Transaction;
 
 class AdditionController extends Controller
 {
@@ -40,9 +33,11 @@ class AdditionController extends Controller
 
     public function stepTwo(Request $request, AdditionService $addition_service){
         //add files to task
+
         return response() -> json([
             'task_files' => $addition_service -> addTaskFiles($request)
         ]);
+
     }
 
     public function stepThree(Request $request, AdditionService $addition_service){
@@ -101,11 +96,30 @@ class AdditionController extends Controller
             /*
                 Broadcasts on the telegram channel: https://t.me/+DQlirEBXwUMxYWFk
             */
-            $broadcast -> prepareForBroadcasting($response['task']);
+            $transaction = new Transaction;
+            $transaction -> user_id = Auth::user() -> id;
+            $transaction -> type = "Credit";
+            $transaction -> task_id = $response['task'] -> id;
+            $transaction -> description = 'Amount charged to broadcast task topic '.  $response['task'] -> topic . ". Code: " .  $response['task'] -> code . " to telegram.";
+            $transaction -> amount = 20;
+            $transaction -> save();
+
+            // $broadcast -> prepareForBroadcasting($response['task']);
         }
 
+        return response() -> json(
+            $response['message']
+        ); 
+    }
+
+    public function deleteTask(
+        Request $request,
+        AdditionService $addition_service, 
+        LogCreationService $log_service
+    )
+    {
         return response() -> json([
-            'task' => $response['task']
+            'message' => $addition_service -> deleteTask($request, $log_service)
         ]);
     }
 

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Models\Task;
+use Illuminate\Support\Facades\Log;
 
 use App\Services\Task\TaskFetchingService;
 
@@ -13,26 +15,50 @@ class FetchController extends Controller
 {
     public function getAllPostedByMe(TaskFetchingService $fetch_service){
 
-        return response() -> json([
-            'tasks' => $fetch_service -> AllMine()
-        ]);
+        return response() -> json(
+            $fetch_service -> AllMine()
+        );
 
     }
 
-    public function getAllDoneByMe(){
-        // get all the tasks the writer has ever taken
-        $tasks = DB::table('tasks') -> where('writer_id', Auth::user() -> id) -> get();
+    public function getAllPostedByMePaginated(Request $request, TaskFetchingService $fetch_service){
 
-        // add file urls to each of the tasks
-        foreach ($tasks as $task){
-            $task -> files = DB::table('taskfiles') -> where('task_id', $task -> id) -> get();
-        }
+        return response() -> json(
+            $fetch_service -> AllMinePaginated($request)
+        );
 
-        // can get other details on the individual tasks here as the need arises
+    }
 
-        return response() -> json([
-            'tasks' => $tasks
-        ]);
+    public function getAllDoneByMeFromBrokerForCreatingInvoice(Request $request, TaskFetchingService $fetch_service){
+        
+        return response() -> json(
+            $fetch_service -> getAllDoneByMeFromBrokerForCreatingInvoice($request)
+        );
+
+    }
+
+    public function getAllDoneByWriterForCreatingInvoice(Request $request, TaskFetchingService $fetch_service){
+        
+        return response() -> json(
+            $fetch_service -> getAllDoneByWriterForCreatingInvoice($request)
+        );
+
+    }
+
+    public function getAllDoneByMe(TaskFetchingService $fetch_service){
+        
+        return response() -> json(
+            $fetch_service -> getAllDoneByMe()
+        );
+        
+    }
+
+    public function getAllDoneByMePaginated(Request $request, TaskFetchingService $fetch_service){
+        
+        return response() -> json(
+            $fetch_service -> getAllDoneByMePaginated($request)
+        );
+
     }
 
     public function getAllAvailableForBidding(Request $request){
@@ -42,11 +68,34 @@ class FetchController extends Controller
             Will implement pagination + make "orderBy" toogle between asc and dsc as specified by user 
         */
 
-        $tasks = DB::table('tasks') -> where($query) -> orderBy('expiry_time', 'asc') -> get();
+        
+        $mine = Auth::user() -> broker -> tasks -> pluck('id');
+        $bidded = Auth::user() -> writer -> bids -> pluck('task_id');
 
-        return response() -> json([
-            'tasks' => $tasks
-        ]);
+        $tasks = Task::query() -> where($query) 
+        -> orderBy('expiry_time', 'asc')
+         
+        -> whereNotIn('id', $mine)
+        -> whereNotIn('id', $bidded)
+
+        -> take(10)
+        -> get();
+        // $tasks = DB::table('tasks') -> where($query) -> orderBy('expiry_time', 'asc') -> get();
+        foreach ($tasks as $task) {
+            // Broker::find($task->broker_id);
+            $task -> broker -> user;
+        }
+
+        return response() -> json(
+            $tasks
+        );
+    }
+
+    public function getAllAvailableForBiddingPaginated(Request $request, TaskFetchingService $fetch_service)
+    {
+        return response() -> json(
+            $fetch_service -> getAllAvailableForBiddingPaginated($request)
+        );
     }
 
     public function getPublicTask(){
@@ -77,10 +126,7 @@ class FetchController extends Controller
         $units = $tasks -> select('unit') -> distinct() -> get();
         $types = $tasks -> select('type') -> distinct() -> get();
         $max_full_pay = $tasks -> orderBy('full_pay', 'desc') -> select('full_pay') -> first();
-        $min_full_pay = DB::table('tasks') -> where([
-            ['status', '=', '1'],
-            ['takers', '=', null],
-        ]) -> orderBy('full_pay', 'asc') -> select('full_pay') -> first();
+        $min_full_pay = $tasks -> orderBy('full_pay', 'asc') -> select('full_pay') -> first();
         return response() -> json([
             'units' => $units,
             'types' => $types,
@@ -89,6 +135,13 @@ class FetchController extends Controller
         ]);
 
     }
+
+    public function getTaskForBidding(Request $request, TaskFetchingService $fetch_service){
+        return response() -> json(
+            $fetch_service -> getTaskForBidding($request)
+        );
+    }
+    
     public function sortFilterQuery($request){
         /*
             Filtering logic:

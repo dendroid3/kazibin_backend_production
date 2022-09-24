@@ -17,6 +17,7 @@ class CreateTasksTable extends Migration
             $table->uuid('id')->primary()->unique();
             $table->uuid('broker_id');
             $table->uuid('writer_id')->nullable();
+            $table->uuid('invoice_id')->nullable();
             $table->integer('status');
             $table->string('topic');
             $table->string('unit');

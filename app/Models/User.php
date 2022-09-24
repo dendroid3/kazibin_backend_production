@@ -27,10 +27,16 @@ class User extends Authenticatable
         'email',
         'email_verification',
         'phone_verification',
+        'credential_verification',
         'password',
         'level',
-        'course',
+        'interests',
         'bio',
+        'availabile',
+        'cost_per_page',
+        'pay_day',
+        'broker_score',
+        'writer_score',
         'code'
     ];
 
@@ -67,7 +73,7 @@ class User extends Authenticatable
             $broker -> save();
 
             $writer = new Writer;
-            $writer -> id = Str::orderedUuid() -> toString();
+            $writer -> id = $request -> id;
             $writer -> user_id = $request -> id;
             $writer -> save();
 
@@ -76,13 +82,6 @@ class User extends Authenticatable
                 His 'writer_score' increases once they do activities associated with being a writer, such as accepting an offer or winning a bid. The 'net_score' which is "broker_score" - "writer_score"
                 shall be used to determine whether a user is a broker or writer.
             */
-            $userCode = new Usercode;
-            $userCode -> id = $request -> id;
-            $userCode -> user_id = $request -> id;
-            $userCode -> broker_score = 0;
-            $userCode -> writer_score = 0;
-            $userCode -> net_score = 0;
-            $userCode -> save();
 
         });
     }
@@ -99,7 +98,20 @@ class User extends Authenticatable
         return $this -> hasOne(Broker::class);
     }
 
-    public function userCode(){
-        return $this -> hasOne(Usercode::class);
+    public function tasks(){
+        return $this -> hasMany(Task::class);
     }
+
+    public function transactions(){
+        return $this -> hasMany(Transaction::class);
+    }
+
+    public function mpesas(){
+        return $this -> hasMany(Mpesa::class);
+    }
+
+    public function verifications(){
+        return $this -> hasMany(Verification::class);
+    }
+
 }

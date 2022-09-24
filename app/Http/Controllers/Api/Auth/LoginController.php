@@ -11,8 +11,10 @@ class LoginController extends Controller
     public function loginUser(Request $request){
         if(Auth::attempt(['email' => $request -> email, 'password' => $request -> pass])){
             $user = Auth::user();
-            //We use laravel passport for authentication, It is the one responsible for creating this token.
+            $user -> writer;
+            $user -> broker;
             $token = $user -> createToken( env('APP_NAME') ) -> accessToken;
+
             return response() -> json([
                 'token' => $token,
                 'user' => $user,

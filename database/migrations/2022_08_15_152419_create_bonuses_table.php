@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsercodesTable extends Migration
+class CreateBonusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateUsercodesTable extends Migration
      */
     public function up()
     {
-        Schema::create('usercodes', function (Blueprint $table) {
-            $table->uuid('id')->primary()->unique();
-            $table->uuid('user_id')->unique();
-            $table->integer('writer_score');
-            $table->integer('broker_score');
-            $table->integer('net_score');
+        Schema::create('bonuses', function (Blueprint $table) {
+            $table->id();
+            $table -> uuid('invoice_id');
+            $table -> integer('amount');
+            $table -> text('description');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateUsercodesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('usercodes');
+        Schema::dropIfExists('bonuses');
     }
 }

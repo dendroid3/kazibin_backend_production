@@ -24,7 +24,7 @@ class OfferTest extends TestCase
             'Content-Type' => 'application/json',
             'Authorization' => $token,
         ])->json('POST', '/api/offer/accept', [
-            'offer_id' => 407,
+            'offer_id' => 'd80d9167-f5c5-4325-87b6-9ad3533da82e',
         ]);
 
         // $response = $this->get('/api/offer/accept');
@@ -40,7 +40,7 @@ class OfferTest extends TestCase
             'Content-Type' => 'application/json',
             'Authorization' => $token,
         ])->json('POST', '/api/offer/accept', [
-            'offer_id' => 408,
+            'offer_id' => 'd80d9167-f5c5-4325-87b6-9ad3533da82e',
         ]);
 
         // $response = $this->get('/api/offer/accept');
@@ -52,8 +52,7 @@ class OfferTest extends TestCase
         $user = User::factory() -> make(['pass' => 'password']);
 
         $response = $this->post('/api/register', $user -> toArray());
-        
 
-        return $response->decodeResponseJson()['token'];
+        return 'Bearer ' . $response->decodeResponseJson()['token'];
     }
 }

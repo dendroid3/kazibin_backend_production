@@ -7,19 +7,24 @@
     "require": {
         "php": "^7.3|^8.0",
         "barryvdh/laravel-cors": "^2.0",
+        "beyondcode/laravel-websockets": "^1.13",
+        "cloudinary-labs/cloudinary-laravel": "^1.0",
+        "depsimon/laravel-wallet": "*",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "irazasyed/telegram-bot-sdk": "^3.5",
         "laravel/framework": "^8.75",
-        "laravel/nexmo-notification-channel": "^2.5",
         "laravel/passport": "^10.2",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "pusher/pusher-php-server": "~3.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.6",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
+        "laravel/telescope": "^4.9",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^5.10",
         "phpunit/phpunit": "^9.5.10"
@@ -53,7 +58,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "laravel/telescope"
+            ]
         }
     },
     "config": {
