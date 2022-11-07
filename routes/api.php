@@ -2,26 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Log;
 
-use App\Models\Taskoffermessage;
-
-
-Route::get('/download', function(Request $request) {
-    // Log::info($request -> foo);
-    // $filename = 'file-name.docx';
-    // $tempImage = tempnam(sys_get_temp_dir(), $filename);
-    // copy('http://localhost/amnesia.docx', $tempImage);
-    
-    // return response()->download($tempImage, $filename);
-    $offer_message = Taskoffermessage::find($request -> message_id);
-                
-    $filename = $offer_message -> message;
-    $tempImage = tempnam(sys_get_temp_dir(), $filename);
-    copy($offer_message -> type, $tempImage);
-            
-    return response()->download($tempImage, $filename);
-});
+Route::get('/download', [App\Http\Controllers\Api\Download\DownloadController::class, 'download']) -> name('file.download');
 
 Route::post('/login', [App\Http\Controllers\Api\Auth\LoginController::class, 'loginUser']) -> name('user.login');
 Route::post('/register', [App\Http\Controllers\Api\Auth\RegisterController::class, 'create']) -> name('user.create');
@@ -38,7 +20,6 @@ Route::middleware(['auth:api']) -> group(function(){
     Route::get('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logoutUser']) -> name('user.logout');
     Route::get('/getLogs', [App\Http\Controllers\Api\Log\LogsController::class, 'getLogMessages']) -> name('logs.get');
 
-    Route::post('/download', [App\Http\Controllers\Api\Download\DownloadController::class, 'download']) -> name('file.download');
 
     Route::post('/initialise_verification', [App\Http\Controllers\Api\Verfication\VerificationsController::class, 'initiateVerification']) 
     -> middleware('canInitiateVerification')
@@ -51,7 +32,6 @@ Route::middleware(['auth:api']) -> group(function(){
         Route::post('/step_4', [App\Http\Controllers\Api\Task\AdditionController::class, 'stepFour']) -> name('task.step_4');
         Route::post('/step_5', [App\Http\Controllers\Api\Task\AdditionController::class, 'stepFive']) -> name('task.step_5');
         Route::post('/step_6', [App\Http\Controllers\Api\Task\AdditionController::class, 'stepSix']) -> name('task.step_6');
-
     });
 
     Route::group(['prefix' => 'search'], function(){
