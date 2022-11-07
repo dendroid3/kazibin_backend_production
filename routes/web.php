@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+
 use Nexmo\Laravel\Facade\Nexmo;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -15,6 +17,7 @@ use App\Models\Taskfile;
 use App\Models\Bid;
 use App\Events\BidMade;
 use App\Events\Loginfor;
+use App\Events\Taskoffermessage;
 use Illuminate\Support\Facades\Log;
 
 /*
@@ -28,6 +31,24 @@ use Illuminate\Support\Facades\Log;
 |
 */
 
+// Route::get('/download', [App\Http\Controllers\Api\Download\DownloadController::class, 'download']) -> name('file.download');
+
+
+Route::get('/download', function(Request $request) {
+    $filename = 'file-name.docx';
+    $tempImage = tempnam(sys_get_temp_dir(), $filename);
+    copy('http://localhost/amnesia.docx', $tempImage);
+    
+    return response()->download($tempImage, $filename);
+    // $offer_message = Taskoffermessage::find($request -> message_id);
+                
+    // $filename = $offer_message -> message;
+    // $tempImage = tempnam(sys_get_temp_dir(), $filename);
+    // copy($offer_message -> type, $tempImage);
+            
+    // return response()->download($tempImage, $filename);
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -37,7 +58,16 @@ Route::get('/home', function () {
 });
 Route::get('/test_broadcast', function () {
     Log::info(Bid::first() -> task -> broker -> user -> id);
-    event(new BidMade(Bid::first(), 'it it OK', Bid::first() -> task -> broker -> user -> id));
+    $bid = Bid::first();
+    $bid -> writer -> user;
+    $bid -> last_message = $bid -> messages() -> orderBy('created_at', 'DESC') -> take(1) -> get();
+    // if($bid  -> messages -> where('read_at', null)  -> where('user_id', '!=', 1) -> where('user_id', '!=', Auth::user() -> id) -> first()){
+
+    if($bid  -> messages -> where('read_at', null)  -> where('user_id', '!=', 1) -> where('user_id', '!=', 22) -> first()){
+      $bid -> unread_message = true;
+    }
+
+    event(new BidMade($bid, 'it it OK', $bid -> task -> broker -> user -> id));
 
     dd('OK');
 

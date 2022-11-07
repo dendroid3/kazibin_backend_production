@@ -2,14 +2,32 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 
-Route::get('/', function(){
-    return 'HJKJHJJJIJJKJ';
-}) -> name('user.login');
+use App\Models\Taskoffermessage;
+
+
+Route::get('/download', function(Request $request) {
+    // Log::info($request -> foo);
+    // $filename = 'file-name.docx';
+    // $tempImage = tempnam(sys_get_temp_dir(), $filename);
+    // copy('http://localhost/amnesia.docx', $tempImage);
+    
+    // return response()->download($tempImage, $filename);
+    $offer_message = Taskoffermessage::find($request -> message_id);
+                
+    $filename = $offer_message -> message;
+    $tempImage = tempnam(sys_get_temp_dir(), $filename);
+    copy($offer_message -> type, $tempImage);
+            
+    return response()->download($tempImage, $filename);
+});
+
 Route::post('/login', [App\Http\Controllers\Api\Auth\LoginController::class, 'loginUser']) -> name('user.login');
 Route::post('/register', [App\Http\Controllers\Api\Auth\RegisterController::class, 'create']) -> name('user.create');
 Route::post('/verify_email', [App\Http\Controllers\Api\Auth\RegisterController::class, 'verifyEmail']) -> name('email.verify');
-Route::post('/initialise_password_reset', [App\Http\Controllers\Api\Auth\RegisterController::class, 'initialisePasswordReset']) -> name('email.verify');
+Route::post('/initialise_password_reset', [App\Http\Controllers\Api\Auth\RegisterController::class, 'initialisePasswordReset']) -> name('password.initialise_reset');
+Route::post('/reset_password', [App\Http\Controllers\Api\Auth\RegisterController::class, 'resetPassword']) -> name('password.reset');
 Route::post('/log_error', [App\Http\Controllers\Api\Error\ErrorController::class, 'logError']) -> name('error.log');
 Route::get('/get_about_statistics', [App\Http\Controllers\Api\Statistics\StatisticsController::class, 'getAboutStatistics']) -> name('statistics.get');
 
@@ -19,6 +37,8 @@ Route::middleware(['auth:api']) -> group(function(){
     Route::post('/create_profile', [App\Http\Controllers\Api\Auth\RegisterController::class, 'createProfile']) -> name('profile.create');
     Route::get('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logoutUser']) -> name('user.logout');
     Route::get('/getLogs', [App\Http\Controllers\Api\Log\LogsController::class, 'getLogMessages']) -> name('logs.get');
+
+    Route::post('/download', [App\Http\Controllers\Api\Download\DownloadController::class, 'download']) -> name('file.download');
 
     Route::post('/initialise_verification', [App\Http\Controllers\Api\Verfication\VerificationsController::class, 'initiateVerification']) 
     -> middleware('canInitiateVerification')

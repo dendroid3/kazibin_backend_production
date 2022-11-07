@@ -64,5 +64,14 @@ class RegisterController extends Controller
             'success' => $response
         ], $response ? 200 : 201);
     }
+    
+    public function resetPassword(Request $request, RegistrationService $register_service)
+    {
+        $response = $register_service ->resetPassword($request);
+
+        return response() -> json([
+            'success' => $response
+        ], $response ? 200 : 201);
+    }
 
 }

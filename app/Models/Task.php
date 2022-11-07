@@ -61,4 +61,8 @@ class Task extends Model
         return $this-> hasMany(Rating::class);
     }
 
+    public function Timestamps(){
+        return $this -> hasOne(Timestamp::class);
+    }
+
 }

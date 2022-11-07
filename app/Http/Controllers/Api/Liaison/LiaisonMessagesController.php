@@ -19,6 +19,11 @@ class LiaisonMessagesController extends Controller
 
     public function sendRequestMessage(Request $request,LiaisonMessagesService $request_messages_service){
         if($request->hasFile('documents')){
+            
+            return response() -> json([
+                'files' => $request_messages_service -> sendRequestMessage($request),
+                'status' => 200
+            ]);
 
         } else {
             

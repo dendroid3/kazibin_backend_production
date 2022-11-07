@@ -110,8 +110,42 @@ class RegistrationService {
 
     if($email_exists)
     {
-      $string = $this -> getRandomString(20);
-      \Mail::to($request -> email)->send(new \App\Mail\VerficationOfAccount($string));
+      $token = $this -> getRandomString(floor(rand(10,30))) . '-' . $this -> getRandomString(floor(rand(10,30))) . '-' . $this -> getRandomString(floor(rand(10,30)));
+      DB::table('password_resets') -> insert([
+        'email' => $request -> email,
+        'token' => $token
+      ]);
+      \Mail::to($request -> email)->send(new \App\Mail\PasswordResetMail($request -> email, $token));
+
+      return true;
+    }
+  }
+  
+  public function resetPassword(Request $request)
+  {
+    $reset_link_exists = DB::table('password_resets') -> where('email', $request -> email) -> where('token', $request -> token) -> exists();
+
+    if($reset_link_exists)
+    {
+      $user = User::query() -> where('email', $request -> email) -> first();
+
+      $user -> password = Hash::make($request['password']);
+
+      $user -> push();
+
+      $resets = DB::table('password_resets') -> where([
+        'email' => $request -> email
+      ]) -> get();
+
+      foreach ($resets as $reset) {
+          
+        $resets = DB::table('password_resets') -> where([
+          'email' => $request -> email,
+          'token' => $reset -> token
+        ]) -> delete();
+      }
+
+      return true;
     }
   }
 }

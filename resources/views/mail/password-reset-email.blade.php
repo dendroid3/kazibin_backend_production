@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>kazibin</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200;300;400&display=swap" rel="stylesheet">
@@ -64,14 +64,15 @@
                     <div class="text-center text-sm text-gray-500 sm:text-left">
                         <div class="flex items-center">
 
-                            <a href="{{env('APP_CLIENT') . '/change_password/' . $string }}" class="ml-1 underline">
+                            <a href="{{env('APP_CLIENT') . '/Password/Reset/' . $token}}" class="ml-1 underline">
                                 Click Here to Recover Password
                             </a>
+
                         </div>
                     </div>
 
                     <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
-                        {{config('app.name')}} v{{ 1.0.1}}
+                        {{config('app.name')}} v{{ '1.0.1'}}
                     </div>
                 </div>
             </div>

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\SystemLog\LogCreationService;
 use Illuminate\Support\Facades\DB;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\Taskoffer;
@@ -16,7 +17,7 @@ use App\Models\Broker;
 use App\Models\Taskoffermessage;
 use App\Models\User;
 use App\Models\Taskmessage;
-use Illuminate\Http\Request;
+use App\Models\Tasktimestamp;
 
 class OfferService
 {
@@ -75,6 +76,11 @@ class OfferService
     $task -> status = 2;
     $task -> push();
 
+    $task_timestamp = new Tasktimestamp;
+    $task_timestamp -> task_id = $task -> id;
+    $task_timestamp -> assigned_at = Carbon::now();
+    $task_timestamp -> save();
+
     $task -> broker -> User;
     $task -> files;
 
@@ -86,22 +92,18 @@ class OfferService
 
     $log_service -> createSystemMessage(Auth::user() -> id, $writers_message, $task -> id, 'Offer Accepted');
 
+    $sorry_message = 'Offer on task code: ' . $task -> code . ' pulled after task was accepted by another writer';
+
     foreach ($task -> Offers as $offer) {
       if($offer -> writer_id == $task -> writer_id){
         $this -> migrateOfferMessagesToJobMessages($offer, $task -> id);
         $offer -> status = 4;
       } else {
         $offer -> status = 5;
+        $log_service -> createSystemMessage($offer -> writer_id, $sorry_message, $offer -> id, 'Offer Pulled');
+
       }
       $offer -> push();
-    }
-
-    foreach (explode('_', $task -> takers)  as $taker) {
-        if(Auth::user() -> id != $taker){
-          $sorry_message = 'Offer on task code: ' . $task -> code . ' pulled after task was accepted by another writer';
-
-          $log_service -> createSystemMessage($taker ? $taker : 99999, $sorry_message, $task -> id, 'Offer Pulled');
-        }
     }
 
     return $writers_message;

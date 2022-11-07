@@ -29,8 +29,6 @@ class CreateInvoiceTaskTable extends Migration
      */
     public function down()
     {
-        Schema::table('invoice_task', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('invoice_task');
     }
 }

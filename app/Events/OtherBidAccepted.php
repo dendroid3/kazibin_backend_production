@@ -9,40 +9,35 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
-
-class BidMade implements ShouldBroadcast
+class OtherBidAccepted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $bid;
-
+    public $bid_id;
     public $message;
-
     public $user_id;
-
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($bid, $message, $user_id)
+    public function __construct($bid_id, $broker_message, $user_id)
     {
-        $this -> bid = $bid;
-        $this -> message = $message;
+        $this -> bid_id = $bid_id;
+
+        $this -> message = $broker_message;
+
         $this -> user_id = $user_id;
     }
 
     public function broadcastWith(){
         return [
-            'bid' => $this -> bid,
+            'bid_id' => $this -> bid_id,
             'message' => $this -> message,
-            'title' => 'Bid Made'
+            'title' => 'Task Assigned to Another'
         ];
     }
-
-
     /**
      * Get the channels the event should broadcast on.
      *
@@ -51,6 +46,5 @@ class BidMade implements ShouldBroadcast
     public function broadcastOn()
     {
         return new PrivateChannel('private_notification_' . $this -> user_id);
-        // return new PrivateChannel('private_notification_974d522f-6246-4130-a43d-6a3939f8c372');
     }
 }

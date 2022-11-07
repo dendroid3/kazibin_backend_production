@@ -37,16 +37,45 @@ class LiaisonMessagesService {
   }
 
   public function sendRequestMessage(Request $request){
-    $liaison_request = Liaisonrequest::find($request -> request_id);
-    $liaison_request_message = new Requestmessage;
-    $liaison_request_message -> user_id = Auth::user() -> id;
-    $liaison_request_message -> liaisonrequest_id = $liaison_request -> id;
-    $liaison_request_message -> broker_id = $liaison_request -> broker_id;
-    $liaison_request_message -> writer_id = $liaison_request -> writer_id;
-    $liaison_request_message -> message = $request -> message;
-    $liaison_request_message -> save();
 
-    return $liaison_request_message;
+    if($request -> hasFile('documents')){
+      $files = $request -> file('documents');
+      $messages = array();
+      $i = 0;
+      foreach ($files as $file) {
+        $liaison_request = Liaisonrequest::find($request -> request_id);
+
+        $uploadedFileUrl = cloudinary()->upload($request->file('documents')[$i]->getRealPath())->getSecurePath();
+
+        $liaison_request_message = new Requestmessage();
+        $liaison_request_message -> type = $uploadedFileUrl;
+        $liaison_request_message -> user_id = Auth::user() -> id;
+        $liaison_request_message -> liaisonrequest_id = $liaison_request -> id;
+        $liaison_request_message -> broker_id = $liaison_request -> broker_id;
+        $liaison_request_message -> writer_id = $liaison_request -> writer_id;
+        $liaison_request_message -> message = $request -> file('documents')[$i] -> getClientOriginalName();
+        $liaison_request_message -> save();
+
+        array_push($messages, $liaison_request_message);
+        $i++;
+
+      }
+      return $messages;
+    } else {
+      $liaison_request = Liaisonrequest::find($request -> request_id);
+    
+      $liaison_request_message = new Requestmessage;
+      $liaison_request_message -> user_id = Auth::user() -> id;
+      $liaison_request_message -> type = 'text';
+      $liaison_request_message -> liaisonrequest_id = $liaison_request -> id;
+      $liaison_request_message -> broker_id = $liaison_request -> broker_id;
+      $liaison_request_message -> writer_id = $liaison_request -> writer_id;
+      $liaison_request_message -> message = $request -> message;
+      $liaison_request_message -> save();
+  
+      return $liaison_request_message;
+  
+    }
   }
 
   public function setCPP(Request $request){

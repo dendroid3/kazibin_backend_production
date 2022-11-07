@@ -7,8 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-use App\Events\BidMade;
 
+use App\Events\BidMade;
+use App\Events\BidPulled;
+use App\Events\BidRejected;
+use App\Events\MyBidAccepted;
+use App\Events\OtherBidAccepted;
+use App\Events\BidMessageSent;
 
 use App\Models\Bid;
 use App\Models\Bidmessage;
@@ -17,6 +22,8 @@ use App\Models\Task;
 use App\Models\Taskmessage;
 use App\Models\Revenue;
 use App\Models\Transaction;
+use App\Models\Tasktimestamp;
+
 use App\Services\SystemLog\LogCreationService;
 use Illuminate\Support\Facades\DB;
 
@@ -74,9 +81,7 @@ class BidsService {
     $revenue -> amount = $request -> bid_cost;
     $revenue -> save();
 
-    // public function __construct($bid, $system_message, $user_id)
-
-    event(new BidMade($bid, $broker_message, '974bbbc3-8f35-4de2-9ba2-944a35a2f0a1'));
+    event(new BidMade($bid, $broker_message, $bid -> task -> broker -> user -> id));
 
     return [
       'success' => true,
@@ -87,6 +92,12 @@ class BidsService {
   }
 
   public function sendBidMessage(Request $request){
+    $bid = Bid::find($request -> bid_id);
+
+    $reciever_id = Auth::user() -> writer -> id == $bid -> writer_id ? $bid -> task -> broker -> user -> id : $bid -> writer -> user -> id;
+    $from_broker = Auth::user() -> writer -> id == $bid -> writer_id ? false : true;
+    $system_message = 'New message from ' . Auth::user()-> code . " : ". Auth::user() -> username . ", on bid on task, " . $bid -> task -> code . " : " .$bid -> task -> topic . ".";
+
     if($request -> hasFile('documents')){
       $files = $request -> file('documents');
       $messages = array();
@@ -103,6 +114,9 @@ class BidsService {
   
           array_push($messages, $message);
           $i++;
+
+          event(new BidMessageSent($message, $reciever_id, $from_broker, $system_message));
+
       }
       return ['messages' => $messages, 'status' => 200, 'files' => true];
     } else {
@@ -113,6 +127,9 @@ class BidsService {
       $message -> type = 'text';
       $message -> message = $request -> message;
       $message -> save();
+
+      event(new BidMessageSent($message, $reciever_id, $from_broker, $system_message));
+
       return ['message' => $message, 'status' => 200];
   }
   }
@@ -181,6 +198,11 @@ class BidsService {
     $task -> status = 2;
     $task -> push();
 
+    $task_timestamp = new Tasktimestamp;
+    $task_timestamp -> task_id = $task -> id;
+    $task_timestamp -> assigned_at = Carbon::now();
+    $task_timestamp -> save();
+
     // MyBidAccepted::dispatch($bid, $system_message);
     $writer_message = 'Bid on ' . Auth::user() -> name . "'s task code: " . $task -> code . " has been accepted";
     $log_service -> createSystemMessage(
@@ -189,6 +211,8 @@ class BidsService {
       Auth::user() -> id,
       'Bid Accepted'
     );
+
+    event(new MyBidAccepted($bid -> id, $writer_message, $bid -> writer -> user -> id));
 
     $broker_message = 'You accepted ' . $writer -> username . "'s bid on task, " . $task -> code . ": " . $task -> topic;
     $log_service -> createSystemMessage(
@@ -206,7 +230,7 @@ class BidsService {
           $bid -> updated_at = Carbon::now();
           $bid -> status = 4;
           $bid -> push();
-            $this -> migrateBidMessagesToTaskMessages($bid);
+          $this -> migrateBidMessagesToTaskMessages($bid);
         } else {
           $bid -> updated_at = Carbon::now();
           $bid -> status = 5;
@@ -218,9 +242,9 @@ class BidsService {
             Auth::user() -> id,
             'Bid Dropped'
           );
-
+      
+          event(new OtherBidAccepted($bid -> id, $dropped_bid_message, $bid -> writer -> user -> id));
         }
-        // $bid -> delete();
     }
 
     return [
@@ -258,6 +282,8 @@ class BidsService {
       'Bid Pulled'
     );
 
+    event(new BidPulled($bid -> id, $broker_message, $task -> broker -> user -> id));
+
     return [
       "status" => 200,
       "success" => true,
@@ -292,6 +318,8 @@ class BidsService {
       Auth::user() -> id,
       'Bid Rejected'
     );
+
+    event(new BidRejected($bid -> id, $writer_message, $bid -> writer -> user -> id));
 
     return [
       "status" => 200,
