@@ -112,9 +112,6 @@ class AdditionService
   }
 
   public function addDifficultyAndTakers(Request $request, OfferService $offer_service, LogCreationService $log_service){
-    Log::info($request -> takers);
-    Log::info( count(explode('_', $request -> takers)) );
-
     $task = Task::find($request -> task_id);
     $task -> takers = $request -> takers;
     if($request -> difficulty){

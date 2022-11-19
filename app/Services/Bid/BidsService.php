@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 use App\Events\BidMade;
@@ -25,7 +26,6 @@ use App\Models\Transaction;
 use App\Models\Tasktimestamp;
 
 use App\Services\SystemLog\LogCreationService;
-use Illuminate\Support\Facades\DB;
 
 class BidsService {
 

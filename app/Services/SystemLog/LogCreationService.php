@@ -46,7 +46,7 @@ class LogCreationService
 
   public function createOfferLog($offer, $task){
     // Creates a log entry associated with offers
-    $stub_1 = 'You have been offered a job, topic: ';
+    $stub_1 = 'You have been offered a task, topic: ';
     $stub_2 = $task['topic'];
     $stub_3 = ', code: ';
     $stub_4 = $task['code'];
@@ -72,6 +72,8 @@ class LogCreationService
     $log -> code = 'Offer Recieved';
     $log -> message = $message;
     $log -> save();
+
+    return $message;
   }
 
   public function createLogOnRequestToWriter($liaison_request, $initiator){

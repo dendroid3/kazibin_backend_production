@@ -9,6 +9,7 @@ use App\Services\SystemLog\LogCreationService;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Events\TaskMarkedComplete;
 
 class StatusService{
     public function markComplete(Request $request, LogCreationService $log_service){
@@ -46,6 +47,14 @@ class StatusService{
         $task_message -> task_id = $request -> task_id;
         $task_message -> message = '--- Task marked as completed. ---';
         $task_message -> save();
+
+        $reciever_id = Auth::user() -> writer -> id == $task -> writer_id ? $task -> broker -> user -> id : $task -> writer -> user -> id;
+
+        $from_broker = Auth::user() -> writer -> id == $task -> writer_id ? false : true;
+
+        $system_message = $from_broker ? $writer_message : $broker_message;
+
+        event(new TaskMarkedComplete($task_message, $reciever_id, $from_broker, $system_message));
     
         return ['message' => $broker_message, 'status' => 200];
 

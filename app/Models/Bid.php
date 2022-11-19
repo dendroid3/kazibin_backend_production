@@ -29,9 +29,6 @@ class Bid extends Model
             $message -> bid_id = $request -> id;
             $message -> message = "--- New Bid by " . Auth::user() -> username . " ---";
             $message -> save();
-            // array_push($messages, $message);
-            // '',
-            // OfferMade::dispatch($request, $system_message);
         });
     }
 

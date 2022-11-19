@@ -15,7 +15,7 @@ class TransactionService{
         $mpesa_transaction = Mpesa::where('mpesa_transaction_id', $request -> mpesa_transaction_id) -> first();
 
         if(!$mpesa_transaction){
-            return ['error' => true, 'message' => 'We have not recieved any transaction with that code. Ensure that the recieving organisation`s name is `WAZO TANK.` If it is and you get this error message, kindly contact support on 070000000 '];
+            return ['error' => true, 'message' => 'We have not recieved any transaction with that code. Ensure that the recieving organisation`s name is `WAZO TANK 2.` If it is and you get this error message, kindly contact support on 0705 715 099'];
         }
 
         if($mpesa_transaction -> status == 2){

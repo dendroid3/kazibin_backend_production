@@ -44,7 +44,7 @@ Route::middleware(['auth:api']) -> group(function(){
         Route::get('/get_mine', [App\Http\Controllers\Api\Offer\MainController::class, 'getMine']) -> name('offer.get_mine');
         Route::post('/get_mine_paginated', [App\Http\Controllers\Api\Offer\MainController::class, 'getMinePaginated']) -> name('offer.get_mine_paginated');
         Route::post('/get_messages', [App\Http\Controllers\Api\Offer\MainController::class, 'getOfferMessages']) -> name('offer.accept');
-        Route::post('/send_message', [App\Http\Controllers\Api\Offer\MainController::class, 'sendOfferMessages']) -> name('offer.send_message');
+        Route::post('/send_message', [App\Http\Controllers\Api\Offer\MainController::class, 'sendOfferMessage']) -> name('offer.send_message');
 
         Route::group(['middleware' => ['OfferOwnershipCheck']], function(){
             Route::post('/accept', [App\Http\Controllers\Api\Offer\MainController::class, 'accept']) -> name('offer.accept');

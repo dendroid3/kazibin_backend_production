@@ -11,8 +11,15 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+use App\Events\TaskMessageSent;
+
 class MessageService{
     public function SendMessage(Request $request){
+        $task = Task::find($request -> task_id);
+        $reciever_id = Auth::user() -> writer -> id == $task -> writer_id ? $task -> broker -> user -> id : $task -> writer -> user -> id;
+        $from_broker = Auth::user() -> writer -> id == $task -> writer_id ? false : true;
+        $system_message = 'New message from ' . Auth::user()-> code . " : " . Auth::user() -> username . ", on task, " . $task -> code . " : " .$task -> topic . ".";
+
         if($request -> hasFile('documents')){
             $files = $request -> file('documents');
             $messages = array();
@@ -29,6 +36,9 @@ class MessageService{
         
                 array_push($messages, $message);
                 $i++;
+
+                event(new TaskMessageSent($message, $reciever_id, $from_broker, $system_message));
+
             }
             return ['messages' => $messages, 'status' => 200, 'files' => true];
         } else {
@@ -39,6 +49,9 @@ class MessageService{
             $message -> message = $request -> message;
             $message -> type = 'text';
             $message -> save();
+
+            event(new TaskMessageSent($message, $reciever_id, $from_broker, $system_message));
+
             return ['message' => $message, 'status' => 200];
         }
     }

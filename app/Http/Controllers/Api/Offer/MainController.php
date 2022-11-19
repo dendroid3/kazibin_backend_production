@@ -10,18 +10,6 @@ use App\Services\Offer\OfferService;
 
 class MainController extends Controller
 {
-    // public function accept(Request $request){
-    //     $offer = Taskoffer::find($request -> offer_id);
-    // }
-
-    // public function reject(Request $request){
-    //     $offer = Taskoffer::find($request -> offer_id);
-
-    // }
-
-    // public function pull(Request $request){
-    //     $offer = Taskoffer::find($request -> offer_id);
-    // }
 
     public function getMine(OfferService $offer_service){
         return response() -> json([
@@ -42,9 +30,9 @@ class MainController extends Controller
         ]);
     }
 
-    public function sendOfferMessages(Request $request, OfferService $offer_service){
+    public function sendOfferMessage(Request $request, OfferService $offer_service){
         return response() -> json(
-            $offer_service -> sendOfferMessages($request),
+            $offer_service ->  sendOfferMessage($request),
         );
     }
 

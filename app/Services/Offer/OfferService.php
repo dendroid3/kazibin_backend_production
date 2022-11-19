@@ -19,6 +19,12 @@ use App\Models\User;
 use App\Models\Taskmessage;
 use App\Models\Tasktimestamp;
 
+use App\Events\OfferMessageSent;
+use App\Events\OfferMade;
+use App\Events\OfferAccepted;
+use App\Events\OfferRejected;
+use App\Events\OfferCancelled;
+
 class OfferService
 {
   public function create($task, LogCreationService $log_service, $taker)
@@ -29,7 +35,9 @@ class OfferService
     $offer -> writer_id = $taker;
     $offer -> save();
 
-    $log_service -> createOfferLog($offer, $task);
+    $system_message = $log_service -> createOfferLog($offer, $task);
+
+    event(new OfferMade($offer -> writer -> user -> id, $system_message));
 
     return ['validated' => true, 'created' => true];
   }
@@ -64,6 +72,8 @@ class OfferService
       'Offer Rejected'
     );
 
+    event(new OfferRejected($offer -> task -> broker -> user -> id, $broker_message, $offer -> id));
+
     return $writer_message;
   }
 
@@ -84,7 +94,7 @@ class OfferService
     $task -> broker -> User;
     $task -> files;
 
-    $brokers_message ='Offer on job code ' . $task -> code . ' has been accepted by writer code: ' . Auth::user() -> code;
+    $brokers_message ='Offer on task code ' . $task -> code . ' has been accepted by writer code: ' . Auth::user() -> code;
 
     $log_service -> createSystemMessage($task -> Broker -> User -> id, $brokers_message, $task -> id, 'Offer Accepted');
 
@@ -98,10 +108,11 @@ class OfferService
       if($offer -> writer_id == $task -> writer_id){
         $this -> migrateOfferMessagesToJobMessages($offer, $task -> id);
         $offer -> status = 4;
+        event(new OfferAccepted($offer -> task -> broker -> user -> id, $brokers_message, $offer -> id));
+        
       } else {
         $offer -> status = 5;
         $log_service -> createSystemMessage($offer -> writer_id, $sorry_message, $offer -> id, 'Offer Pulled');
-
       }
       $offer -> push();
     }
@@ -113,7 +124,7 @@ class OfferService
   {
     
     $offer = Taskoffer::find($request -> offer_id);
-    $offer -> status = 2;
+    // $offer -> status = 2;
     $offer -> updated_at = Carbon::now();
     $offer -> push();
 
@@ -122,7 +133,6 @@ class OfferService
     $task -> push();
 
     $writer_message = $task -> broker -> user -> username . " canceled your offer on task " . $task -> code .  ": " . $task -> topic;
-
 
     $log_service -> createSystemMessage(
       Auth::user() -> id, 
@@ -140,6 +150,8 @@ class OfferService
       Auth::user() -> id, 
       'Offer Canceled'
     );
+
+    event(new OfferCancelled($offer -> task -> writer -> user -> id, $writer_message, $offer -> id));
 
     return $broker_message;
   }
@@ -193,7 +205,6 @@ class OfferService
         }
         //  orderBy('updated_at', 'desc')
         return $task_offers;
-            // 'job_id' => $task_offer -> job_id,
 
     } else {
         return[
@@ -203,14 +214,10 @@ class OfferService
   }
 
   public function getOfferMessages(Request $request){
-    // $messages = Taskoffer::
-    
     $messages = Taskoffermessage::query()
-    // DB::table('taskoffermessages')
                   -> where('taskoffer_id', $request -> task_offer_id) 
                   -> orderBy('created_at', 'ASC')
                   -> get();
-    // find($request -> task_offer_id) -> messages;
     foreach ($messages as $message) {
       
         if((!$message -> read_at) && ($message -> user_id != Auth::user() -> id)){
@@ -223,7 +230,12 @@ class OfferService
     return $messages;
   }
 
-  public function sendOfferMessages(Request $request){
+  public function  sendOfferMessage(Request $request){
+    $offer = Taskoffer::find($request -> task_offer_id);
+    $reciever_id = Auth::user() -> writer -> id == $offer -> writer -> id ? $offer -> task -> broker -> user -> id : $offer -> writer -> user -> id;
+    $from_broker = Auth::user() -> writer -> id == $offer -> writer -> id ? false : true;
+    $system_message = 'New message from ' . Auth::user()-> code . " : ". Auth::user() -> username . ", on offer on task, " . $offer -> task -> code . " : " .$offer -> task -> topic . ".";
+
     if($request -> hasFile('documents')){
       $files = $request -> file('documents');
       $messages = array();
@@ -240,6 +252,9 @@ class OfferService
   
           array_push($messages, $task_offer_message);
           $i++;
+  
+          event(new OfferMessageSent($task_offer_message, $reciever_id, $from_broker, $system_message));
+
       }
       return ['messages' => $messages, 'status' => 200, 'files' => true];
 
@@ -251,6 +266,9 @@ class OfferService
       $task_offer_message -> message = $request -> message;
       $task_offer_message -> type = 'text';
       $task_offer_message -> save();
+
+      event(new OfferMessageSent($task_offer_message, $reciever_id, $from_broker, $system_message));
+
       return ['message' => $task_offer_message, 'status' => 200];
     }
 

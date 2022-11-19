@@ -18,6 +18,8 @@ use App\Models\Taskmessage;
 use App\Models\Broker;
 use App\Models\Writer;
 
+use App\Events\InvoiceCreated;
+
 class InvoiceService{
     public function createInvoice(Request $request, LogCreationService $log_creation){
         $invoice = new Invoice;
@@ -81,11 +83,11 @@ class InvoiceService{
         $writer = $task -> writer -> user;
 
         $broker_message = "Invoice code: " . $invoice -> code . " created. It is worth KES " . $invoice -> amount .
-        " for " . (count($task_ids) - 1) . ' task(s), the recipient is:' . $writer -> code .
+        " for " . (count($task_ids) - 1) . ' task(s), the recipient is, ' . $writer -> code .
         ": " . $writer -> username . '.';
 
         $log_creation -> createSystemMessage(
-            Auth::user() -> id,
+            $task -> broker -> user -> id,
             $broker_message,
             $task -> writer -> user -> id, 
             'Invoice Created'
@@ -97,13 +99,20 @@ class InvoiceService{
         $log_creation -> createSystemMessage(
             $task -> writer -> user -> id, 
             $broker_message,
-            Auth::user() -> id,
+            $task -> broker -> user -> id,
             'Invoice Created'
         );
 
+
         if(Auth::user() -> writer -> id === $task -> writer_id){
+            $user_id = $task -> broker -> user -> id;
+            event(new InvoiceCreated($user_id, false, $broker_message, $invoice -> tasks_signature));
+
             return ['message' => $writer_message];
         } else {
+            $user_id = $task -> writer -> user -> id;
+            event(new InvoiceCreated($user_id, true, $writer_message, $invoice -> tasks_signature));
+
             return ['message' => $broker_message];
         }
 

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BidMessageSent implements ShouldBroadcast
+class TaskMarkedComplete implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -32,7 +32,7 @@ class BidMessageSent implements ShouldBroadcast
             'message' => $this -> message,
             'from_broker' => $this -> from_broker,
             'system_message' => $this -> system_message,
-            'title' => 'Bid Message'
+            'title' => 'Task Marked Complete'
         ];
     }
 
