@@ -42,7 +42,9 @@ class BroadcastService {
     . "Amount: "
     . "<b>" . $task->full_pay . "</b> \n  \n"
     //change this url to the one you are serving this app on + "/view/"
-    . "http://192.168.0.103:8080/t/" 
+    // . "http://192.168.0.103:8080/t/" 
+    . env('APP_CLIENT', "http://192.168.0.101:8080") 
+    . "/t/"
     . $task -> code;
 
     $this -> braodcastToTaskChannel($text);

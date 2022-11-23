@@ -203,7 +203,6 @@ class BidsService {
     $task_timestamp -> assigned_at = Carbon::now();
     $task_timestamp -> save();
 
-    // MyBidAccepted::dispatch($bid, $system_message);
     $writer_message = 'Bid on ' . Auth::user() -> name . "'s task code: " . $task -> code . " has been accepted";
     $log_service -> createSystemMessage(
       $writer -> id, 

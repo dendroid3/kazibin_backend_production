@@ -24,6 +24,7 @@ use App\Events\OfferMade;
 use App\Events\OfferAccepted;
 use App\Events\OfferRejected;
 use App\Events\OfferCancelled;
+use App\Events\OtherOfferAccepted;
 
 class OfferService
 {
@@ -113,6 +114,7 @@ class OfferService
       } else {
         $offer -> status = 5;
         $log_service -> createSystemMessage($offer -> writer_id, $sorry_message, $offer -> id, 'Offer Pulled');
+        event(new OtherOfferAccepted($offer -> writer -> user -> id, $sorry_message, $offer -> id));
       }
       $offer -> push();
     }
@@ -124,7 +126,7 @@ class OfferService
   {
     
     $offer = Taskoffer::find($request -> offer_id);
-    // $offer -> status = 2;
+    $offer -> status = 2;
     $offer -> updated_at = Carbon::now();
     $offer -> push();
 
@@ -175,7 +177,6 @@ class OfferService
         }
         //  orderBy('updated_at', 'desc')
         return $task_offers;
-            // 'job_id' => $task_offer -> job_id,
 
     } else {
         return[
