@@ -104,7 +104,7 @@ class AdditionController extends Controller
             $transaction -> amount = 20;
             $transaction -> save();
 
-            // $broadcast -> prepareForBroadcasting($response['task']);
+            $broadcast -> prepareforBroadcasting($response['task']);
         }
 
         return response() -> json(
