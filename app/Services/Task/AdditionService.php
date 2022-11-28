@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Services\SystemLog\LogCreationService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 use App\Models\Task;
@@ -56,10 +57,10 @@ class AdditionService
     $file_urls = array();
     $i = 0;
     foreach ($files as $file) {
-        $uploadedFileUrl = cloudinary()->upload($request->file('documents')[$i]->getRealPath())->getSecurePath();
+        $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
         $task_file = new Taskfile;
         $task_file -> task_id = $request -> task_id;
-        $task_file -> url = $uploadedFileUrl;
+        $task_file -> url = 'https://kazibin.sfo3.digitaloceanspaces.com/' .  $uploadedFileUrl;
         $task_file -> name =  $request -> file('documents')[$i] -> getClientOriginalName();
         $task_file -> save();
 

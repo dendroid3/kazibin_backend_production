@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 use App\Events\TaskMessageSent;
@@ -25,11 +26,11 @@ class MessageService{
             $messages = array();
             $i = 0;
             foreach ($files as $file) {
-                $uploadedFileUrl = cloudinary()->upload($request->file('documents')[$i]->getRealPath())->getSecurePath();
+                $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
                 $message = new Taskmessage();
                 $message -> id = Str::orderedUuid() -> toString();
                 $message -> user_id = Auth::user() -> id;
-                $message -> type = $uploadedFileUrl;
+                $message -> type = 'https://kazibin.sfo3.digitaloceanspaces.com/' . $uploadedFileUrl;
                 $message -> task_id = $request -> task_id;
                 $message -> message = $request -> file('documents')[$i] -> getClientOriginalName();
                 $message -> save();

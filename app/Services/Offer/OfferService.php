@@ -9,6 +9,7 @@ use App\Services\SystemLog\LogCreationService;
 use Illuminate\Support\Facades\DB;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\Taskoffer;
@@ -242,11 +243,12 @@ class OfferService
       $messages = array();
       $i = 0;
       foreach ($files as $file) {
-          $uploadedFileUrl = cloudinary()->upload($request->file('documents')[$i]->getRealPath())->getSecurePath();
+          $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
+
           $task_offer_message = new Taskoffermessage();
           $task_offer_message -> id = Str::orderedUuid() -> toString();
           $task_offer_message -> user_id = Auth::user() -> id;
-          $task_offer_message -> type = $uploadedFileUrl;
+          $task_offer_message -> type = 'https://kazibin.sfo3.digitaloceanspaces.com/' .  $uploadedFileUrl;
           $task_offer_message -> taskoffer_id = $request -> task_offer_id;
           $task_offer_message -> message = $request -> file('documents')[$i] -> getClientOriginalName();
           $task_offer_message -> save();

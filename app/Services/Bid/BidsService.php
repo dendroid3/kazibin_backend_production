@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -103,11 +104,11 @@ class BidsService {
       $messages = array();
       $i = 0;
       foreach ($files as $file) {
-          $uploadedFileUrl = cloudinary()->upload($request->file('documents')[$i]->getRealPath())->getSecurePath();
+          $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
           $message = new Bidmessage();
           $message -> id = Str::orderedUuid() -> toString();
           $message -> user_id = Auth::user() -> id;
-          $message -> type = $uploadedFileUrl;
+          $message -> type = 'https://kazibin.sfo3.digitaloceanspaces.com/' . $uploadedFileUrl;
           $message -> bid_id = $request -> bid_id;
           $message -> message = $request -> file('documents')[$i] -> getClientOriginalName();
           $message -> save();

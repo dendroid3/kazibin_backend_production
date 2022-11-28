@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Liaisonrequest;
 use App\Models\Requestmessage;
@@ -45,10 +46,10 @@ class LiaisonMessagesService {
       foreach ($files as $file) {
         $liaison_request = Liaisonrequest::find($request -> request_id);
 
-        $uploadedFileUrl = cloudinary()->upload($request->file('documents')[$i]->getRealPath())->getSecurePath();
+        $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
 
         $liaison_request_message = new Requestmessage();
-        $liaison_request_message -> type = $uploadedFileUrl;
+        $liaison_request_message -> type = 'https://kazibin.sfo3.digitaloceanspaces.com/' . $uploadedFileUrl;
         $liaison_request_message -> user_id = Auth::user() -> id;
         $liaison_request_message -> liaisonrequest_id = $liaison_request -> id;
         $liaison_request_message -> broker_id = $liaison_request -> broker_id;
