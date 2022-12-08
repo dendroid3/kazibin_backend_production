@@ -38,7 +38,7 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'encrypted' => true,
-                'host' => '127.0.0.1',
+                'host' => 'api.kazibin.adilirealestate.com',
                 'port' => 6003,
                 'scheme' => 'https',
                 'useTLS' => true
