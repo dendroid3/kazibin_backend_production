@@ -28,7 +28,7 @@ class canInitiateVerification
         foreach ($verification_applications as $application) {
             if($application -> status == 1){
                 return response() -> json([
-                    'error' => 'You already have an application being proccessed. If you made an error in that application kindly write to us via our official email'
+                    'error' => 'You already have an application being proccessed. If you made an error in that application kindly write to us via our support email `support@kazibin.com`'
                 ], 201);
             }
         }

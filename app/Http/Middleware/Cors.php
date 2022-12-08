@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class CanBidOnJob
+class Cors
 {
     /**
      * Handle an incoming request.
@@ -16,10 +16,9 @@ class CanBidOnJob
      */
     public function handle(Request $request, Closure $next)
     {
-        // has the money
-        // check incomplete and number of bids 
-        // for incomplete; check deadline, < a day?
-        // level
+        header('Access-Control-Allow-Origin:  https://app.kazibin.adilirealestate.com');
+        header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Authorization, Origin');
+        header('Access-Control-Allow-Methods:  POST, PUT');
         return $next($request);
     }
 }
