@@ -49,7 +49,7 @@
 
                             <div class="ml-12">
                               <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                We have recieved a request to change the password the kazibin's account under this email. 
+                                We have recieved a request to change the password of the kazibin account under this email. 
                               </div>
                             </div>
                         </div>
