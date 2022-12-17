@@ -34,7 +34,7 @@
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
                     
-                    <img src="https://api.kazibin.adilirealestate.com/icon.svg" alt="Image" class="icon"/>
+                    <img src="https://drive.google.com/file/d/1z7-lKxavVy96oBu1BuR7qTobvh0ljsvf/view?usp=share_link" alt="Image" class="icon"/>
                 </div>
 
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
