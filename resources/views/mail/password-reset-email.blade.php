@@ -35,7 +35,6 @@
                 <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
                     
                     <img src="https://drive.google.com/file/d/1z7-lKxavVy96oBu1BuR7qTobvh0ljsvf/view?usp=share_link" alt="Image" class="icon"/>
-                    <img src="{{ $message->embed('assets/icon.png')) }}" alt="logo" title="Logo" style="display:block"  width="60" height="60"/>
                 </div>
 
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
