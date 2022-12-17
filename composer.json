@@ -18,7 +18,9 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "league/flysystem-aws-s3-v3": "~1.0",
-        "pusher/pusher-php-server": "~3.0"
+        "pusher/pusher-php-server": "~3.0",
+        "symfony/http-client": "^5.4",
+        "symfony/mailgun-mailer": "^5.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
