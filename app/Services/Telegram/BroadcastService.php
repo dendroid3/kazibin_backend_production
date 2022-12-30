@@ -28,7 +28,6 @@ class BroadcastService {
   }
 
   public function prepareForBroadcasting($task){
-    // dd($task);
     $text = "<u><b>" . $task->code .": </b>" 
     . "<b>" . $task->unit . " " . $task->type . "</b></u> \n \n"
     . "Due on: <b>"
@@ -41,9 +40,7 @@ class BroadcastService {
     . ($task -> pages ?  "Cost Per Page: <b>" . $task -> page_cost . "</b> \n" : '')
     . "Amount: "
     . "<b>" . $task->full_pay . "</b> \n  \n"
-    //change this url to the one you are serving this app on + "/view/"
-    // . "http://192.168.0.103:8080/t/" 
-    . env('APP_CLIENT', "http://192.168.0.101:8080") 
+    . env('APP_CLIENT', "https://app.kazibin.com") 
     . "/t/"
     . $task -> code;
 

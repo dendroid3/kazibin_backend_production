@@ -5,7 +5,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://app.kazibin.adilirealestate.com'],
+    'allowed_origins' => ['https://app.kazibin.adilirealestate.com', 'http://localhost:8080', 'https://app.kazibin.com'],
 
     'allowed_origins_patterns' => ['*'],
 
