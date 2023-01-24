@@ -14,6 +14,8 @@ use App\Models\Revenue;
 
 class VerificationsController extends Controller
 {
+    //there should be a part to send samples
+    //additionally, they should be able to check graduation credentials
     public function initiateVerification(Request $request, LogCreationService $log_service, TransactionService $transaction_service)
     {
         $front_url = cloudinary()->upload($request->file('front_id')->getRealPath())->getSecurePath();

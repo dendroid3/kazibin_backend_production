@@ -5,7 +5,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://app.kazibin.com'],
+    'allowed_origins' => ['https://app.kazibin.com', 'http://localhost:8080'],
 
     'allowed_origins_patterns' => ['*'],
 
