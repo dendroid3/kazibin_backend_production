@@ -154,7 +154,7 @@ class OfferService
       'Offer Canceled'
     );
 
-    event(new OfferCancelled($offer -> task -> writer -> user -> id, $writer_message, $offer -> id));
+    event(new OfferCancelled($offer -> writer -> user -> id, $writer_message, $offer -> id));
 
     return $broker_message;
   }

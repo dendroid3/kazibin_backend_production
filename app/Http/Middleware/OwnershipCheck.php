@@ -17,6 +17,7 @@ class OwnershipCheck
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
+    
     public function handle(Request $request, Closure $next)
     {
         $task_owner  = Task::find($request->input('task_id'));

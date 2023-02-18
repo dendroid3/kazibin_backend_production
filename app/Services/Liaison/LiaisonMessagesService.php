@@ -64,6 +64,8 @@ class LiaisonMessagesService {
       return $messages;
     } else {
       $liaison_request = Liaisonrequest::find($request -> request_id);
+      $liaison_request -> created_at = Carbon::now();
+      $liaison_request -> push();
     
       $liaison_request_message = new Requestmessage;
       $liaison_request_message -> user_id = Auth::user() -> id;

@@ -32,4 +32,13 @@ class BrokersController extends Controller
         ]);
         
     }
+
+    public function getOneBroker(Request $request, BrokersService $brokers_service){
+        
+        return response() -> json([
+            'broker' => $brokers_service -> getOneBroker($request),
+            'status' => 200
+        ]);
+        
+    }
 }

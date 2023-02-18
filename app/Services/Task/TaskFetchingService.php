@@ -29,7 +29,6 @@ class TaskFetchingService{
         if($task -> status === 1){
 
           foreach ($task -> offers as $offer) {
-            // $offer -> messages -> first();
             $offer -> writer -> user;
 
             $offer -> last_message = $offer -> messages() -> orderBy('created_at', 'DESC') -> take(1) -> get();
@@ -44,6 +43,10 @@ class TaskFetchingService{
             if($bid  -> messages -> where('read_at', null)  -> where('user_id', '!=', 1) -> where('user_id', '!=', Auth::user() -> id) -> first()){
               $bid -> unread_message = true;
             }
+          }
+        } else {
+          if($task  -> messages -> where('read_at', null)  -> where('user_id', '!=', 1) -> where('user_id', '!=', Auth::user() -> id) -> first()){
+            $task -> unread_message = true;
           }
         }
 
@@ -96,6 +99,10 @@ class TaskFetchingService{
               $bid -> unread_message = true;
             }
           }
+        } else {
+          if($task  -> messages -> where('read_at', null)  -> where('user_id', '!=', 1) -> where('user_id', '!=', Auth::user() -> id) -> first()){
+            $task -> unread_message = true;
+          }
         }
 
     }
@@ -106,9 +113,7 @@ class TaskFetchingService{
   public function getAllDoneByMe()
   {
     // get all the tasks the writer has ever taken
-    // $tasks = Auth::user() -> writer -> tasks;
-    $tasks = Task::where('writer_id', Auth::user() -> writer -> id) -> take(10) -> get();
-
+    $tasks = Task::where('writer_id', Auth::user() -> writer -> id) -> take(10) -> orderBy('updated_at', 'DESC') -> get();
 
     // add file urls to each of the tasks
     foreach ($tasks as $task){
@@ -116,6 +121,9 @@ class TaskFetchingService{
         $task -> broker -> user; 
         $task -> Files;
         $task -> ratings;
+        if($task  -> messages -> where('read_at', null)  -> where('user_id', '!=', 1) -> where('user_id', '!=', Auth::user() -> id) -> first()){
+          $task -> unread_message = true;
+        }
     }
 
     return $tasks;
@@ -173,6 +181,10 @@ class TaskFetchingService{
         $task -> files;
         $task -> broker -> user; 
         $task -> Files;
+        
+        if($task  -> messages -> where('read_at', null)  -> where('user_id', '!=', 1) -> where('user_id', '!=', Auth::user() -> id) -> first()){
+          $task -> unread_message = true;
+        }
         // = DB::table('taskfiles') -> where('task_id', $task -> id) -> get();
     }
 

@@ -178,6 +178,10 @@ class InvoiceService{
         $invoice -> status = 2;
         $invoice -> push();
 
+        $broker = Auth::user();
+        $broker -> broker_score = $broker -> broker_score + count((explode("_", $invoice -> tasks_signature)) - 1);
+        $broker -> push();
+
         $task_ids = explode("_", $invoice -> tasks_signature);
         foreach ($task_ids as $task_id) {
             if( array_search($task_id, $task_ids) < ( count($task_ids) - 1 )){

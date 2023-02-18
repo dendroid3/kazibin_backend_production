@@ -65,4 +65,8 @@ class Task extends Model
         return $this -> hasOne(Timestamp::class);
     }
 
+    public function messages(){
+        return $this -> hasMany(Taskmessage::class);
+    }
+
 }

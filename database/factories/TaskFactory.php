@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Models\User;
 
 class TaskFactory extends Factory
 {
@@ -21,15 +22,25 @@ class TaskFactory extends Factory
             'unit' => 'Physics',
             'type' => 'Article',
             'instructions' => $this->faker->paragraph(10),
-            'broker_id' => "e6ca266c-aa02-40b4-a9a0-f3ceaf94b1f6", # rand(1,20),
+            'broker_id' =>  "02fc5c8b-e21a-4475-ac32-bac266d4437e", #
+            // 'broker_id' =>  $this -> getBrokerId(), # rand(1,20), "3524d514-6e23-44f6-b4e6-13280565f734", #
             'pages' =>  $pages,
             'page_cost' => $page_cost,
             'expiry_time' => Carbon::now()->addMinutes(rand(360, 7200))->toDateTimeString(),
             'full_pay' => $pages * $page_cost,
             'pay_day' => $this -> fakePayDay(),
+            'difficulty' => Floor(rand(1,9)),
             'status' => 1,
             'code' => $this->fakeCode()
         ];
+    }
+
+    public function getBrokerId()
+    {
+        $users = User::all();
+        $user_count = count($users);
+        $user = $users[Floor(rand(0, ($user_count - 1)))];
+        return $user -> broker -> id;
     }
 
     public function fakeUnit(){

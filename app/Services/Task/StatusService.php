@@ -22,8 +22,6 @@ class StatusService{
         $writer -> writer_score = $writer -> writer_score + 1;
         $writer -> push();
         
-        $broker = Auth::user();
-        $broker -> broker_score = $broker -> broker_score + 1;
 
         $broker_message = 'Your task ' . $task-> code . ": " . $task -> topic . ' marked complete.';
         $log_service -> createSystemMessage(

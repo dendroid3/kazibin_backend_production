@@ -43,7 +43,7 @@ class BidsService {
     $bid -> task_id = $request -> task_id;
     $bid -> save();
 
-
+    Log::info($request -> all());
     $task = Task::find($request -> task_id);
 
     $broker = $task -> broker -> user;
@@ -67,7 +67,13 @@ class BidsService {
                                           'Bid Made'
                                         );
 
-    
+    $message = new Bidmessage();
+    $message -> id = Str::orderedUuid() -> toString();
+    $message -> user_id = 1;
+    $message -> bid_id = $bid -> id;
+    $message -> message = "Proposal: " . $request -> proposal;
+    $message -> save();
+
     $transaction = new Transaction;
     $transaction -> user_id = Auth::user() -> id;
     $transaction -> type = "Credit";
@@ -300,7 +306,7 @@ class BidsService {
 
     $task = $bid -> task;
 
-    $broker_message = 'You rejected' . $bid -> writer -> user -> username . "'s bid on task " . 
+    $broker_message = 'You rejected ' . $bid -> writer -> user -> username . "'s bid on task " . 
                       $task -> code .": ". $task -> topic . ".";
 
     $log_service -> createSystemMessage(

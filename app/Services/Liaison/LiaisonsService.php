@@ -49,7 +49,7 @@ class LiaisonsService {
 
     $writers_requests = Liaisonrequest::query()
                         -> where('broker_id', Auth::user() -> broker -> id)
-                        -> orderBy('created_at', 'DESC')
+                        -> orderBy('updated_at', 'DESC')
                         -> take(10)
                         -> get();
     if($writers_requests){
@@ -58,7 +58,7 @@ class LiaisonsService {
         $last_message = DB::table('requestmessages') -> where([
           ['broker_id', '=', $writer_request -> broker_id],
           ['writer_id', '=', $writer_request -> writer_id]
-        ]) -> select('user_id', 'message', 'created_at') -> orderBy('created_at', 'DESC') -> take(1) -> get()[0]; 
+        ]) -> select('user_id', 'message', 'created_at', 'read_at') -> orderBy('created_at', 'DESC') -> take(1) -> get()[0]; 
         $writer_request -> last_message = $last_message;
         $writer_request -> writer = Writer::find($writer_request -> writer_id) -> user;
         $writer_request -> mine = Auth::user() -> id == $writer_request -> initiator_id;
@@ -73,7 +73,7 @@ class LiaisonsService {
 
     $brokers_requests = Liaisonrequest::query()
                         -> where('writer_id', Auth::user() -> writer -> id)
-                        -> orderBy('created_at', 'DESC')
+                        -> orderBy('updated_at', 'DESC')
                         -> take(10)
                         -> get();
 
@@ -82,7 +82,7 @@ class LiaisonsService {
         $last_message = DB::table('requestmessages') -> where([
           ['broker_id', '=', $broker_request -> broker_id],
           ['writer_id', '=', $broker_request -> writer_id]
-        ]) -> select('user_id', 'message', 'created_at') -> orderBy('created_at', 'DESC') -> take(1) -> get()[0];
+        ]) -> select('user_id', 'message', 'created_at', 'read_at') -> orderBy('created_at', 'DESC') -> take(1) -> get()[0];
         $broker_request -> last_message = $last_message;
         $broker_request -> broker = Broker::find($broker_request -> broker_id) -> user;
         $broker_request -> mine = Auth::user() -> id == $broker_request -> initiator_id;
@@ -106,7 +106,7 @@ class LiaisonsService {
         $requests = Liaisonrequest::query()
           -> where('writer_id', Auth::user() -> writer -> id)
           -> where('initiator_id', Auth::user() -> id)
-          -> orderBy('created_at', 'DESC')
+          -> orderBy('updated_at', 'DESC')
           -> paginate(10);
 
         foreach ($requests as $broker_request) {
@@ -131,7 +131,7 @@ class LiaisonsService {
         $requests = Liaisonrequest::query()
           -> where('writer_id', Auth::user() -> writer -> id)
           -> where('initiator_id', '!=' , Auth::user() -> id)
-          -> orderBy('created_at', 'DESC')
+          -> orderBy('updated_at', 'DESC')
           -> paginate(10);
 
           foreach ($requests as $broker_request) {
@@ -155,14 +155,14 @@ class LiaisonsService {
         $requests = Liaisonrequest::query()
           -> where('broker_id', Auth::user() -> broker -> id)
           -> where('initiator_id', Auth::user() -> id)
-          -> orderBy('created_at', 'DESC')
+          -> orderBy('updated_at', 'DESC')
           -> paginate(10);
 
           foreach ($requests as $writer_request) {
             $last_message = DB::table('requestmessages') -> where([
               ['broker_id', '=', $writer_request -> broker_id],
               ['writer_id', '=', $writer_request -> writer_id]
-            ]) -> select('user_id', 'message', 'created_at') -> orderBy('created_at', 'DESC') -> take(1) -> get()[0]; 
+            ]) -> select('user_id', 'message', 'created_at', 'read_at') -> orderBy('created_at', 'DESC') -> take(1) -> get()[0]; 
             $writer_request -> last_message = $last_message;
             $writer_request -> writer = Writer::find($writer_request -> writer_id) -> user;
             $writer_request -> mine = Auth::user() -> id == $writer_request -> initiator_id;
@@ -177,7 +177,6 @@ class LiaisonsService {
         break;
             
       default: #from writers
-      Log::info('ins');
         $requests = Liaisonrequest::query()
           -> where('broker_id', Auth::user() -> broker -> id)
           -> where('initiator_id', '!=' ,Auth::user() -> id)
@@ -188,7 +187,7 @@ class LiaisonsService {
           $last_message = DB::table('requestmessages') -> where([
             ['broker_id', '=', $writer_request -> broker_id],
             ['writer_id', '=', $writer_request -> writer_id]
-          ]) -> select('user_id', 'message', 'created_at') -> orderBy('created_at', 'DESC') -> take(1) -> get()[0]; 
+          ]) -> select('user_id', 'message', 'created_at', 'read_at') -> orderBy('created_at', 'DESC') -> take(1) -> get()[0]; 
           $writer_request -> last_message = $last_message;
           $writer_request -> writer = Writer::find($writer_request -> writer_id) -> user;
           $writer_request -> mine = Auth::user() -> id == $writer_request -> initiator_id;

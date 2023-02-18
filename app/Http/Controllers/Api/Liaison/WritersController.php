@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Liaison;
 
 use App\Http\Controllers\Controller;
-
+use Illuminate\Http\Request;
 use App\Services\Liaison\WritersService;
 
 class WritersController extends Controller
@@ -30,5 +30,15 @@ class WritersController extends Controller
             'writers' => $writers_service -> getMyWriters(),
             'status' => 200
         ]);
+
+    }
+
+    public function getMyWriter(Request $request, WritersService $writers_service){
+
+        return response() -> json([
+            'writer_tasks' => $writers_service -> getMyWriter($request),
+            'status' => 200
+        ]);
+
     }
 }

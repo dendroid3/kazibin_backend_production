@@ -13,6 +13,8 @@ Route::post('/reset_password', [App\Http\Controllers\Api\Auth\RegisterController
 Route::post('/log_error', [App\Http\Controllers\Api\Error\ErrorController::class, 'logError']) -> name('error.log');
 Route::get('/get_about_statistics', [App\Http\Controllers\Api\Statistics\StatisticsController::class, 'getAboutStatistics']) -> name('statistics.get');
 
+Route::post('/get_one_broker', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getOneBroker']) -> name('brokers.get_one');
+
 Route::middleware(['auth:api']) -> group(function(){
     Route::get('/resend_verification_email', [App\Http\Controllers\Api\Auth\RegisterController::class, 'resendVerificationEmail']) -> name('profile.create');
     Route::get('/is_account_verified', [App\Http\Controllers\Api\Auth\RegisterController::class, 'isAccountVerified']) -> name('profile.create');
@@ -129,6 +131,9 @@ Route::middleware(['auth:api']) -> group(function(){
         Route::post('/request/set_cost_per_page', [App\Http\Controllers\Api\Liaison\LiaisonMessagesController::class, 'setCostPerPage']) -> name('request.setCPP');
 
         Route::get('/get_my_writers', [App\Http\Controllers\Api\Liaison\WritersController::class, 'getMyWriters']) -> name('writers.get_mine');
+        Route::post('/get_my_writer', [App\Http\Controllers\Api\Liaison\WritersController::class, 'getMyWriter']) -> name('writer.get_mine');
+
+
         Route::get('/get_my_brokers', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getMyBrokers']) -> name('writers.get_mine');
     });
 
