@@ -15,6 +15,7 @@ class Bid extends Model
     protected $fillable = [
         'writer_id',
         'task_id',
+        'broker_id',
         'status'
     ];
 

@@ -41,6 +41,7 @@ class BidsService {
     $bid -> id = Str::orderedUuid() -> toString();
     $bid -> writer_id = Auth::user() -> writer -> id;
     $bid -> task_id = $request -> task_id;
+    $bid -> broker_id = $request -> broker_id;
     $bid -> save();
 
     Log::info($request -> all());

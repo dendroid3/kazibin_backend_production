@@ -134,7 +134,11 @@ Route::middleware(['auth:api']) -> group(function(){
         Route::post('/get_my_writer', [App\Http\Controllers\Api\Liaison\WritersController::class, 'getMyWriter']) -> name('writer.get_mine');
 
 
-        Route::get('/get_my_brokers', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getMyBrokers']) -> name('writers.get_mine');
+        Route::get('/get_my_brokers', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getMyBrokers']) -> name('brokers.get_mine');
+        Route::post('/get_my_broker', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getMyBroker']) -> name('broker.get_mine');
+        Route::post('/get_my_broker_offers', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getMyBrokerOFfers']) -> name('broker.get_my_offers');
+        Route::post('/get_my_broker_bids', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getMyBrokerBids']) -> name('broker.get_my_bids');
+        Route::post('/get_my_broker_invoices', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getMyBrokerInvoices']) -> name('broker.get_my_invoices');
     });
 
     Route::group(['prefix' => 'bid'], function(){

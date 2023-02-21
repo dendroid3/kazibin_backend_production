@@ -36,7 +36,7 @@ class WritersController extends Controller
     public function getMyWriter(Request $request, WritersService $writers_service){
 
         return response() -> json([
-            'writer_tasks' => $writers_service -> getMyWriter($request),
+            'data' => $writers_service -> getMyWriter($request),
             'status' => 200
         ]);
 

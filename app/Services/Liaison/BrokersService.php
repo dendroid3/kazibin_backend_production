@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 use App\Models\User;
 use App\Models\Broker;
+use App\Models\Task;
+use App\Models\Taskoffer;
+use App\Models\Invoice;
+use App\Models\Bid;
 
 class BrokersService {
   public function getAll(){
@@ -92,5 +96,175 @@ class BrokersService {
     $broker -> cancelled_tasks =  count($broker -> broker -> tasks -> where('status', 4));
 
     return $broker;
+  }
+
+  
+  public function getMyBroker(Request $request){
+
+    $broker_tasks = Task::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> select('code', 'created_at', 'difficulty', 'expiry_time', 'full_pay', 'id', 'page_cost', 'pages', 'status', 'topic', 'type', 'unit')
+    -> orderBy('updated_at', 'DESC') -> paginate(10);
+
+    $total_tasks = Task::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> count();
+
+    
+    $available_tasks = Task::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 1) -> count();
+
+    $underway_tasks = Task::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 2) -> count();
+    
+    $complete_tasks = Task::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 3) -> count();
+
+    $cancelled_tasks = Task::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 4) -> count();
+
+    
+    $paid_tasks = Task::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> whereIn('status', [6, 8]) -> count(); 
+
+    return [
+      'tasks' => $broker_tasks,
+      'broker_writer_metrics' => [
+        'total' => $total_tasks,
+        'available' => $available_tasks,
+        'underway' => $underway_tasks,
+        'complete' => $complete_tasks,
+        'cancelled' => $cancelled_tasks,
+        'paid' => $paid_tasks,
+      ]
+    ];
+  }
+
+  public function getMyBrokerInvoices(Request $request){
+    $invoices = Invoice::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> orderBy('updated_at', 'DESC') -> paginate(10);
+
+    $total_invoices = Invoice::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> count();
+
+    $pending_invoices = Invoice::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 1)
+    -> count();
+
+    $paid_invoices = Invoice::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> whereIn('status', [2, 3])
+    -> count();
+
+    return [
+      'invoices' => $invoices,
+      'broker_writer_invoices' => [
+        'total' => $total_invoices,
+        'pending' => $pending_invoices,
+        'paid' => $paid_invoices,
+      ]
+    ];
+  }
+  
+  public function getMyBrokerOFfers(Request $request){
+    $offers = Taskoffer::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> orderBy('updated_at', 'DESC') -> paginate(10);
+
+    $total_offers = Taskoffer::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> count();
+
+    $pending_offers = Taskoffer::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 1)
+    -> count();
+
+    $accepted_offers = Taskoffer::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 4)
+    -> count();
+    
+    $rejected_offers = Taskoffer::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 3)
+    -> count();
+    
+    $cancelled_offers = Taskoffer::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 2)
+    -> count();
+
+    return [
+      'offers' => $offers,
+      'broker_writer_offers' => [
+        'total' => $total_offers,
+        'pending' => $pending_offers,
+        'accepted' => $accepted_offers,
+        'rejected' => $rejected_offers,
+        'cancelled' => $cancelled_offers,
+      ]
+    ];
+  }
+  
+  public function getMyBrokerBids(Request $request){
+    $bids = Bid::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> orderBy('updated_at', 'DESC') -> paginate(10);
+
+    foreach ($bids as $bid) {
+      $bid -> task -> broker -> user;
+      if($bid  -> messages -> where('read_at', null)  -> where('user_id', '!=', 1) -> where('user_id', '!=', Auth::user() -> id) -> first()){
+        $bid -> unread_message = true;
+      }
+    }
+    $total_bids = Bid::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> count();
+
+    $pending_bids = Bid::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 1)
+    -> count();
+
+    $pulled_bids = Bid::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 2)
+    -> count();
+    
+    $rejected_bids = Bid::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 3)
+    -> count();
+    
+    $won_bids = Bid::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 4)
+    -> count();
+    
+    $lost_bids = Bid::query() -> where('writer_id', Auth::user() -> writer -> id)
+    -> where('broker_id', $request -> broker_id)
+    -> where('status', 5)
+    -> count();
+
+    return [
+      'bids' => $bids,
+      'broker_writer_bids' => [
+        'total' => $total_bids,
+        'pending' => $pending_bids,
+        'pulled' => $pulled_bids,
+        'rejected' => $rejected_bids,
+        'won' => $won_bids,
+        'lost' => $lost_bids,
+      ]
+    ];
   }
 }

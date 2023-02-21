@@ -86,12 +86,46 @@ class WritersService {
   }
 
   public function getMyWriter(Request $request){
-
     $writer_tasks = Task::query() -> where('broker_id', Auth::user() -> broker -> id)
     -> where('writer_id', $request -> writer_id)
     -> select('code', 'created_at', 'difficulty', 'expiry_time', 'full_pay', 'id', 'page_cost', 'pages', 'status', 'topic', 'type', 'unit')
     -> orderBy('updated_at', 'DESC') -> paginate(10);
 
-    return $writer_tasks;
+    $total_tasks = Task::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> count();
+    
+    $available_tasks = Task::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 1) -> count();
+
+    $underway_tasks = Task::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 2) -> count();
+    
+    $complete_tasks = Task::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 3) -> count();
+
+    $cancelled_tasks = Task::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 4) -> count();
+
+    
+    $paid_tasks = Task::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> whereIn('status', [6, 8]) -> count(); 
+
+    return [
+      'tasks' => $writer_tasks,
+      'broker_writer_metrics' => [
+        'total' => $total_tasks,
+        'available' => $available_tasks,
+        'underway' => $underway_tasks,
+        'complete' => $complete_tasks,
+        'cancelled' => $cancelled_tasks,
+        'paid' => $paid_tasks,
+      ]
+    ];
   }
 }

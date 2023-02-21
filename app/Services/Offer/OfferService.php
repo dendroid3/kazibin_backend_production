@@ -34,6 +34,7 @@ class OfferService
     $offer = new Taskoffer();
     $offer -> id = Str::orderedUuid() -> toString();
     $offer -> task_id = $task -> id;
+    $offer -> broker_id = $task -> broker_id;
     $offer -> writer_id = $taker;
     $offer -> save();
 

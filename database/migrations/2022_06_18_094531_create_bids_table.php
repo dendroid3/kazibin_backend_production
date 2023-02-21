@@ -17,10 +17,12 @@ class CreateBidsTable extends Migration
             $table->uuid('id') -> primary() -> unique();
             $table->integer('status')->default(1);
             $table->uuid('task_id');
+            $table->uuid('broker_id');
             $table->uuid('writer_id');
             $table->timestamps();
 
             $table->index('task_id');
+            $table->index('broker_id');
             $table->index('writer_id');
         });
     }

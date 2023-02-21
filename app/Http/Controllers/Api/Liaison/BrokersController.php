@@ -41,4 +41,40 @@ class BrokersController extends Controller
         ]);
         
     }
+    
+    public function getMyBroker(Request $request, BrokersService $brokers_service){
+        
+        return response() -> json([
+            'data' => $brokers_service -> getMyBroker($request),
+            'status' => 200
+        ]);
+        
+    }
+    
+    public function getMyBrokerInvoices(Request $request, BrokersService $brokers_service){
+        
+        return response() -> json([
+            'data' => $brokers_service -> getMyBrokerInvoices($request),
+            'status' => 200
+        ]);
+        
+    }
+    
+    public function getMyBrokerOFfers(Request $request, BrokersService $brokers_service){
+        
+        return response() -> json([
+            'data' => $brokers_service -> getMyBrokerOFfers($request),
+            'status' => 200
+        ]);
+        
+    }
+    
+    public function getMyBrokerBids(Request $request, BrokersService $brokers_service){
+        
+        return response() -> json([
+            'data' => $brokers_service -> getMyBrokerBids($request),
+            'status' => 200
+        ]);
+        
+    }
 }

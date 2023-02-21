@@ -1,16 +1,48 @@
 <?php
 
-namespace Database\Factories;
+namespace App\Console\Commands;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Console\Command;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Models\User;
 
-class TaskFactory extends Factory
+use App\Models\Task;
+
+class createTasks extends Command
 {
-    public function __construct(){
-        $this -> jobs = [
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'create:tasks';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $jobs = [
             [
                 "unit" => "FOOD TOXICOLOGY",
                 "instructions" => 
@@ -421,37 +453,44 @@ class TaskFactory extends Factory
                 ,
                 "length"=> 3000
             ],
-        ]
         ];
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
-    {   $page_cost = rand(150,450);
-        $pages = rand(1,20);
-        return [
-            'topic' => $this->faker->name(),
-            'unit' => 'Physics',
-            'type' => 'Article',
-            'instructions' => $this->$jobs[Floor(rand(1, 34))]['instructions'],
-            'broker_id' => 'fcd5b38c-92b1-48ea-a1b7-8da8e656ff20', # "02fc5c8b-e21a-4475-ac32-bac266d4437e", #
-            // 'broker_id' =>  $this -> getBrokerId(), # rand(1,20), "3524d514-6e23-44f6-b4e6-13280565f734", #
-            'pages' =>  $pages,
-            'page_cost' => $page_cost,
-            'expiry_time' => Carbon::now()->addMinutes(rand(360, 7200))->toDateTimeString(),
-            'full_pay' => $pages * $page_cost,
-            'pay_day' => $this -> fakePayDay(),
-            'difficulty' => Floor(rand(1,9)),
-            'status' => Floor(rand(0,8)),
-            'code' => $this->fakeCode(),
-            'writer_id' => '83e18258-0e31-4e83-a999-9daeacfff9ba'
-        ];
+
+        foreach ($jobs as $job) {
+            $ts = new Task;
+            $ts -> unit = $this -> fakeUnit();
+            $ts -> instructions = $job['instructions'];
+            $ts -> topic = $job['unit'];
+
+
+            $page_cost = rand(150,450);
+            $pages = rand(1,20);
+            // $ts -> topic = $this->faker->name();
+            $ts -> type = 'Article' ;
+            $ts -> broker_id = "fcd5b38c-92b1-48ea-a1b7-8da8e656ff20"; # "02fc5c8b-e21a-4475-ac32-bac266d4437e"; #
+            // $ts -> broker_id =  $this -> getBrokerId(); # rand(1;20); "3524d514-6e23-44f6-b4e6-13280565f734"; #
+            $ts -> pages =  $pages;
+            $ts -> page_cost = $page_cost;
+            $ts -> expiry_time = Carbon::now()->addMinutes(rand(360, 7200))->toDateTimeString();
+            $ts -> full_pay = $pages * $page_cost;
+            $ts -> pay_day = $this -> fakePayDay();
+            $ts -> difficulty = Floor(rand(1,9));
+            $ts -> status = 1; #Floor(rand(0,8));
+            $ts -> code = $this->fakeCode();
+            $ts -> writer_id = '83e18258-0e31-4e83-a999-9daeacfff9ba';
+
+            
+            $ts -> save();
+            $this->line('<fg=green;> Created: ' .  $ts -> unit. ' => (' . $job['length']. ' words), </>');
+            $this->line('<fg=green;> Topic: ' .  $job['unit'] . '</>');
+            $this->line('<fg=green;> Instructions: ' .  $ts -> instructions . '</>');
+            $this->line('<fg=red;> |||||||||||||||||||||||||||||||||||||| </>');
+        }
+        $this->line('<fg=red;> Total Jobs Added: ' . count($jobs) . ' </>');
+
+        return 0;
     }
 
-    public $jobs;
-
+    
     public function getBrokerId()
     {
         $users = User::all();
@@ -499,5 +538,4 @@ class TaskFactory extends Factory
         return strtoupper(Str::random(rand(3,5))) . '-' . strtoupper(Str::random(rand(3,6))) . rand(45,123);
     }
 
-    public function Topic(){}
 }

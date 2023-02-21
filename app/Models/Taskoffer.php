@@ -13,6 +13,7 @@ class Taskoffer extends Model
     use HasFactory, TraitUuid;
     protected $fillable = [
         'writer_id',
+        'broker_id',
         'task_id',
         'status'
     ];
