@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 use App\Services\Task\TaskFetchingService;
 
@@ -61,6 +62,26 @@ class FetchController extends Controller
 
     }
 
+    public function getAllAvailableForBiddingLanding(Request $request){
+        $tasks = Task::query() -> where([
+            ['takers', '=', null],
+            ['status', '=', 1]
+        ]) 
+        -> orderBy('expiry_time', 'asc')
+        -> select('code', 'unit', 'topic', 'instructions', 'expiry_time', 'full_pay')
+        -> take(10)
+        -> get();
+
+        foreach ($tasks as $task) {
+            // $task -> expiry_time = Carbon::createFromFormat('Y-m-d H:M:S', '1975-05-21 22')->toDateTimeString();
+            $task -> full_pay = $task -> full_pay;
+        }
+
+        return response() -> json(
+            $tasks
+        );
+    }
+
     public function getAllAvailableForBidding(Request $request){
         $query = $this -> sortFilterQuery($request -> all());
       
@@ -74,7 +95,6 @@ class FetchController extends Controller
 
         $tasks = Task::query() -> where($query) 
         -> orderBy('expiry_time', 'asc')
-         
         -> whereNotIn('id', $mine)
         -> whereNotIn('id', $bidded)
 

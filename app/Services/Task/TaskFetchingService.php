@@ -197,7 +197,6 @@ class TaskFetchingService{
   public function getTaskForBidding(Request $request)
   {
     $task = Task::where('code', $request -> task_code) -> first();
-  
 
     if($task -> status > 1 || !$task){
       return 404;

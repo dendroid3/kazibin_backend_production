@@ -12,8 +12,8 @@ Route::post('/initialise_password_reset', [App\Http\Controllers\Api\Auth\Registe
 Route::post('/reset_password', [App\Http\Controllers\Api\Auth\RegisterController::class, 'resetPassword']) -> name('password.reset');
 Route::post('/log_error', [App\Http\Controllers\Api\Error\ErrorController::class, 'logError']) -> name('error.log');
 Route::get('/get_about_statistics', [App\Http\Controllers\Api\Statistics\StatisticsController::class, 'getAboutStatistics']) -> name('statistics.get');
-
 Route::post('/get_one_broker', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getOneBroker']) -> name('brokers.get_one');
+Route::get('/get_available_for_bidding_landing', [App\Http\Controllers\Api\Task\FetchController::class, 'getAllAvailableForBiddingLanding']) -> name('task.get_all_available_for_bidding_landing');
 
 Route::middleware(['auth:api']) -> group(function(){
     Route::get('/resend_verification_email', [App\Http\Controllers\Api\Auth\RegisterController::class, 'resendVerificationEmail']) -> name('profile.create');
@@ -152,5 +152,6 @@ Route::middleware(['auth:api']) -> group(function(){
         Route::post('/reject', [App\Http\Controllers\Api\Bid\MainController::class, 'rejectBid']) -> name('bid.reject');
         Route::post('/pull', [App\Http\Controllers\Api\Bid\MainController::class, 'pullBid']) -> name('bid.pull');
     });
+
 
 });

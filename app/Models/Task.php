@@ -12,21 +12,23 @@ class Task extends Model
     use HasFactory, TraitUuid;
 
     protected $fillable = [
+        'id',
         'broker_id',
         'writer_id',
+        'invoice_id',
+        'status',
         'topic',
         'unit',
         'pages',
         'page_cost',
-        'instructions',
-        'expiry_time',
-        'status',
-        'pay_day',
-        'type',
-        'takers',
-        'code',
+        'full_pay',
         'difficulty',
-        'invoice_id'
+        'instructions',
+        'type',
+        'taker',
+        'code',
+        'expiry_time',
+        'pay_day',
     ];
 
     public function Files(){
