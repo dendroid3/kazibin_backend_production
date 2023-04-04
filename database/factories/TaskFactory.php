@@ -9,8 +9,15 @@ use App\Models\User;
 
 class TaskFactory extends Factory
 {
-    public function __construct(){
-        $this -> jobs = [
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        $jobs = 
+        [
             [
                 "unit" => "FOOD TOXICOLOGY",
                 "instructions" => 
@@ -401,7 +408,7 @@ class TaskFactory extends Factory
                     organization. You must also include within the document recommendations of how you will create
                     polices and establish practices to help staff overcome such barriers and in doing so refer to theory and
                     practice.
-                     "
+                        "
                 ,
                 "length"=> 3000
             ],
@@ -422,20 +429,13 @@ class TaskFactory extends Factory
                 "length"=> 3000
             ],
         ];
-    }
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
-    {   $page_cost = rand(150,450);
+        $page_cost = rand(150,450);
         $pages = rand(1,20);
         return [
             'topic' => $this->faker->name(),
-            'unit' => 'Physics',
+            'unit' => $jobs[Floor(rand(1, 34))]['unit'],
             'type' => 'Article',
-            'instructions' => $this->$jobs[Floor(rand(1, 34))]['instructions'],
+            'instructions' => $jobs[Floor(rand(1, 34))]['instructions'],
             'broker_id' => "5d7b9156-39e8-4893-ab07-2b30d18218d6",
             'pages' =>  $pages,
             'page_cost' => $page_cost,
@@ -445,7 +445,7 @@ class TaskFactory extends Factory
             'difficulty' => Floor(rand(1,9)),
             'status' => 1, #Floor(rand(0,8)),
             'code' => $this->fakeCode(),
-            // 'writer_id' => '83e18258-0e31-4e83-a999-9daeacfff9ba'
+            'writer_id' => '83e18258-0e31-4e83-a999-9daeacfff9ba'
         ];
     }
 
