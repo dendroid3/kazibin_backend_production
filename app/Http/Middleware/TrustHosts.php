@@ -16,7 +16,8 @@ class TrustHosts extends Middleware
         return [
             $this->allSubdomainsOfApplicationUrl(),
             'http://localhost:8080',
-            'http://localhost'
+            'http://localhost',
+            'https://kazibin.com',
         ];
     }
 }

@@ -421,8 +421,8 @@ class TaskFactory extends Factory
                 ,
                 "length"=> 3000
             ],
-        ]
         ];
+    }
     /**
      * Define the model's default state.
      *
@@ -436,17 +436,16 @@ class TaskFactory extends Factory
             'unit' => 'Physics',
             'type' => 'Article',
             'instructions' => $this->$jobs[Floor(rand(1, 34))]['instructions'],
-            'broker_id' => 'fcd5b38c-92b1-48ea-a1b7-8da8e656ff20', # "02fc5c8b-e21a-4475-ac32-bac266d4437e", #
-            // 'broker_id' =>  $this -> getBrokerId(), # rand(1,20), "3524d514-6e23-44f6-b4e6-13280565f734", #
+            'broker_id' => "5d7b9156-39e8-4893-ab07-2b30d18218d6",
             'pages' =>  $pages,
             'page_cost' => $page_cost,
             'expiry_time' => Carbon::now()->addMinutes(rand(360, 7200))->toDateTimeString(),
             'full_pay' => $pages * $page_cost,
             'pay_day' => $this -> fakePayDay(),
             'difficulty' => Floor(rand(1,9)),
-            'status' => Floor(rand(0,8)),
+            'status' => 1, #Floor(rand(0,8)),
             'code' => $this->fakeCode(),
-            'writer_id' => '83e18258-0e31-4e83-a999-9daeacfff9ba'
+            // 'writer_id' => '83e18258-0e31-4e83-a999-9daeacfff9ba'
         ];
     }
 
@@ -470,10 +469,6 @@ class TaskFactory extends Factory
         $types = array('Essay', 'Report', 'Trascription', 'Article', 'Programming');
         $random_number = floor(rand(0, (count($types) - 1 )));
         return $types[$random_number];
-    }
-
-    public function fakeExpiryTime(){
-
     }
 
     public function fakePayDay(){
