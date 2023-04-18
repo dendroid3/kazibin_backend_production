@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 use App\Models\Task;
+use App\Models\Taskmessage;
 use App\Models\Taskfile;
 
 use App\Services\Offer\OfferService;
@@ -221,4 +222,20 @@ class AdditionService
 
   }
 
+  public function changeDeadline(Request $request){
+    
+    $task = Task::find($request -> task_id);
+    $task -> expiry_time = $request -> expiry_time;
+    $task -> push();
+
+    $task_message = new Taskmessage;
+    $task_message -> id = Str::orderedUuid() -> toString();
+    $task_message -> user_id = 1;
+    $task_message -> type = 'text';
+    $task_message -> task_id = $request -> task_id;
+    $task_message -> message = '--- Deadline changed to ' . $request -> expiry_time . ' ---' ;
+    $task_message -> save();
+
+    return $task_message;
+  }
 }

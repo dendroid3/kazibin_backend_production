@@ -32,9 +32,24 @@ class ProfileService {
             ['status', 3]
         ]) -> count();
         
+        $posted_revision = Task::where([
+            ['broker_id', Auth::user() -> broker -> id],
+            ['status', 8]
+        ]) -> count();
+
         $posted_canceled = Task::where([
             ['broker_id', Auth::user() -> broker -> id],
             ['status', 4]
+        ]) -> count();
+
+        $posted_invoiced = Task::where([
+            ['broker_id', Auth::user() -> broker -> id],
+            ['status', 5]
+        ]) -> count();
+
+        $posted_diputed = Task::where([
+            ['broker_id', Auth::user() -> broker -> id],
+            ['status', 7]
         ]) -> count();
         
         $posted_paid = Task::where([
@@ -54,6 +69,11 @@ class ProfileService {
             ['status', 3]
         ]) -> count();
         
+        $taken_revision = Task::where([
+            ['writer_id', Auth::user() -> writer -> id],
+            ['status', 8]
+        ]) -> count();
+
         $taken_canceled = Task::where([
             ['writer_id', Auth::user() -> writer -> id],
             ['status', 4]
@@ -67,6 +87,11 @@ class ProfileService {
         $taken_paid = Task::where([
             ['writer_id', Auth::user() -> writer -> id],
             ['status', 6]
+        ]) -> count();
+
+        $taken_disputed = Task::where([
+            ['writer_id', Auth::user() -> writer -> id],
+            ['status', 7]
         ]) -> count();
 
         $offers_all = Auth::user() -> writer -> offers -> count();
@@ -108,7 +133,10 @@ class ProfileService {
                 'posted_underway' => $posted_underway,
                 'posted_completed' => $posted_completed,
                 'posted_canceled' => $posted_canceled,
-                'posted_paid' => $posted_paid
+                'posted_paid' => $posted_paid,
+                'posted_revision' => $posted_revision,
+                'posted_invoiced' => $posted_invoiced,
+                'posted_diputed' => $posted_diputed
             ],
             
             'taken' => [
@@ -117,7 +145,9 @@ class ProfileService {
                 'taken_completed' => $taken_completed,
                 'taken_canceled' => $taken_canceled,
                 'taken_paid' => $taken_paid,
-                'taken_invoiced' => $taken_invoiced
+                'taken_invoiced' => $taken_invoiced,
+                'taken_revision' => $taken_revision,
+                'taken_disputed' => $taken_disputed
             ],
             
             'offers' => [

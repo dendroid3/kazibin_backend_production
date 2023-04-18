@@ -123,4 +123,16 @@ class AdditionController extends Controller
         ]);
     }
 
+    
+
+    public function changeDeadline(Request $request, AdditionService $addition_service){
+        /*
+            this step adds the payment mode for the task. This record will then be used to give the writer and broker reminders as well. 
+                Date 28/05/1965 means payment on delivery
+                Date 17/09/1997 means payment on approval
+        */
+
+        return response() -> json($addition_service -> changeDeadline($request));
+    }
+
 }

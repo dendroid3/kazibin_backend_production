@@ -34,6 +34,8 @@ Route::middleware(['auth:api']) -> group(function(){
         Route::post('/step_4', [App\Http\Controllers\Api\Task\AdditionController::class, 'stepFour']) -> name('task.step_4');
         Route::post('/step_5', [App\Http\Controllers\Api\Task\AdditionController::class, 'stepFive']) -> name('task.step_5');
         Route::post('/step_6', [App\Http\Controllers\Api\Task\AdditionController::class, 'stepSix']) -> name('task.step_6');
+
+        Route::post('/change_deadline', [App\Http\Controllers\Api\Task\AdditionController::class, 'changeDeadline']) -> name('task.step_6');
     });
 
     Route::group(['prefix' => 'search'], function(){

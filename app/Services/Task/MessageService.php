@@ -19,7 +19,7 @@ class MessageService{
         $task = Task::find($request -> task_id);
         $reciever_id = Auth::user() -> writer -> id == $task -> writer_id ? $task -> broker -> user -> id : $task -> writer -> user -> id;
         $from_broker = Auth::user() -> writer -> id == $task -> writer_id ? false : true;
-        $system_message = 'New message from ' . Auth::user()-> code . " : " . Auth::user() -> username . ", on task, " . $task -> code . " : " .$task -> topic . ".";
+        $system_message = 'New message from ' . Auth::user()-> code . " : " . Auth::user() -> username . ", on task, " . $task -> code . " : " .$task -> topic . ":";
 
         if($request -> hasFile('documents')){
             $files = $request -> file('documents');
@@ -38,7 +38,7 @@ class MessageService{
                 array_push($messages, $message);
                 $i++;
 
-                event(new TaskMessageSent($message, $reciever_id, $from_broker, $system_message));
+                event(new TaskMessageSent($message, $reciever_id, $from_broker, $system_message, 565));
 
             }
             return ['messages' => $messages, 'status' => 200, 'files' => true];
@@ -51,7 +51,7 @@ class MessageService{
             $message -> type = 'text';
             $message -> save();
 
-            event(new TaskMessageSent($message, $reciever_id, $from_broker, $system_message));
+            event(new TaskMessageSent($message, $reciever_id, $from_broker, $system_message, 565));
 
             return ['message' => $message, 'status' => 200];
         }
