@@ -16,6 +16,8 @@ use App\Models\Task;
 use App\Models\Taskmessage;
 use App\Models\Taskfile;
 
+use App\Events\TaskMessageSent;
+
 use App\Services\Offer\OfferService;
 
 class AdditionService 
@@ -234,8 +236,57 @@ class AdditionService
     $task_message -> type = 'text';
     $task_message -> task_id = $request -> task_id;
     $task_message -> message = '--- Deadline changed to ' . $request -> expiry_time . ' ---' ;
-    $task_message -> save();
+    
+    if($task -> status > 1){
+      $task_message -> save();
+      event(new TaskMessageSent($task_message, $task -> writer -> user -> id, false, 'Change in deadline on task '. $task -> code . " : " . $task -> topic, 565));
+    
+      ($task -> status > 1) ? $message_to_send = $task_message : $message_to_send = "Deadline Changed";
+    }
+    return [
+      'message' => $message_to_send,
+      'task' => $task
+    ];
 
-    return $task_message;
+  }
+
+  
+  public function changePayment(Request $request){
+
+    $task = Task::find($request -> task_id);
+    
+    $task_message = new Taskmessage;
+    $task_message -> id = Str::orderedUuid() -> toString();
+    $task_message -> user_id = 1;
+    $task_message -> type = 'text';
+    $task_message -> task_id = $request -> task_id;
+
+    if($request -> full_pay){
+        $task -> full_pay = $request -> full_pay;
+        $task -> pages = null;
+        $task -> page_cost = null;
+        
+        $task_message -> message = '--- Payment terms changed to ' . $request -> full_pay . 'KES for the whole task---' ;
+    } else {
+        $task -> pages = $request -> pages;
+        $task -> page_cost = $request -> page_cost;
+        $task -> full_pay = ($request -> pages) * ($request -> page_cost);
+
+        $task_message -> message = '--- Payment terms changed to ' . $request -> pages . ' pages at ' .
+        $request -> page_cost . ' totaling ' .  ($request -> pages) * ($request -> page_cost) . ' KES ---' ;
+    }
+
+    if($task -> status > 1){
+      $task_message -> save();
+      event(new TaskMessageSent($task_message, $task -> writer -> user -> id, false, 'Change in payment details on task ' . $task -> code . " : " . $task -> topic, 565));
+    }
+
+    $task -> push();
+
+    ($task -> status > 1) ? $message_to_send = $task_message : $message_to_send = "Payment Details Changed";
+    return [
+      'message' => $message_to_send,
+      'task' => $task
+    ];
   }
 }
