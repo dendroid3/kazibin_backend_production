@@ -241,8 +241,9 @@ class AdditionService
       $task_message -> save();
       event(new TaskMessageSent($task_message, $task -> writer -> user -> id, false, 'Change in deadline on task '. $task -> code . " : " . $task -> topic, 565));
     
-      ($task -> status > 1) ? $message_to_send = $task_message : $message_to_send = "Deadline Changed";
     }
+    ($task -> status > 1) ? $message_to_send = $task_message : $message_to_send = "Deadline Changed";
+
     return [
       'message' => $message_to_send,
       'task' => $task
@@ -273,7 +274,7 @@ class AdditionService
         $task -> full_pay = ($request -> pages) * ($request -> page_cost);
 
         $task_message -> message = '--- Payment terms changed to ' . $request -> pages . ' pages at ' .
-        $request -> page_cost . ' totaling ' .  ($request -> pages) * ($request -> page_cost) . ' KES ---' ;
+        $request -> page_cost . 'KES, totaling ' .  ($request -> pages) * ($request -> page_cost) . ' KES ---' ;
     }
 
     if($task -> status > 1){
