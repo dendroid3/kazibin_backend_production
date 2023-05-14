@@ -9,11 +9,11 @@ return [
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['X-Custom-Header', 'Upgrade-Insecure-Requests'],
 
     'exposed_headers' => [],
 
-    'max_age' => 1000,
+    'max_age' => 10000,
 
     'supports_credentials' => false,
 
