@@ -51,7 +51,7 @@ class RegistrationService {
       $user -> push(); 
     }
 
-    $verification_email = $this->sendVerificationEmail($user);
+    // $verification_email = $this->sendVerificationEmail($user);
     $user -> writer;
     $user -> broker;
 

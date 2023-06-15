@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Task;
+use App\Models\Taskoffer;
+use App\Models\Bid;
+use App\Models\Invoice;
 
 class WritersService {
   public function getAll(){
@@ -125,6 +128,129 @@ class WritersService {
         'complete' => $complete_tasks,
         'cancelled' => $cancelled_tasks,
         'paid' => $paid_tasks,
+      ]
+    ];
+  }
+
+  public function getMyWriterOFfers(Request $request){
+    $offers = Taskoffer::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> orderBy('updated_at', 'DESC') -> paginate(10);
+
+    $total_offers = Taskoffer::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> count();
+
+    $pending_offers = Taskoffer::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 1)
+    -> count();
+
+    $accepted_offers = Taskoffer::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 4)
+    -> count();
+    
+    $rejected_offers = Taskoffer::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 3)
+    -> count();
+    
+    $cancelled_offers = Taskoffer::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 2)
+    -> count();
+
+    return [
+      'offers' => $offers,
+      'broker_writer_offers' => [
+        'total' => $total_offers,
+        'pending' => $pending_offers,
+        'accepted' => $accepted_offers,
+        'rejected' => $rejected_offers,
+        'cancelled' => $cancelled_offers,
+      ]
+    ];
+  }
+
+  public function getMyWriterBids(Request $request){
+    $bids = Bid::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> orderBy('updated_at', 'DESC') -> paginate(10);
+
+    foreach ($bids as $bid) {
+      $bid -> task -> broker -> user;
+      if($bid  -> messages -> where('read_at', null)  -> where('user_id', '!=', 1) -> where('user_id', '!=', Auth::user() -> id) -> first()){
+        $bid -> unread_message = true;
+      }
+    }
+    $total_bids = Bid::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> count();
+
+    $pending_bids = Bid::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 1)
+    -> count();
+
+    $pulled_bids = Bid::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 2)
+    -> count();
+    
+    $rejected_bids = Bid::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 3)
+    -> count();
+    
+    $won_bids = Bid::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 4)
+    -> count();
+    
+    $lost_bids = Bid::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 5)
+    -> count();
+
+    return [
+      'bids' => $bids,
+      'broker_writer_bids' => [
+        'total' => $total_bids,
+        'pending' => $pending_bids,
+        'pulled' => $pulled_bids,
+        'rejected' => $rejected_bids,
+        'won' => $won_bids,
+        'lost' => $lost_bids,
+      ]
+    ];
+  }
+
+  public function getMyWriterInvoices(Request $request){
+    $invoices = Invoice::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> orderBy('updated_at', 'DESC') -> paginate(10);
+
+    $total_invoices = Invoice::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> count();
+
+    $pending_invoices = Invoice::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> where('status', 1)
+    -> count();
+
+    $paid_invoices = Invoice::query() -> where('broker_id', Auth::user() -> broker -> id)
+    -> where('writer_id', $request -> writer_id)
+    -> whereIn('status', [2, 3])
+    -> count();
+
+    return [
+      'invoices' => $invoices,
+      'broker_writer_invoices' => [
+        'total' => $total_invoices,
+        'pending' => $pending_invoices,
+        'paid' => $paid_invoices,
       ]
     ];
   }

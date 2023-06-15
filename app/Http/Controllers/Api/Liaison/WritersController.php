@@ -41,4 +41,31 @@ class WritersController extends Controller
         ]);
 
     }
+    
+    public function getMyWriterOFfers(Request $request, WritersService $writers_service){
+        
+        return response() -> json([
+            'data' => $writers_service -> getMyWriterOFfers($request),
+            'status' => 200
+        ]);
+        
+    }
+    
+    public function getMyWriterBids(Request $request, WritersService $writers_service){
+        
+        return response() -> json([
+            'data' => $writers_service -> getMyWriterBids($request),
+            'status' => 200
+        ]);
+        
+    }
+    
+    public function getMyWriterInvoices(Request $request, WritersService $writers_service){
+        
+        return response() -> json([
+            'data' => $writers_service -> getMyWriterInvoices($request),
+            'status' => 200
+        ]);
+        
+    }
 }

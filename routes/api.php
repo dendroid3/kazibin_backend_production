@@ -135,7 +135,9 @@ Route::middleware(['auth:api']) -> group(function(){
 
         Route::get('/get_my_writers', [App\Http\Controllers\Api\Liaison\WritersController::class, 'getMyWriters']) -> name('writers.get_mine');
         Route::post('/get_my_writer', [App\Http\Controllers\Api\Liaison\WritersController::class, 'getMyWriter']) -> name('writer.get_mine');
-
+        Route::post('/get_my_writer_offers', [App\Http\Controllers\Api\Liaison\WritersController::class, 'getMyWriterOFfers']) -> name('writer.get_my_offers');
+        Route::post('/get_my_writer_bids', [App\Http\Controllers\Api\Liaison\WritersController::class, 'getMyWriterBids']) -> name('writer.get_my_bids');
+        Route::post('/get_my_writer_invoices', [App\Http\Controllers\Api\Liaison\WritersController::class, 'getMyWriterInvoices']) -> name('writer.get_my_invoices');
 
         Route::get('/get_my_brokers', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getMyBrokers']) -> name('brokers.get_mine');
         Route::post('/get_my_broker', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getMyBroker']) -> name('broker.get_mine');
