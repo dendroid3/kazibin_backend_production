@@ -51,12 +51,10 @@ class RegistrationService {
       $user -> push(); 
     }
 
-    // $verification_email = $this->sendVerificationEmail($user);
+    $verification_email = $this->sendVerificationEmail($user);
     $user -> writer;
     $user -> broker;
 
-    // dd($user);
-    
     return [
       'validated' => true,
       'user' => $user,
@@ -65,7 +63,8 @@ class RegistrationService {
   }
 
   public function sendVerificationEmail($user){
-      \Mail::to($user -> email)->send(new \App\Mail\VerficationOfAccount($user));
+    Log::info('IN');
+      // \Mail::to($user -> email)->send(new \App\Mail\VerficationOfAccount($user));
   }
 
   public function isAccountVerified(){
@@ -84,7 +83,8 @@ class RegistrationService {
     return true;
   }
 
-  public function getRandomString($number){
+  public function getRandomString($number)
+  {
     // This function is meant to ensure that no two 'email_verification' field data are similar.
     $random_string = Str::random($number);
     $exist = DB::table('users')->where('email_verification', $random_string) -> exists();
@@ -94,7 +94,8 @@ class RegistrationService {
     return $random_string;
   }
 
-  public function createProfile(Request $request){
+  public function createProfile(Request $request)
+  {
     $user = User::find(Auth::user()->id);
     $user -> level = 0;
     $user -> course = $request -> course;

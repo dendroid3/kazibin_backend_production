@@ -22,7 +22,6 @@ Route::middleware(['auth:api']) -> group(function(){
     Route::get('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logoutUser']) -> name('user.logout');
     Route::get('/getLogs', [App\Http\Controllers\Api\Log\LogsController::class, 'getLogMessages']) -> name('logs.get');
 
-
     Route::post('/initialise_verification', [App\Http\Controllers\Api\Verfication\VerificationsController::class, 'initiateVerification']) 
     -> middleware('canInitiateVerification')
     -> name('verification.initialise');
@@ -157,6 +156,5 @@ Route::middleware(['auth:api']) -> group(function(){
         Route::post('/reject', [App\Http\Controllers\Api\Bid\MainController::class, 'rejectBid']) -> name('bid.reject');
         Route::post('/pull', [App\Http\Controllers\Api\Bid\MainController::class, 'pullBid']) -> name('bid.pull');
     });
-
 
 });
