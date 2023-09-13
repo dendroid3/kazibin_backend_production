@@ -57,6 +57,8 @@ class LoginTest extends TestCase
 
         $response= $this->get('/api/logout');
 
-        $response -> assertStatus(500);
+        dd($response);
+
+        $response -> assertStatus(403);
     }
 }

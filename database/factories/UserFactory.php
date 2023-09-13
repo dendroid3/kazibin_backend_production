@@ -17,7 +17,7 @@ class UserFactory extends Factory
         return [
             
             'id' => Str::orderedUuid() -> toString(),
-            'username' => $this->faker->name(),
+            'username' => substr($this->faker->name(), 0, 25),
             'phone_number' => rand(111111111,999999999),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => '2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password

@@ -16,9 +16,7 @@ class Authenticate extends Middleware
     {
         if (! $request->expectsJson()) {
             if ($request->is('api/*')) {
-                // return 'Not Found';
-            return 'loginssasa';
-
+                return;
             }
             return route('login');
         }

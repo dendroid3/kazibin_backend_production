@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 
 use App\Models\Task;
+use App\Models\Broker;
 
 class createTasks extends Command
 {
@@ -42,6 +43,8 @@ class createTasks extends Command
      */
     public function handle()
     {
+        Task::truncate();
+
         $jobs = [
             [
                 "unit" => "FOOD TOXICOLOGY",
@@ -466,8 +469,7 @@ class createTasks extends Command
             $pages = rand(1,20);
             // $ts -> topic = $this->faker->name();
             $ts -> type = 'Article' ;
-            $ts -> broker_id = "fcd5b38c-92b1-48ea-a1b7-8da8e656ff20"; # "02fc5c8b-e21a-4475-ac32-bac266d4437e"; #
-            // $ts -> broker_id =  $this -> getBrokerId(); # rand(1;20); "3524d514-6e23-44f6-b4e6-13280565f734"; #
+            $ts -> broker_id = Broker::query() -> first() -> id; # "02fc5c8b-e21a-4475-ac32-bac266d4437e"; #
             $ts -> pages =  $pages;
             $ts -> page_cost = $page_cost;
             $ts -> expiry_time = Carbon::now()->addMinutes(rand(360, 7200))->toDateTimeString();
@@ -476,7 +478,7 @@ class createTasks extends Command
             $ts -> difficulty = Floor(rand(1,9));
             $ts -> status = 1; #Floor(rand(0,8));
             $ts -> code = $this->fakeCode();
-            $ts -> writer_id = '83e18258-0e31-4e83-a999-9daeacfff9ba';
+            $ts -> writer_id = null;
 
             
             $ts -> save();
