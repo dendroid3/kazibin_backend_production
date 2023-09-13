@@ -33,10 +33,8 @@ class RegistrationTest extends TestCase
 
         $user = User::factory() -> make([
                                     'username' => null
-                                    // 'test_username_not_entered_registration_failstest_username_not_entered_registration_failstest_username_not_entered_registration_failstest_username_not_entered_registration_failstest_username_not_entered_registration_fails',
                                 ]);
         $response = $this->post('/api/register', $user -> toArray());
-        // dd($response);
 
         $this -> assertContains("The username field is required.", [$response->getData() -> errors ->username[0]]);
         $this->assertEquals('201', $response->status());
