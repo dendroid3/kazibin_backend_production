@@ -5,7 +5,9 @@ namespace Tests\Feature\Job;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\UploadedFile;
+
 use Carbon\Carbon;
 
 use Tests\TestCase;
@@ -15,6 +17,16 @@ use App\Models\User;
 
 class AdditionTest extends TestCase
 {
+    
+    public function createToken()
+    {
+        $user = User::factory() -> make(['pass' => 'password']);
+
+        $response = $this->post('/api/register', $user -> toArray());
+
+        return $response->decodeResponseJson()['token'];
+    }
+
     public function test_addition_fails_not_logged_in()
     {
         // $response = $this->get('/');
@@ -26,30 +38,24 @@ class AdditionTest extends TestCase
 
         $response->assertStatus(401);
     }
-    // public function test_ownership_middleware_works_changes_cannot_be_made_to_another_users_document()
-    // {
-    //     $this -> withoutExceptionHandling();
+    
+    public function test_ownership_middleware_works_changes_cannot_be_made_to_another_users_document()
+    {
+        $this -> withoutExceptionHandling();
         
-    //     $task = Task::factory() -> make();
-    //     $step_1_response = $this->withHeaders([
-    //         'Accept' => 'application/json',
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => 'Bearer ' . $this -> createToken()
-    //         ,
-    //     ])->json('POST', 'api/create_task/step_1', $task -> toArray());
+        $different_user_task_id = Task::query() -> orderBy('created_at', 'asc') -> first() -> id;
 
-    //     $token = 'Bearer ' . $this -> createToken();
+        $step_3_response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $this -> createToken(),
+        ])->json('POST', 'api/create_task/step_3', [
+            'task_id' =>  $different_user_task_id,
+            'full_pay' => 3000
+        ]);
+        $step_3_response->assertStatus(202);
+    }
 
-    //     $step_3_response = $this->withHeaders([
-    //         'Accept' => 'application/json',
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => $token,
-    //     ])->json('POST', 'api/create_task/step_3', [
-    //         'task_id' =>  $step_1_response->decodeResponseJson()['task']['id'],
-    //         'full_pay' => 3000
-    //     ]);
-    //     $step_3_response->assertStatus(202);
-    // }
     public function test_addition_fails_no_topic()
     {
         
@@ -78,6 +84,7 @@ class AdditionTest extends TestCase
 
         $response->assertStatus(201);
     }
+    
     public function test_addition_fails_no_instructions()
     {
         
@@ -123,7 +130,8 @@ class AdditionTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_addition_of_files_to_task_successful(){
+    public function test_addition_of_files_to_task_successful()
+    {
         $this -> withoutExceptionHandling();
         
         $token = 'Bearer ' . $this -> createToken();
@@ -138,6 +146,7 @@ class AdditionTest extends TestCase
         $step_1_response->assertStatus(200);
 
         $documents = [];
+
         for ($i=0; $i < 5; $i++) { 
             array_push($documents, UploadedFile::fake()->image('avatar' . $i .'.jpg'));
         }
@@ -159,7 +168,6 @@ class AdditionTest extends TestCase
 
     }
 
-    
     public function test_addition_step_three_with_no_pages_done_successfully()
     {
         $this -> withoutExceptionHandling();
@@ -215,7 +223,8 @@ class AdditionTest extends TestCase
         $step_3_response->assertStatus(200);
     }
 
-    public function test_addition_step_four_successfully_done_deadline_added(){
+    public function test_addition_step_four_successfully_done_deadline_added()
+    {
 
         $this -> withoutExceptionHandling();
         
@@ -242,7 +251,8 @@ class AdditionTest extends TestCase
         $step_4_response->assertStatus(200);
     }
 
-    public function test_addition_step_five_successfully_done_pay_day_added(){
+    public function test_addition_step_five_successfully_done_pay_day_added()
+    {
 
         $this -> withoutExceptionHandling();
         
@@ -269,7 +279,8 @@ class AdditionTest extends TestCase
         $step_5_response->assertStatus(200);
     }
 
-    public function test_addition_step_six_fails_no_difficulty_level_entered(){
+    public function test_addition_step_six_fails_no_difficulty_level_entered()
+    {
 
         $this -> withoutExceptionHandling();
         
@@ -296,7 +307,8 @@ class AdditionTest extends TestCase
         $step_6_response->assertStatus(201);
     }
 
-    public function test_addition_step_six_successfully_done_takers_added(){
+    public function test_addition_step_six_successfully_done_takers_added()
+    {
 
         $this -> withoutExceptionHandling();
         
@@ -311,6 +323,14 @@ class AdditionTest extends TestCase
 
         $step_1_response->assertStatus(200);
 
+        //create takers string
+        $takers = User::query() -> orderBy('created_at', 'asc') -> take(5) -> get();
+        $takers_id_string = '';
+
+        foreach ($takers as $taker) {
+            $takers_id_string .= $taker -> writer -> id ."_";
+        }
+
         $step_6_response = $this->withHeaders([
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
@@ -318,13 +338,14 @@ class AdditionTest extends TestCase
         ])->json('POST', 'api/create_task/step_6', [
             'task_id' => $step_1_response->decodeResponseJson()['task']['id'],
             'difficulty' => rand(2,9),
-            'takers' => '1_2_3_4_5_',
+            'takers' => $takers_id_string,
         ]);
 
         $step_6_response->assertStatus(200);
     }
 
-    public function test_full_flow_with_no_pages(){
+    public function test_full_flow_with_no_pages()
+    {
         
         $this -> withoutExceptionHandling();
         $token = 'Bearer ' . $this -> createToken();
@@ -414,18 +435,9 @@ class AdditionTest extends TestCase
 
         $step_6_response->assertStatus(200);
     }
-    
-    public function createToken()
+
+    public function test_full_flow_with_pages()
     {
-        $user = User::factory() -> make(['pass' => 'password']);
-
-        $response = $this->post('/api/register', $user -> toArray());
-        // dd($response);
-        return $response->decodeResponseJson()['token'];
-    }
-
-    public function test_full_flow_with_pages(){
-        
         $this -> withoutExceptionHandling();
 
         $token = 'Bearer ' . $this -> createToken();

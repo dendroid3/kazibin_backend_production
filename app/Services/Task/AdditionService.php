@@ -46,10 +46,6 @@ class AdditionService
     $task -> instructions = $request -> instructions;
     $task -> save();
 
-    //$task -> code = strtoupper(Str::random(2)) . '-' . strtoupper(Str::random(3)); 
-
-    //$task -> push();
-
     return ['validated' => true, 'task' => $task];
 
   }
@@ -63,7 +59,7 @@ class AdditionService
         $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
         $task_file = new Taskfile;
         $task_file -> task_id = $request -> task_id;
-        $task_file -> url = 'https://kazibin.sfo3.digitaloceanspaces.com/' .  $uploadedFileUrl;
+        $task_file -> url = env('DIGITALOCEAN_SPACES_ENDPOINT') .  $uploadedFileUrl;
         $task_file -> name =  $request -> file('documents')[$i] -> getClientOriginalName();
         $task_file -> save();
 
@@ -120,6 +116,8 @@ class AdditionService
     $task -> takers = $request -> takers;
     if($request -> difficulty){
       $task -> difficulty = $request -> difficulty;
+    } else {
+      return ['validated' => false, 'error' => 'You need to enter the difficulty level of this task'];
     }
     $task -> updated_at = Carbon::now();
     $task -> push();

@@ -87,7 +87,7 @@ class AdditionController extends Controller
 
         if(!$response['validated']){
             return  response() -> json([
-                'errors' => $response['errors']
+                'error' => $response['error']
             ], 201);
         }
 

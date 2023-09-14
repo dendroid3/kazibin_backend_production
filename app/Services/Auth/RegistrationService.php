@@ -63,8 +63,8 @@ class RegistrationService {
   }
 
   public function sendVerificationEmail($user){
-    // Log::info('IN');
-      // \Mail::to($user -> email)->send(new \App\Mail\VerficationOfAccount($user));
+    Log::info('IN');
+      \Mail::to($user -> email)->send(new \App\Mail\VerficationOfAccount($user));
   }
 
   public function isAccountVerified(){

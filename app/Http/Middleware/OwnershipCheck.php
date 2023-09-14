@@ -21,6 +21,7 @@ class OwnershipCheck
     public function handle(Request $request, Closure $next)
     {
         $task_owner  = Task::find($request->input('task_id'));
+        
         if(Auth::user() -> broker -> id === $task_owner -> broker_id){
             return $next($request);
         } else {

@@ -7,9 +7,9 @@
     "require": {
         "php": "^7.3|^8.0",
         "barryvdh/laravel-cors": "^2.0",
+        "barryvdh/laravel-dompdf": "^2.0",
         "beyondcode/laravel-websockets": "^1.13",
         "cloudinary-labs/cloudinary-laravel": "^1.0",
-        "depsimon/laravel-wallet": "*",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "irazasyed/telegram-bot-sdk": "^3.5",
@@ -18,7 +18,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "league/flysystem-aws-s3-v3": "~1.0",
-        "pusher/pusher-php-server": "~3.0",
+        "pusher/pusher-php-server": "~4.0",
         "symfony/http-client": "^5.4",
         "symfony/mailgun-mailer": "^5.4"
     },

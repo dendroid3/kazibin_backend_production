@@ -31,8 +31,6 @@ class VerificationTest extends TestCase
 
     public function test_email_already_verified_verification_fails()
     {
-
-        
         $this -> withoutExceptionHandling();
 
         $user = User::factory() -> create(['email_verification' => 'jhgfghjkjhghuijHGujHUKiuHjkjHjuyt567ujhKiu']);
