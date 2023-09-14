@@ -65,7 +65,9 @@ class FetchController extends Controller
     public function getAllAvailableForBiddingLanding(Request $request){
         $tasks = Task::query() -> where([
             ['takers', '=', null],
-            ['status', '=', 1]
+            ['status', '=', 1],
+            ['full_pay', '!=', null],
+            ['expiry_time', '!=', null]
         ]) 
         -> orderBy('expiry_time', 'asc')
         -> select('code', 'unit', 'topic', 'instructions', 'expiry_time', 'full_pay')

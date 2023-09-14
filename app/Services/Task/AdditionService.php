@@ -70,8 +70,8 @@ class AdditionService
     return $file_urls;
   }
 
-  public function addPageCount(Request $request){
-
+  public function addPageCount(Request $request)
+  {
     $task = Task::find($request -> task_id);
     if($request -> full_pay){
         $task -> full_pay = $request -> full_pay;
@@ -97,7 +97,8 @@ class AdditionService
     return $task;
   }
 
-  public function addPayInformation(Request $request){
+  public function addPayInformation(Request $request)
+  {
     /*
       this step adds the payment mode for the task. This record will then be used to give the writer and broker reminders as well. 
         Date 28/05/1965 means payment on delivery
@@ -111,7 +112,8 @@ class AdditionService
     return $task;
   }
 
-  public function addDifficultyAndTakers(Request $request, OfferService $offer_service, LogCreationService $log_service){
+  public function addDifficultyAndTakers(Request $request, OfferService $offer_service, LogCreationService $log_service)
+  {
     $task = Task::find($request -> task_id);
     $task -> takers = $request -> takers;
     if($request -> difficulty){
@@ -153,7 +155,8 @@ class AdditionService
     }
   }
 
-  public function deleteTask(Request $request, LogCreationService $log_service){
+  public function deleteTask(Request $request, LogCreationService $log_service)
+  {
     $task = Task::find($request -> task_id);
     
     if(($task -> bids -> count() === 0) && ($task -> offers -> count() === 0) && ($task -> status === 1)){
@@ -222,7 +225,8 @@ class AdditionService
 
   }
 
-  public function changeDeadline(Request $request){
+  public function changeDeadline(Request $request)
+  {
     
     $task = Task::find($request -> task_id);
     $task -> expiry_time = $request -> expiry_time;
@@ -250,7 +254,8 @@ class AdditionService
   }
 
   
-  public function changePayment(Request $request){
+  public function changePayment(Request $request)
+  {
 
     $task = Task::find($request -> task_id);
     
