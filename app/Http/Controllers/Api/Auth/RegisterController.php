@@ -36,9 +36,11 @@ class RegisterController extends Controller
     public function verifyEmail(Request $request, RegistrationService $register_service){
         $response = $register_service -> verifyEmail($request);
 
+        $success = ($response == 200) ? true : false;
+        
         return response() -> json([
-            'success' => $response
-        ], $response ? 200 : 201);
+            'success' => $success
+        ], $response);
 
     }
 

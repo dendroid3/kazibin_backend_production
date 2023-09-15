@@ -63,7 +63,6 @@ class RegistrationService {
   }
 
   public function sendVerificationEmail($user){
-    Log::info('IN');
       \Mail::to($user -> email)->send(new \App\Mail\VerficationOfAccount($user));
   }
 
@@ -73,14 +72,23 @@ class RegistrationService {
 
   public function verifyEmail(Request $request)
   {
-    $account = DB::table('users') -> where('email_verification', $request -> email_verification) -> first();
+    $account = DB::table('users') 
+    -> where('email_verification', $request -> email_verification) 
+    -> where('email', $request -> email)
+    -> first();
+
     if(!$account){
-      return false;
+      return 201;
     }
+
+    if(!$account -> email_verification){
+      return 202;
+    }
+
     DB::table('users') -> where('email_verification', $request -> email_verification) -> update([
         'email_verification' => null
     ]);
-    return true;
+    return 200;
   }
 
   public function getRandomString($number)
