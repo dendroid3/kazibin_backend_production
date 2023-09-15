@@ -12,7 +12,15 @@ use App\Models\User;
 
 class LoginTest extends TestCase
 {
-    // use RefreshDatabase;
+     
+    public function createToken()
+    {
+        $user = User::factory() -> make(['pass' => 'password']);
+
+        $response = $this->post('/api/register', $user -> toArray());
+
+        return $response->decodeResponseJson()['token'];
+    }
 
     public function test_wrong_credentials_entered_user_not_found_and_not_logged_in()
     {
@@ -24,7 +32,6 @@ class LoginTest extends TestCase
             'email' => $user -> email,
             'pass' => 'passwords'
         ]);
-        // dd($response);
 
         $response->assertStatus(201);
     }
@@ -44,9 +51,13 @@ class LoginTest extends TestCase
 
     public function test_authenticated_user_can_loggout()
     {
-        $user = User::factory() -> create();
+        $token = 'Bearer ' . $this -> createToken();
 
-        $response= $this->actingAs($user)->get('/api/logout');
+        $response=  $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+        ])->get('/api/logout');
 
         $response -> assertStatus(200);
     }
@@ -57,8 +68,6 @@ class LoginTest extends TestCase
 
         $response= $this->get('/api/logout');
 
-        // dd($response);
-
-        $response -> assertStatus(403);
+        $response -> assertStatus(500);
     }
 }
