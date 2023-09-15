@@ -20,6 +20,17 @@ use App\Events\Loginfor;
 use App\Events\Taskoffermessage;
 use Illuminate\Support\Facades\Log;
 
+use App\Mail\VerficationOfAccount;
+
+
+Route::get('/registration_email', function () {
+    $user = User::query() 
+    // -> where('email_verification', '!=', null) 
+    -> orderBy('created_at', 'desc') -> first(); 
+
+    return new VerficationOfAccount($user);
+});
+
 Route::get('{any}', function () {
     return response() -> json(['error' => 'forbidden'], 403);
 });

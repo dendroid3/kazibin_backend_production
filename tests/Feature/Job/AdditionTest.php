@@ -58,7 +58,6 @@ class AdditionTest extends TestCase
 
     public function test_addition_fails_no_topic()
     {
-        
         $token = 'Bearer ' . $this -> createToken();
 
         $task = Task::factory() -> make(['topic' => null]);
