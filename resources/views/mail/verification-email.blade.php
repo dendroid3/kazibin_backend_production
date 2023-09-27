@@ -133,7 +133,7 @@
                                     As a writer you can: 
                                     <ul>
                                         <li>
-                                            Explore brokers and liaise with them to for long-term writing commitments.
+                                            Explore brokers and liaise with them for long-term writing commitments.
                                         </li>
                                         <li>
                                             Receive job offers from the brokers you have liaised with.
@@ -166,7 +166,7 @@
                                 </div>
                               
                                 <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    You do not have to choose between being a writer or an employer, you can perform all these functions from the same account and the platform will categorise you as either depending on your activity ont the platform. 
+                                    You do not have to choose between being a writer or an employer, you can perform all these functions from the same account and the platform will categorise you as either depending on your activity on the platform. 
                                     But before you do that please 
                                     <a href="{{env('APP_CLIENT') . '/verify_email/' . $user->email_verification . '?email=' . $user -> email }}" class="ml-1 underline">
                                         verify your account here

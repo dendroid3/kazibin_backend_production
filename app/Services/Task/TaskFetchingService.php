@@ -229,8 +229,13 @@ class TaskFetchingService{
       $query -> where('unit', $request['unit']);
     } 
 
-    $query -> orderBy('expiry_time', 'asc')
-     
+    $query 
+    -> where([
+      ['takers', '=', null],
+      ['full_pay', '!=', null],
+      ['expiry_time', '!=', null]
+    ])
+    -> orderBy('expiry_time', 'asc')
     -> whereNotIn('id', $mine)
     -> whereNotIn('id', $bidded);
 

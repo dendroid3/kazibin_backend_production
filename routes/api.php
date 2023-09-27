@@ -14,6 +14,7 @@ Route::post('/log_error', [App\Http\Controllers\Api\Error\ErrorController::class
 Route::get('/get_about_statistics', [App\Http\Controllers\Api\Statistics\StatisticsController::class, 'getAboutStatistics']) -> name('statistics.get');
 Route::post('/get_one_broker', [App\Http\Controllers\Api\Liaison\BrokersController::class, 'getOneBroker']) -> name('brokers.get_one');
 Route::get('/get_available_for_bidding_landing', [App\Http\Controllers\Api\Task\FetchController::class, 'getAllAvailableForBiddingLanding']) -> name('task.get_all_available_for_bidding_landing');
+Route::get('/get_total_available_tasks', [App\Http\Controllers\Api\Task\FetchController::class, 'getTotalAvailableTasks']) -> name('task.get_total_available_tasks');
 
 Route::middleware(['auth:api']) -> group(function(){
     Route::get('/resend_verification_email', [App\Http\Controllers\Api\Auth\RegisterController::class, 'resendVerificationEmail']) -> name('profile.create');

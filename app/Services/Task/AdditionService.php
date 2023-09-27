@@ -17,6 +17,7 @@ use App\Models\Taskmessage;
 use App\Models\Taskfile;
 
 use App\Events\TaskMessageSent;
+use App\Events\TaskAdded;
 
 use App\Services\Offer\OfferService;
 
@@ -116,6 +117,11 @@ class AdditionService
   {
     $task = Task::find($request -> task_id);
     $task -> takers = $request -> takers;
+
+    if(!$request ->takers){
+      // ??
+    }
+
     if($request -> difficulty){
       $task -> difficulty = $request -> difficulty;
     } else {

@@ -84,6 +84,21 @@ class FetchController extends Controller
         );
     }
 
+    
+    public function getTotalAvailableTasks(Request $request){
+        $tasks = Task::query() -> where([
+            ['takers', '=', null],
+            ['status', '=', 1],
+            ['full_pay', '!=', null],
+            ['expiry_time', '!=', null]
+        ]) 
+        -> count();
+
+        return response() -> json(
+            $tasks
+        );
+    }
+
     public function getAllAvailableForBidding(Request $request){
         $query = $this -> sortFilterQuery($request -> all());
       
