@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
+    // Welcome back!
     public function loginUser(Request $request){
         if(Auth::attempt(['email' => $request -> email, 'password' => $request -> pass])){
             $user = Auth::user();
