@@ -36,7 +36,6 @@ class BrokersService {
           -> where('id', '!=', Auth::user() -> id)
           -> orderBy('broker_score', 'DESC')
           -> paginate(10);
-          Log::info('called');
     // ? DB::table('users') -> get();
     foreach ($brokers as $broker) {
       $broker -> broker;

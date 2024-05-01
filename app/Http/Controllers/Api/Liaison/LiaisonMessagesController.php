@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Liaison;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use App\Services\Liaison\LiaisonMessagesService;
 
@@ -19,7 +20,8 @@ class LiaisonMessagesController extends Controller
 
     public function sendRequestMessage(Request $request,LiaisonMessagesService $request_messages_service){
         if($request->hasFile('documents')){
-            
+            Log::info($request -> all());
+
             return response() -> json([
                 'files' => $request_messages_service -> sendRequestMessage($request),
                 'status' => 200

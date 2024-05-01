@@ -44,7 +44,6 @@ class BidsService {
     $bid -> broker_id = $request -> broker_id;
     $bid -> save();
 
-    Log::info($request -> all());
     $task = Task::find($request -> task_id);
 
     $broker = $task -> broker -> user;
@@ -184,7 +183,6 @@ class BidsService {
     } 
     $query  -> orderBy('updated_at', 'DESC');
     $bids = $query-> paginate(10);
-    // Log::info($bids);
     
     foreach ($bids as $bid) {
       $bid -> task -> broker -> user;

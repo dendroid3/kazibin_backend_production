@@ -222,7 +222,6 @@ class ProfileService {
     public function getWriterMetrics(Request $request){
         $user = User::find($request -> user_id);
         $writer = $user -> writer;
-        Log::info(round($writer -> ratings() -> avg('rating'), 1));
         $writer -> average_rating = round($writer -> ratings() -> avg('rating'), 1);
         $writer -> number_of_reviews = $writer -> ratings -> count();
 

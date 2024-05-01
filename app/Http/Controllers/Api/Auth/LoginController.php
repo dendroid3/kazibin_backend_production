@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
-    // Welcome back!
     public function loginUser(Request $request){
         if(Auth::attempt(['email' => $request -> email, 'password' => $request -> pass])){
             $user = Auth::user();
@@ -28,7 +27,7 @@ class LoginController extends Controller
     }
 
     public function logoutUser(Request $request){
-        DB::table('oauth_access_tokens') -> where('user_id', Auth::user() -> id)  -> delete();
+        DB::table('oauth_access_tokens') -> where('user_id', Auth::user() -> id) -> delete();
 
         return response() -> json([
             'logout' => true

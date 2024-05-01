@@ -78,11 +78,14 @@ class LogCreationService
 
   public function createLogOnRequestToWriter($liaison_request, $initiator){
     $broker_log_stub_1 = 'Request sent to writer. Username: ';
+    // $other_party = Writer::find($liaison_request -> writer_id) -> user;
     $other_party = Writer::find($liaison_request -> writer_id) -> user;
     #DB::table('users') -> where('id', $liaison_request -> writer_id) -> first();
     $broker_log_stub_2 = $other_party -> username;
     $broker_log_stub_3 = '. Code: ';
     $broker_log_stub_4 = $other_party -> code;
+    // dd($other_party);
+
 
     $broker_message = $broker_log_stub_1 . $broker_log_stub_2 . $broker_log_stub_3 . $broker_log_stub_4;
     $user_id_for_writer = Writer::find($liaison_request['writer_id']) -> user -> id;

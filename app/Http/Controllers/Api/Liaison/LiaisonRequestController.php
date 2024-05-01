@@ -55,6 +55,7 @@ class LiaisonRequestController extends Controller
     public function acceptRequest(Request $request, LiaisonsService $liaison_service, LogCreationService $log_creation){
         switch ($request -> base) {
             case 'attach_broker_to_me':
+                \Illuminate\Support\Facades\Log::info('Auth in controller ' . Auth::user() -> username);
                 $response = $liaison_service -> attachBrokerToMe($request, $log_creation);
                 break;
             

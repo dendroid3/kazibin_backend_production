@@ -436,16 +436,16 @@ class TaskFactory extends Factory
             'unit' => $jobs[Floor(rand(1, 34))]['unit'],
             'type' => 'Article',
             'instructions' => $jobs[Floor(rand(1, 34))]['instructions'],
-            'broker_id' => "5d7b9156-39e8-4893-ab07-2b30d18218d6",
+            'broker_id' => $this -> getBrokerId(),
             'pages' =>  $pages,
             'page_cost' => $page_cost,
             'expiry_time' => Carbon::now()->addMinutes(rand(360, 7200))->toDateTimeString(),
             'full_pay' => $pages * $page_cost,
             'pay_day' => $this -> fakePayDay(),
             'difficulty' => Floor(rand(1,9)),
-            'status' => 5, #Floor(rand(0,8)),
+            'status' => Floor(rand(0,5)),
             'code' => $this->fakeCode(),
-            'writer_id' => '83e18258-0e31-4e83-a999-9daeacfff9ba'
+            // 'writer_id' => '83e18258-0e31-4e83-a999-9daeacfff9ba'
         ];
     }
 

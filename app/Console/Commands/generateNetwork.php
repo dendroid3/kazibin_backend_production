@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
@@ -53,9 +52,7 @@ class generateNetwork extends Command
                     'broker_id' => $user,
                     'cost_per_page' => 300
                 ]);
-                Log::info('broker');
-                Log::info($base);
-                Log::info($network);
+              
             } else {
 
                 $user = $users[$i] -> writer -> id;
@@ -64,9 +61,7 @@ class generateNetwork extends Command
                     'broker_id' => $broker_id,
                     'cost_per_page' => 300
                 ]);
-                Log::info('writer');
-                Log::info($base);
-                Log::info($network);
+          
             }
         }
         return 0;

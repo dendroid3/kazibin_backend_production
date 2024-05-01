@@ -70,8 +70,6 @@ class TaskFetchingService{
       -> paginate(10);
     }
 
-    // Log::info($request -> status);
-   
     // add file urls to each of the tasks
     foreach ($tasks as $task){
         $task -> ratings;
@@ -148,7 +146,6 @@ class TaskFetchingService{
   public function getAllDoneByWriterForCreatingInvoice(Request $request)
   {
     $writer_id = User::where('code', $request['code']) -> first() -> writer -> id;
-    Log::info($writer_id);
     $tasks = Task::where('broker_id', Auth::user() -> broker -> id) 
         -> where('status', 3)
         -> where('writer_id', $writer_id)
@@ -197,6 +194,9 @@ class TaskFetchingService{
   public function getTaskForBidding(Request $request)
   {
     $task = Task::where('code', $request -> task_code) -> first();
+    if(!$task){
+      return;
+    }
 
     if($task -> status > 1 || !$task){
       return 404;

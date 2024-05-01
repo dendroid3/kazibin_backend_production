@@ -46,7 +46,8 @@ class LiaisonMessagesService {
       foreach ($files as $file) {
         $liaison_request = Liaisonrequest::find($request -> request_id);
 
-        $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
+        // $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
+        $uploadedFileUrl = 'one';
 
         $liaison_request_message = new Requestmessage();
         $liaison_request_message -> type = 'https://kazibin.sfo3.digitaloceanspaces.com/' . $uploadedFileUrl;

@@ -26,6 +26,7 @@ class LiaisonsService {
     $liaison_request -> writer_id = $request -> writer_id;
     $liaison_request -> save();
 
+
     $log_service -> createLogOnRequestToWriter($liaison_request, Auth::user());
 
     return $liaison_request;
@@ -250,17 +251,18 @@ class LiaisonsService {
 
   public function attachBrokerToMe($request, $log_service){
     $user = Auth::user();
-    // return $user;
     $check = DB::table('broker_writer') -> where([
       ['broker_id', '=', $request -> broker_id],
       ['writer_id', '=', $user -> writer -> id],
     ]) -> exists();
     if(!$check){
+      Log::info('writer ' . Auth::user() -> username);
+      Log::info('broker '. Broker::find($request -> broker_id) -> user -> username);
       
       DB::table('broker_writer')->insert([
         'broker_id' => $request -> broker_id, 
         'writer_id' => $user -> writer -> id,
-        'cost_per_page' => 300
+        'cost_per_page' => 312
       ]);
 
       // Auth::user() -> writer -> brokers() -> attach($request -> broker_id);
