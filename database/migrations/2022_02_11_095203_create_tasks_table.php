@@ -18,6 +18,7 @@ class CreateTasksTable extends Migration
             $table->uuid('broker_id');
             $table->uuid('writer_id')->nullable();
             $table->uuid('invoice_id')->nullable();
+            //1 = unassigned, 2 = incomplete, 3 = complete, 4 = cancelled, 5 = invoiced, 6 = paid, 8 = processing pay
             $table->integer('status');
             $table->string('topic');
             $table->string('unit');

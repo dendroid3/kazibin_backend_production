@@ -195,7 +195,7 @@ class TaskFetchingService{
   {
     $task = Task::where('code', $request -> task_code) -> first();
     if(!$task){
-      return;
+      return 404;
     }
 
     if($task -> status > 1 || !$task){

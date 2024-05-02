@@ -32,8 +32,8 @@ class LiaisonsService {
     return $liaison_request;
   }
 
-  public function sendRequestToBroker(Request $request, LogCreationService $log_service){
-
+  public function sendRequestToBroker(Request $request, LogCreationService $log_service)
+  {
     $liaison_request = new Liaisonrequest;
     $liaison_request -> id =  Str::orderedUuid() -> toString();
     $liaison_request -> initiator_id = Auth::user() -> id;
@@ -46,8 +46,8 @@ class LiaisonsService {
     return $liaison_request;
   }
 
-  public function getLiaisonRequests(){
-
+  public function getLiaisonRequests()
+  {
     $writers_requests = Liaisonrequest::query()
                         -> where('broker_id', Auth::user() -> broker -> id)
                         -> orderBy('updated_at', 'DESC')
@@ -101,7 +101,8 @@ class LiaisonsService {
     ];
   }
 
-  public function getLiaisonRequestsPaginated(Request $request){
+  public function getLiaisonRequestsPaginated(Request $request)
+  {
     switch ($request -> filter_option) {
       case 'to brokers':
         $requests = Liaisonrequest::query()
@@ -204,9 +205,11 @@ class LiaisonsService {
     }
   }
 
-  public function rejectRequestFromBroker($request, $log_service){
+  public function rejectRequestFromBroker($request, $log_service)
+  {
 
     $this -> changeRequestStatus($request -> broker_id, Auth::user() -> writer -> id, 3);
+    
     $broker = Broker::find($request -> broker_id) -> user;
     
     $my_message = $log_service -> createSystemMessage(Auth::user() -> id,

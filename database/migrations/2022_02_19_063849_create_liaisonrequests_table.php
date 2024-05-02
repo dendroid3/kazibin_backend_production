@@ -18,6 +18,7 @@ class CreateLiaisonrequestsTable extends Migration
             $table->longText('initiator_id');
             $table->integer('cost_per_page')->nullable();
             $table->string('pay_day')->nullable();
+            // 1 = unresolved, 3 = rejected, 4 = accepted
             $table->integer('status')->default(1);
             $table->uuid('broker_id')->nullable();
             $table->uuid('writer_id')->nullable();

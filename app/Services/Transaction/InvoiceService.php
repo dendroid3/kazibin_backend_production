@@ -21,7 +21,8 @@ use App\Models\Writer;
 use App\Events\InvoiceCreated;
 
 class InvoiceService{
-    public function createInvoice(Request $request, LogCreationService $log_creation){
+    public function createInvoice(Request $request, LogCreationService $log_creation)
+    {
         $invoice = new Invoice;
         $invoice -> status = 1;
         $invoice -> broker_id = $request -> broker_id;
@@ -118,7 +119,8 @@ class InvoiceService{
 
     }
 
-    public function markPaid(Request $request, LogCreationService $log_creation){
+    public function markPaid(Request $request, LogCreationService $log_creation)
+    {
         $invoice = Invoice::find($request -> invoice_id);
 
         if(Auth::user() -> writer -> id == $invoice -> writer_id){
@@ -174,12 +176,11 @@ class InvoiceService{
     }
 
     public function markPaidAsBroker($invoice, LogCreationService $log_creation){
-        
         $invoice -> status = 2;
         $invoice -> push();
 
         $broker = Auth::user();
-        $broker -> broker_score = $broker -> broker_score + count((explode("_", $invoice -> tasks_signature)) - 1);
+        $broker -> broker_score = $broker -> broker_score + (count((explode("_", $invoice -> tasks_signature))) - 1);
         $broker -> push();
 
         $task_ids = explode("_", $invoice -> tasks_signature);

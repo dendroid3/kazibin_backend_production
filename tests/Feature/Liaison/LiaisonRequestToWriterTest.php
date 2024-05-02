@@ -61,8 +61,6 @@ class LiaisonRequestToWriterTest extends TestCase
         ])->json('POST', '/api/liaison/request/writer', [
             'writer_id' => $writer_id,
         ]);
-        // dd($liaison_request_response);
-
 
         $liaison_request_response->assertStatus(200);
         $this -> assertSame($liaison_request_response['liaison_request']['writer_id'], $writer_id);
@@ -72,7 +70,8 @@ class LiaisonRequestToWriterTest extends TestCase
     public function test_writer_can_reject_request()
     {
         $this -> withoutExceptionHandling();
-        
+        $liaison_request = DB::table('liaisonrequests') -> truncate();
+
         $user = User::factory() -> make(['pass' => 'password']);
 
         $create_writer_response = $this->post('/api/register', $user -> toArray());
@@ -93,6 +92,7 @@ class LiaisonRequestToWriterTest extends TestCase
         $this -> assertSame($liaison_request_response['liaison_request']['writer_id'], $writer_id);
 
         //writer token
+        $this->refreshApplication();
 
         $writer_token = 'Bearer ' . $create_writer_response['token'];
 
@@ -106,6 +106,13 @@ class LiaisonRequestToWriterTest extends TestCase
         ]);
 
         $reject_liaison_response->assertStatus(200);
+        
+        $liaison_request = DB::table('liaisonrequests') -> where([
+            'writer_id' => $writer_id,
+            'broker_id' => $liaison_request_response['liaison_request']['broker_id'],
+        ]) -> first();
+
+        $this -> assertEquals($liaison_request -> status, 3);
 
     }
 
@@ -165,6 +172,14 @@ class LiaisonRequestToWriterTest extends TestCase
             ]) -> exists()
         );
 
+         
+        $liaison_request = DB::table('liaisonrequests') -> where([
+            'writer_id' => $writer_id,
+            'broker_id' => $broker_id,
+        ]) -> first();
+
+        $this -> assertEquals($liaison_request -> status, 4);
+
     }
 
     public function test_writer_can_fetch_brokers_to_request()
@@ -192,7 +207,6 @@ class LiaisonRequestToWriterTest extends TestCase
 
         $all_brokers_response->assertStatus(200);
         $this -> assertEquals($number_of_brokers, count($all_brokers_response["brokers"]));
-        // dd();
     }
 
     public function test_writer_can_fetch_requests_from_brokers()

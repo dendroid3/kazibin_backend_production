@@ -21,12 +21,14 @@ class MessageService{
         $from_broker = Auth::user() -> writer -> id == $task -> writer_id ? false : true;
         $system_message = 'New message from ' . Auth::user()-> code . " : " . Auth::user() -> username . ", on task, " . $task -> code . " : " .$task -> topic . ":";
 
+        Log::info(Auth::user() -> id);
         if($request -> hasFile('documents')){
             $files = $request -> file('documents');
             $messages = array();
             $i = 0;
             foreach ($files as $file) {
-                $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
+                // $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
+                $uploadedFileUrl = $i;
                 $message = new Taskmessage();
                 $message -> id = Str::orderedUuid() -> toString();
                 $message -> user_id = Auth::user() -> id;

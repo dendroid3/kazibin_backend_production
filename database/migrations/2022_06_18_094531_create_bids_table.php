@@ -15,6 +15,7 @@ class CreateBidsTable extends Migration
     {
         Schema::create('bids', function (Blueprint $table) {
             $table->uuid('id') -> primary() -> unique();
+            //1 = Unresolved, 2 = Pulled, 3 = Rejected, 4 = Won, 5 = Lost
             $table->integer('status')->default(1);
             $table->uuid('task_id');
             $table->uuid('broker_id');

@@ -14,7 +14,6 @@ class Invoice extends Model
         'broker_id',
         'writer_id',
         'status',
-        'jobs_signature',
         'amount',
         'code',
         'tasks_signature'
