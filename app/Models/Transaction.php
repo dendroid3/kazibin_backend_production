@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use \App\Traits\TraitUuid;
+use App\Traits\TraitUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Transaction extends Model
 {
@@ -22,12 +24,14 @@ class Transaction extends Model
         'amount'
     ];
 
-    public function User() {
+    public function User(): BelongsTo
+    {
         return $this -> belongsTo(User::class);
     }
 
-    
-    public function Revenue() {
+
+    public function Revenue(): HasOne
+    {
         return $this -> hasOne(Revenue::class);
     }
 

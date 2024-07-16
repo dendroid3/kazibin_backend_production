@@ -445,7 +445,6 @@ class TaskFactory extends Factory
             'difficulty' => Floor(rand(1,9)),
             'status' => Floor(rand(0,5)),
             'code' => $this->fakeCode(),
-            // 'writer_id' => '83e18258-0e31-4e83-a999-9daeacfff9ba'
         ];
     }
 

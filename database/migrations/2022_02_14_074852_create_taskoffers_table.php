@@ -15,6 +15,7 @@ class CreateTaskoffersTable extends Migration
     {
         Schema::create('taskoffers', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
+            //1 = unassigned, 2 = cancelled, 3 = rejected, 4 = accepted, 5 = pulled
             $table->integer('status')->default(1);
             $table->uuid('broker_id');
             $table->uuid('task_id');

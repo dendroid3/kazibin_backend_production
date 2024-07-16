@@ -283,8 +283,8 @@ class InvoiceService{
         $writers_i_owe = array();
 
         foreach ($writers_i_owe_ids as $writer_id) {
-            $writer_i_owe = Writer::find($writer_id)-> first() -> user() -> select('code', 'username') -> first();
-            array_push($writers_i_owe, $writer_i_owe);
+            $writer_I_owe = Writer::find($writer_id)-> first() -> user() -> select('code', 'username') -> first();
+            array_push($writers_i_owe, $writer_I_owe);
         }
 
         $brokers_that_owe_me_ids = Task::where('writer_id', Auth::user() -> writer ->id) 
@@ -341,7 +341,6 @@ class InvoiceService{
     }
     
     public function getInvoicesPaginated(Request $request){
-    
         if(!$request -> status){
             if($request -> credited){
                 $credited_invoices = Invoice::where('broker_id', Auth::user() -> broker -> id) -> paginate(10);
@@ -373,5 +372,4 @@ class InvoiceService{
             }
         }
     }
-
 }

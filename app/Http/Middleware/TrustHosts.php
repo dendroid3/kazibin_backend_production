@@ -18,6 +18,7 @@ class TrustHosts extends Middleware
             'http://localhost:8080',
             'http://localhost',
             'https://kazibin.com',
+            'http://192.168.1.101:8080/'
         ];
     }
 }

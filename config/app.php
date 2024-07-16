@@ -177,7 +177,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         // App\Providers\TelescopeServiceProvider::class,
         FruitCake\Cors\CorsServiceProvider::class,
-        Telegram\Bot\Laravel\TelegramServiceProvider::class,
     ],
 
     /*

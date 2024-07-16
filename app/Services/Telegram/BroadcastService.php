@@ -5,12 +5,13 @@ namespace App\Services\Telegram;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Carbon\CarbonInterface;
 use Carbon\CarbonInterval;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class BroadcastService {
   public function braodcastToTaskChannel($text){
     Telegram::sendMessage([
-      'chat_id' => env('TELEGRAM_CHANNEL_ID', '-1001693325642'),
+      'chat_id' => env('TELEGRAM_CHANNEL_ID'),
       'parse_mode' => 'HTML',
       'text' => $text
     ]);
@@ -21,15 +22,20 @@ class BroadcastService {
     "Error Message: " . $error['message'] . "\n" .
     "User Phone Number: " . $error['user_phone_number'];
     Telegram::sendMessage([
-      'chat_id' => env('TELEGRAM_CHANNEL_ID', '-1001693325642'),
+      'chat_id' => env('TELEGRAM_CHANNEL_ID'),
+      'thread_id' => 3,
       'parse_mode' => 'HTML',
       'text' => $text
     ]);
   }
 
   public function prepareForBroadcasting($task){
+    $task_url = env('APP_CLIENT', "https://app.kazibin.com") 
+    . "/t/"
+    . $task -> code;
+
     $text = "<u><b>" . $task->code .": </b>" 
-    . "<b>" . $task->unit . " " . $task->type . "</b></u> \n \n"
+    . "<b>" . $task->unit . " " . strtoupper($task->type) . "</b></u> \n \n"
     . "Due on: <b>"
     . $this -> checkDueTimeOn($task -> expiry_time) . "</b> \n"
     . "Time left: <b>"
@@ -40,9 +46,7 @@ class BroadcastService {
     . ($task -> pages ?  "Cost Per Page: <b>" . $task -> page_cost . "</b> \n" : '')
     . "Amount: "
     . "<b>" . $task->full_pay . "</b> \n  \n"
-    . env('APP_CLIENT', "https://app.kazibin.com") 
-    . "/t/"
-    . $task -> code;
+    . '<a href="' . $task_url. '">View Task</a>';
 
     $this -> braodcastToTaskChannel($text);
   }

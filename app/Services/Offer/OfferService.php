@@ -80,7 +80,8 @@ class OfferService
     return $writer_message;
   }
 
-  public function acceptOffer(Request $request, LogCreationService $log_service){
+  public function acceptOffer(Request $request, LogCreationService $log_service)
+  {
     $offer = Taskoffer::find($request -> offer_id);
 
     $task = Task::find($request -> task_id);
@@ -160,7 +161,8 @@ class OfferService
     return $broker_message;
   }
 
-  public function getMine(){
+  public function getMine()
+  {
     $task_offers = Taskoffer::query() 
                 -> where('writer_id', Auth::user() -> writer -> id) 
                 -> orderBy('created_at', 'desc') 
@@ -187,8 +189,8 @@ class OfferService
     }
   }
 
-  public function getMinePaginated(Request $request){
-    
+  public function getMinePaginated(Request $request)
+  {
     $query = Taskoffer::where('writer_id', Auth::user() -> writer -> id);
     if($request['status']){
       $query -> where('status', $request['status']);
@@ -216,7 +218,8 @@ class OfferService
     }
   }
 
-  public function getOfferMessages(Request $request){
+  public function getOfferMessages(Request $request)
+  {
     $messages = Taskoffermessage::query()
                   -> where('taskoffer_id', $request -> task_offer_id) 
                   -> orderBy('created_at', 'ASC')
@@ -233,7 +236,8 @@ class OfferService
     return $messages;
   }
 
-  public function  sendOfferMessage(Request $request){
+  public function  sendOfferMessage(Request $request)
+  {
     $offer = Taskoffer::find($request -> task_offer_id);
     $reciever_id = Auth::user() -> writer -> id == $offer -> writer -> id ? $offer -> task -> broker -> user -> id : $offer -> writer -> user -> id;
     $from_broker = Auth::user() -> writer -> id == $offer -> writer -> id ? false : true;
@@ -244,8 +248,8 @@ class OfferService
       $messages = array();
       $i = 0;
       foreach ($files as $file) {
-          $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
-
+          // $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
+          $uploadedFileUrl = $i;
           $task_offer_message = new Taskoffermessage();
           $task_offer_message -> id = Str::orderedUuid() -> toString();
           $task_offer_message -> user_id = Auth::user() -> id;
@@ -278,7 +282,8 @@ class OfferService
 
   }
   
-  public function migrateOfferMessagesToJobMessages($offer, $task_id){
+  public function migrateOfferMessagesToJobMessages($offer, $task_id)
+  {
 
     $text_messages = DB::table('taskoffermessages')->where('taskoffer_id', $offer -> id)-> select(
       'message', 'user_id', 'created_at', 'type', 'delivered_at', 'read_at'

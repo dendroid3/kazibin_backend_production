@@ -12,7 +12,7 @@
         "cloudinary-labs/cloudinary-laravel": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "irazasyed/telegram-bot-sdk": "^3.5",
+        "irazasyed/telegram-bot-sdk": "^3.9",
         "laravel/framework": "^8.75",
         "laravel/passport": "^10.2",
         "laravel/sanctum": "^2.11",

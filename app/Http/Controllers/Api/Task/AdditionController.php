@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Services\Offer\OfferService;
+use Illuminate\Support\Facades\Log;
 use App\Services\Task\AdditionService;
 use App\Services\Telegram\BroadcastService;
 use App\Services\SystemLog\LogCreationService;
@@ -14,7 +15,8 @@ use App\Models\Transaction;
 
 class AdditionController extends Controller
 {
-    public function index(Request $request, AdditionService $addition_service){
+    public function index(Request $request, AdditionService $addition_service): \Illuminate\Http\JsonResponse
+    {
         //initialise task upload
 
         $response = $addition_service -> addInitialTaskDetails($request);
@@ -24,14 +26,15 @@ class AdditionController extends Controller
                 'errors' => $response['errors']
             ], 201);
         };
-        
+
         return  response() -> json([
             'task' => $response['task']
         ]);
 
     }
 
-    public function stepTwo(Request $request, AdditionService $addition_service){
+    public function stepTwo(Request $request, AdditionService $addition_service): \Illuminate\Http\JsonResponse
+    {
         //add files to task
 
         return response() -> json([
@@ -40,7 +43,8 @@ class AdditionController extends Controller
 
     }
 
-    public function stepThree(Request $request, AdditionService $addition_service){
+    public function stepThree(Request $request, AdditionService $addition_service): \Illuminate\Http\JsonResponse
+    {
         //about page count
 
         return response() -> json([
@@ -49,7 +53,8 @@ class AdditionController extends Controller
 
     }
 
-    public function stepFour(Request $request, AdditionService $addition_service){
+    public function stepFour(Request $request, AdditionService $addition_service): \Illuminate\Http\JsonResponse
+    {
         //this step adds the deadline for the task. This record shall be the ine used to give the writer and broker reminders
 
         return response() -> json([
@@ -57,9 +62,10 @@ class AdditionController extends Controller
         ]);
     }
 
-    public function stepFive(Request $request, AdditionService $addition_service){
+    public function stepFive(Request $request, AdditionService $addition_service): \Illuminate\Http\JsonResponse
+    {
         /*
-            this step adds the payment mode for the task. This record will then be used to give the writer and broker reminders as well. 
+            this step adds the payment mode for the task. This record will then be used to give the writer and broker reminders as well.
                 Date 28/05/1965 means payment on delivery
                 Date 17/09/1997 means payment on approval
         */
@@ -70,19 +76,20 @@ class AdditionController extends Controller
     }
 
     public function stepSix(
-        Request $request, 
-        AdditionService $addition_service, 
-        BroadcastService $broadcast, 
-        OfferService $offer_service, 
+        Request $request,
+        AdditionService $addition_service,
+        BroadcastService $broadcast,
+        OfferService $offer_service,
         LogCreationService $log_service
-    ){
+    ):\Illuminate\Http\jsonResponse
+    {
         /*
             This step adds the dificulty of the task as assumed by the broker.
             It also describes who should take the task. If the task is offered to public then the 'takers' field is left null
-            If the task is offered to one or more writers then the field houses the ids of the writers separated by the underscore character '_'. All writers in the 'takers' field get 
+            If the task is offered to one or more writers then the field houses the ids of the writers separated by the underscore character '_'. All writers in the 'takers' field get
             an offer.
         */
-        
+
         $response = $addition_service -> addDifficultyAndTakers($request, $offer_service, $log_service);
 
         if(!$response['validated']){
@@ -91,11 +98,13 @@ class AdditionController extends Controller
             ], 201);
         }
 
- 
+
+
         if($request -> broadcast_on_telegram){
             /*
                 Broadcasts on the telegram channel: https://t.me/+DQlirEBXwUMxYWFk
             */
+            
             $transaction = new Transaction;
             $transaction -> user_id = Auth::user() -> id;
             $transaction -> type = "Credit";
@@ -109,25 +118,27 @@ class AdditionController extends Controller
 
         return response() -> json(
             $response['message']
-        ); 
+        );
     }
 
     public function deleteTask(
         Request $request,
-        AdditionService $addition_service, 
+        AdditionService $addition_service,
         LogCreationService $log_service
-    )
+    ): \Illuminate\Http\JsonResponse
     {
         return response() -> json([
             'message' => $addition_service -> deleteTask($request, $log_service)
         ]);
     }
 
-    public function changeDeadline(Request $request, AdditionService $addition_service){
+    public function changeDeadline(Request $request, AdditionService $addition_service): \Illuminate\Http\JsonResponse
+    {
         return response() -> json($addition_service -> changeDeadline($request));
     }
 
-    public function changePayment(Request $request, AdditionService $addition_service){
+    public function changePayment(Request $request, AdditionService $addition_service): \Illuminate\Http\JsonResponse
+    {
         return response() -> json($addition_service -> changePayment($request));
     }
 

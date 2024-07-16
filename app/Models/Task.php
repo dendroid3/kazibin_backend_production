@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use \App\Traits\TraitUuid;
+use App\Traits\TraitUuid;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 
 class Task extends Model
@@ -25,49 +28,59 @@ class Task extends Model
         'difficulty',
         'instructions',
         'type',
-        'taker',
+        'takers',
         'code',
         'expiry_time',
         'pay_day',
     ];
 
-    public function Files(){
+    public function Files(): HasMany
+    {
         return $this -> hasMany(Taskfile::class);
     }
 
-    public function Offers(){
+    public function Offers(): HasMany
+    {
         return $this -> hasMany(Taskoffer::class);
     }
 
-    public function Invoice(){
+    public function Invoice(): BelongsTo
+    {
         return $this -> belongsTo(Invoice::class);
     }
 
-    public function user(){
+    public function user(): BelongsTo
+    {
         return $this -> belongsTo(User::class);
     }
 
-    public function broker(){
+    public function broker(): BelongsTo
+    {
         return $this -> belongsTo(Broker::class);
     }
 
-    public function writer(){
+    public function writer(): BelongsTo
+    {
         return $this -> belongsTo(Writer::class);
     }
 
-    public function bids(){
+    public function bids(): HasMany
+    {
         return $this -> hasMany(Bid::class);
     }
  
-    public function ratings(){
+    public function ratings(): HasMany
+    {
         return $this-> hasMany(Rating::class);
     }
 
-    public function Timestamps(){
+    public function Timestamps(): HasOne
+    {
         return $this -> hasOne(Timestamp::class);
     }
 
-    public function messages(){
+    public function messages(): HasMany
+    {
         return $this -> hasMany(Taskmessage::class);
     }
 

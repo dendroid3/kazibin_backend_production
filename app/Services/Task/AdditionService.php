@@ -21,10 +21,10 @@ use App\Events\TaskAdded;
 
 use App\Services\Offer\OfferService;
 
-class AdditionService 
+class AdditionService
 {
   public function addInitialTaskDetails(Request $request){
-    
+
     $validator = Validator::make($request->all(), [
       'topic' => ['required', 'min:5', 'bail'],
       'unit' => ['required', 'bail'],
@@ -36,12 +36,11 @@ class AdditionService
       return ['validated' => false, 'errors' => $validator -> errors()];
     }
 
-            
     $task = new Task;
+    $task -> topic = strtoupper($request -> topic);
     $task -> broker_id = Auth::user() -> broker -> id;
     $task -> status = 1;
     $task -> code = $request -> code ? strtoupper($request -> code) : strtoupper(Str::random(2)) . '-' . strtoupper(Str::random(3));
-    $task -> topic = strtoupper($request -> topic);
     $task -> unit = strtoupper($request -> unit);
     $task -> type = $request -> type;
     $task -> instructions = $request -> instructions;
@@ -91,7 +90,7 @@ class AdditionService
   }
 
   public function addDeadline(Request $request){
-    
+
     $task = Task::find($request -> task_id);
     $task -> expiry_time = $request -> expiry_time;
     $task -> push();
@@ -102,7 +101,7 @@ class AdditionService
   public function addPayInformation(Request $request)
   {
     /*
-      this step adds the payment mode for the task. This record will then be used to give the writer and broker reminders as well. 
+      this step adds the payment mode for the task. This record will then be used to give the writer and broker reminders as well.
         Date 28/05/1965 means payment on delivery
         Date 17/09/1997 means payment on approval
     */
@@ -119,11 +118,7 @@ class AdditionService
     $task = Task::find($request -> task_id);
     $task -> takers = $request -> takers;
 
-    if(!$request ->takers){
-      // ??
-    }
-
-    if($request -> difficulty){
+      if($request -> difficulty){
       $task -> difficulty = $request -> difficulty;
     } else {
       return ['validated' => false, 'error' => 'You need to enter the difficulty level of this task'];
@@ -141,7 +136,7 @@ class AdditionService
             $offer_service -> create($task, $log_service, $taker);
           }
         }
-        
+
       }
 
       $broker_message = $log_service -> createTaskLog($task);
@@ -165,7 +160,7 @@ class AdditionService
   public function deleteTask(Request $request, LogCreationService $log_service)
   {
     $task = Task::find($request -> task_id);
-    
+
     if(($task -> bids -> count() === 0) && ($task -> offers -> count() === 0) && ($task -> status === 1)){
       $broker_message = "You deleted task code " . $task -> code . ".";
       $log_service -> createSystemMessage(
@@ -185,12 +180,12 @@ class AdditionService
         'Task Deleted'
       );
 
-      foreach ($task -> bids as $bids) {
+      foreach ($task -> bids as $bid) {
         $writer_message = "Bid on " . $task -> code . ": " . $task -> topic . " pulled because " . Auth::user() -> username . " deleted the task.";
 
         $bid -> status = 2;
         $bid-> push();
-        
+
         $log_service -> createSystemMessage(
           $bid -> writer -> user -> id,
           $writer_message,
@@ -209,12 +204,12 @@ class AdditionService
         'Bid Pulled'
       );
 
-      foreach ($task -> offers as $offers) {
+      foreach ($task -> offers as $offer) {
         $writer_message = "Offer on " . $task -> code . ": " . $task -> topic . " pulled because " . Auth::user() -> username . " deleted the task.";
 
         $offer -> status = 2;
         $offer -> push();
-        
+
         $log_service -> createSystemMessage(
           $offer -> writer -> user -> id,
           $writer_message,
@@ -234,7 +229,7 @@ class AdditionService
 
   public function changeDeadline(Request $request)
   {
-    
+
     $task = Task::find($request -> task_id);
     $task -> expiry_time = $request -> expiry_time;
     $task -> push();
@@ -245,11 +240,11 @@ class AdditionService
     $task_message -> type = 'text';
     $task_message -> task_id = $request -> task_id;
     $task_message -> message = '--- Deadline changed to ' . $request -> expiry_time . ' ---' ;
-    
+
     if($task -> status > 1){
       $task_message -> save();
       event(new TaskMessageSent($task_message, $task -> writer -> user -> id, false, 'Change in deadline on task '. $task -> code . " : " . $task -> topic, 565));
-    
+
     }
     ($task -> status > 1) ? $message_to_send = $task_message : $message_to_send = "Deadline Changed";
 
@@ -260,12 +255,12 @@ class AdditionService
 
   }
 
-  
+
   public function changePayment(Request $request)
   {
 
     $task = Task::find($request -> task_id);
-    
+
     $task_message = new Taskmessage;
     $task_message -> id = Str::orderedUuid() -> toString();
     $task_message -> user_id = 1;
@@ -276,7 +271,7 @@ class AdditionService
         $task -> full_pay = $request -> full_pay;
         $task -> pages = null;
         $task -> page_cost = null;
-        
+
         $task_message -> message = '--- Payment terms changed to ' . $request -> full_pay . 'KES for the whole task---' ;
     } else {
         $task -> pages = $request -> pages;
