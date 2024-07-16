@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Mpesa;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Http;
 
 class TransactionService{
     public function claimTransaction(Request $request, LogCreationService $log_service)
@@ -61,6 +62,42 @@ class TransactionService{
         $transactions = Auth::user() -> transactions() -> orderBy('created_at', 'DESC') -> paginate(10);#-> take(10) -> get();
 
         return $transactions;
+    }
+
+    public function getAccessToken()
+    {
+        $response = Http::withHeaders([
+            "Authorization" => "Basic " . base64_encode( env('MPESA_CONSUMER_KEY') .':'.env('MPESA_CONSUMER_SECRET') )
+        ])
+        -> get("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials");
+
+        Log::info($response);
+        
+        return $response['access_token'];
+    }
+
+    public function requestForCompletionOfTransactionFromCustomer(Request $request)
+    {
+        $response = Http::withHeaders([
+            "Authorization" => "Bearer " . $this -> getAccessToken()
+        ])
+        -> post('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', [
+            "BusinessShortCode" => 174379,
+            "Password" => "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjQwNzE2MTg0ODUy",
+            "Timestamp" => "20240716184852",
+            "TransactionType" => "CustomerPayBillOnline",
+            "Amount" => $request -> amount,
+            "PartyA" => $request -> phone_number,
+            "PartyB" => 174379,
+            "PhoneNumber" => 254705715099,
+            "CallBackURL" => "https://mydomain.com/path",
+            "AccountReference" => Auth::user() -> code . ": " . Auth::user() -> username,
+            "TransactionDesc" => "Payment of X" 
+        ]);
+
+        Log::info($request -> all());
+        Log::info($response);
+        return $response;
     }
     
 }

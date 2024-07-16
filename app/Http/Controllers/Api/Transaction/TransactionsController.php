@@ -29,4 +29,11 @@ class TransactionsController extends Controller
             $transaction_service -> getTransactionsPaginated($request)
         );
     }
+
+    public function depositFromMpesa(Request $request, TransactionService $transaction_service)
+    {
+        return response() -> json(
+            $transaction_service -> requestForCompletionOfTransactionFromCustomer($request)
+        );
+    }
 }
