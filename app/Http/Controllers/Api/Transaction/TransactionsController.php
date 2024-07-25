@@ -36,4 +36,11 @@ class TransactionsController extends Controller
             $transaction_service -> requestForCompletionOfTransactionFromCustomer($request)
         );
     }
+
+    public function recordTransaction(Request $request, TransactionService $transaction_service)
+    {
+        return response() -> json(
+            $transaction_service -> recordTransaction($request)
+        );
+    }
 }

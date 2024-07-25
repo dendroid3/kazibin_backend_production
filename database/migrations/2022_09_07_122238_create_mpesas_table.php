@@ -15,15 +15,12 @@ class CreateMpesasTable extends Migration
     {
         Schema::create('mpesas', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
-            $table->string('first_name');
-            $table->string('middle_name')->default('Doe');
-            $table->string('last_name')->default('Doe');
-            $table->uuid('user_id')->nullable();
-            $table->integer('msisdn');
-            $table->string('bill_ref_number');
-            $table->string('mpesa_transaction_id');
-            $table->dateTime('transation_time');
-            $table->integer('status')->default(1);
+            $table->string('checkout_request_id');
+            $table->uuid('user_id');
+            $table->bigInteger('paying_phone_number');
+            $table->string('receipt_number')->nullable();
+            $table->dateTime('transaction_date')->nullable();
+            $table->integer('status')->default(0);
             $table->integer('amount');
             $table->timestamps();
         });

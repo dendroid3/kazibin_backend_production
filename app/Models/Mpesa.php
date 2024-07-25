@@ -12,15 +12,13 @@ class Mpesa extends Model
     
     protected $fillable = [
         'id',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'msisdn',
-        'bill_ref_number',
-        'mpesa_transaction_id',
-        'transation_time',
+        'checkout_request_id',
+        'user_id',
         'status',
-        'amount'
+        'amount',
+        'paying_phone_number',
+        'receipt_number',
+        'transaction_date'
     ];
 
     public function User(){
