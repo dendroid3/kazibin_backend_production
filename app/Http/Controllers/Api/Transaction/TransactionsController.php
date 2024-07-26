@@ -32,9 +32,15 @@ class TransactionsController extends Controller
 
     public function depositFromMpesa(Request $request, TransactionService $transaction_service)
     {
-        return response() -> json(
-            $transaction_service -> requestForCompletionOfTransactionFromCustomer($request)
-        );
+        $response = $transaction_service -> requestForCompletionOfTransactionFromCustomer($request);
+
+        if(isset($response['message'])) {
+            return response() -> json([
+                'message' => $response['message']
+            ], 500);
+        } else {
+            return response() -> json($response);
+        }
     }
 
     public function recordTransaction(Request $request, TransactionService $transaction_service)

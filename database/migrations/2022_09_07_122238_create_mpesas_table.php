@@ -20,6 +20,7 @@ class CreateMpesasTable extends Migration
             $table->bigInteger('paying_phone_number');
             $table->string('receipt_number')->nullable();
             $table->dateTime('transaction_date')->nullable();
+            // status 0 = success!
             $table->integer('status')->default(0);
             $table->integer('amount');
             $table->timestamps();

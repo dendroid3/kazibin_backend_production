@@ -72,14 +72,11 @@ class TransactionService{
         ])
         -> get("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials");
 
-        Log::info($response);
-        
         return $response['access_token'];
     }
 
     public function requestForCompletionOfTransactionFromCustomer(Request $request)
     {
-
         $response = Http::withHeaders([
             "Authorization" => "Bearer " . $this -> getAccessToken()
         ])
@@ -92,39 +89,58 @@ class TransactionService{
             "PartyA" => $request -> phone_number,
             "PartyB" => 174379,
             "PhoneNumber" => $request -> phone_number,
-            "CallBackURL" => "https://755b-41-89-227-171.ngrok-free.app/api/transaction/recordTransaction",
+            "CallBackURL" => env('MPESA_DEPOSIT_REQUEST_CALLBACK'),//"https://755b-41-89-227-171.ngrok-free.app/api/transaction/recordTransaction",
             "AccountReference" => Auth::user() -> code,
             "TransactionDesc" => "Payment of X" 
         ]);
 
-        if($response['errorCode'])
+        $decoded_response = json_decode($response);
+
+        if(isset($decoded_response -> errorCode))
         {
-            $Mpesa -> status = 1;
-            $Mpesa -> push();
-            return false;
+            if($decoded_response -> errorCode)
+            {
+                return [
+                    'message' => 'Could not initiate transaction, kindly try again after a few minutes'
+                ];
+            }
         }
 
-        // request for MPesa PIN not made
-        if($response['ResponseCode'] > 0)
-        {
-            return false;
-        }
-
-        // request for MPesa PIN made successfuly
         $Mpesa = new Mpesa;
         $Mpesa -> checkout_request_id = $response['CheckoutRequestID'];
         $Mpesa -> user_id = Auth::user() -> id;
-        $Mpesa -> status = 0;
         $Mpesa -> amount = $request['amount'];
         $Mpesa -> paying_phone_number = $request['phone_number'];
+
+        // request for MPesa PIN not made
+        if(isset($decoded_response -> ResponseCode))
+        {
+            if($decoded_response -> ResponseCode > 0)
+            {
+                Log::info("ResponseCode more than 0");
+                $Mpesa -> status = 1;
+                $Mpesa -> save();
+                return [
+                    'message' => 'Could not initiate transaction, kindly try again after a few minutes'
+                ];
+            }   
+        }
+
+        // request for MPesa PIN made successfully : the status will be the default 0!
         $Mpesa -> save();
 
-        return $response;
+        return true;
     }
 
     public function recordTransaction(Request $request)
     {
+        Log::info("recordTransaction");
+        Log::info($request ->all());
+
         $Mpesa = Mpesa::query() -> where('checkout_request_id', $request['Body']['stkCallback']['CheckoutRequestID']) -> first();
+
+        Log::info("Mpesa");
+        Log::info($Mpesa);
 
         if($request['Body']['stkCallback']['ResultCode'] > 0)
         {
