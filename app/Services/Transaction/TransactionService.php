@@ -77,6 +77,9 @@ class TransactionService{
 
     public function requestForCompletionOfTransactionFromCustomer(Request $request)
     {
+        Log::info("request -> data");
+        Log::info($request -> all());
+
         $response = Http::withHeaders([
             "Authorization" => "Bearer " . $this -> getAccessToken()
         ])
@@ -93,6 +96,8 @@ class TransactionService{
             "AccountReference" => Auth::user() -> code,
             "TransactionDesc" => "Payment of X" 
         ]);
+
+        Log::info($response);
 
         $decoded_response = json_decode($response);
 
