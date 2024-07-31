@@ -443,6 +443,7 @@ class TaskFactory extends Factory
             'full_pay' => $pages * $page_cost,
             'pay_day' => $this -> fakePayDay(),
             'difficulty' => Floor(rand(1,9)),
+            'verified_only' => (Floor(rand(1,9)) > 2) ? true : false,
             'status' => Floor(rand(0,5)),
             'code' => $this->fakeCode(),
         ];

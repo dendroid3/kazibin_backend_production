@@ -115,14 +115,17 @@ class AdditionService
 
   public function addDifficultyAndTakers(Request $request, OfferService $offer_service, LogCreationService $log_service)
   {
+    Log::info($request -> all());
     $task = Task::find($request -> task_id);
     $task -> takers = $request -> takers;
+    $task -> verified_only = $request -> verified_only ? true : false;
 
-      if($request -> difficulty){
+    if($request -> difficulty){
       $task -> difficulty = $request -> difficulty;
     } else {
       return ['validated' => false, 'error' => 'You need to enter the difficulty level of this task'];
     }
+
     $task -> updated_at = Carbon::now();
     $task -> push();
 

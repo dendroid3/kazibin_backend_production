@@ -18,10 +18,14 @@ class VerificationsController extends Controller
     //additionally, they should be able to check graduation credentials
     public function initiateVerification(Request $request, LogCreationService $log_service, TransactionService $transaction_service)
     {
+        // Change this destination to Digital Ocean Spaces.
+
         $front_url = cloudinary()->upload($request->file('front_id')->getRealPath())->getSecurePath();
         $back_id = cloudinary()->upload($request->file('back_id')->getRealPath())->getSecurePath();
         $passport_url = cloudinary()->upload($request->file('passport')->getRealPath())->getSecurePath();
 
+        // We do not need to claim transactions anynmore!
+        
         $transaction_service -> claimTransaction($request, $log_service);
         
         $transaction = new Transaction;
@@ -44,10 +48,8 @@ class VerificationsController extends Controller
         $revenue -> type = "Verification";
         $revenue -> amount = 500;
         $revenue -> save();
-    
 
         $user_message = 'You successfully initialised the verification process, the admins will go through your application and resolve in, at most, 72 hours.';
-
 
         $log_service -> createSystemMessage(
             Auth::user() -> id,

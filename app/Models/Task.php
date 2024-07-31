@@ -32,6 +32,7 @@ class Task extends Model
         'code',
         'expiry_time',
         'pay_day',
+        'verified_only'
     ];
 
     public function Files(): HasMany

@@ -37,14 +37,25 @@ class BidsService {
             return 'false';
         }
     }
+
+    // Check if the task is verified only and if the user is verified
+    $task = Task::find($request -> task_id);
+
+    if($task -> verified_only){
+      if(!Auth::user() -> credential_verification) {
+        return [
+          "success" => false,
+          "message" => "Only verified users are allowed to bid on this task"
+        ];
+      }
+    }
+
     $bid = new Bid;
     $bid -> id = Str::orderedUuid() -> toString();
     $bid -> writer_id = Auth::user() -> writer -> id;
     $bid -> task_id = $request -> task_id;
     $bid -> broker_id = $request -> broker_id;
     $bid -> save();
-
-    $task = Task::find($request -> task_id);
 
     $broker = $task -> broker -> user;
     $writer_message = 'Bid made to broker username: ' . $broker -> username . ". Code: " .

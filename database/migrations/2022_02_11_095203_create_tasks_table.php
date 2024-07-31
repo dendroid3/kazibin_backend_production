@@ -30,6 +30,7 @@ class CreateTasksTable extends Migration
             $table->string('type');
             $table->string('takers')->nullable() ->nullable();
             $table->string('code')->nullable();
+            $table->boolean('verified_only')->default(false);
             $table->dateTime('expiry_time')->nullable();
             $table->dateTime('pay_day') ->nullable();
             $table->timestamps();
