@@ -14,9 +14,6 @@ return [
     |
     | - name: The *personal* name you would like to refer to your bot as.
     |
-    |       - username: Your Telegram Bot's Username.
-    |                       Example: (string) 'BotFather'.
-    |
     |       - token:    Your Telegram Bot's Access Token.
                         Refer for more details: https://core.telegram.org/bots#botfather
     |                   Example: (string) '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11'.
@@ -31,21 +28,24 @@ return [
     |                       Acme\Project\Commands\BotFather\ByeCommand::class,
     |             ]
     */
-    'bots'                         => [
-        'mybot' => [
-            'username'            => 'kazibin_bot',
-            'token'               => env('TELEGRAM_BOT_TOKEN', 'YOUR-BOT-TOKEN'),
+    'bots' => [
+        // @kazibin_notifications_bot
+        'group_notifications_bot' => [
+            'username'            => 'kazibin_tasks',
+            'token'               => env('TELEGRAM_NOTIFICATIONS_BOT_TOKEN', 'YOUR-BOT-TOKEN'),
             'certificate_path'    => env('TELEGRAM_CERTIFICATE_PATH', ''),
             'webhook_url'         => env('TELEGRAM_WEBHOOK_URL', ''),
             'commands'            => [
-                //Acme\Project\Commands\MyTelegramBot\BotCommand::class
+                // App\TelegramCommands\StartCommand::class
             ],
         ],
 
-        //        'mySecondBot' => [
-        //            'username'  => 'AnotherTelegram_Bot',
-        //            'token' => '123456:abc',
-        //        ],
+        // 'personal_accounts_bot' => [
+        //     'username'  => 'kazibin',
+        //     'token' => env('TELEGRAM_ACCOUNTS_BOT_TOKEN'),
+        //     'commands' => [
+        //     ]
+        // ],
     ],
 
     /*
@@ -57,7 +57,7 @@ return [
     | your default bot for regular use.
     |
     */
-    'default'                      => 'mybot',
+    'default'                      => 'group_notifications_bot',
 
     /*
     |--------------------------------------------------------------------------
@@ -115,7 +115,7 @@ return [
     | will respond with a list of available commands and description.
     |
     */
-    'commands'                     => [
+    'commands' => [
         Telegram\Bot\Commands\HelpCommand::class,
     ],
 

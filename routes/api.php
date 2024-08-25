@@ -16,7 +16,7 @@ Route::post('/get_one_broker', [App\Http\Controllers\Api\Liaison\BrokersControll
 Route::get('/get_available_for_bidding_landing', [App\Http\Controllers\Api\Task\FetchController::class, 'getAllAvailableForBiddingLanding']) -> name('task.get_all_available_for_bidding_landing');
 Route::get('/get_total_available_tasks', [App\Http\Controllers\Api\Task\FetchController::class, 'getTotalAvailableTasks']) -> name('task.get_total_available_tasks');
 
-Route::middleware(['auth:api']) -> group(function(){
+Route::middleware(['auth:api', 'RecordLastActivity']) -> group(function(){
     Route::get('/resend_verification_email', [App\Http\Controllers\Api\Auth\RegisterController::class, 'resendVerificationEmail']) -> name('profile.create');
     Route::get('/is_account_verified', [App\Http\Controllers\Api\Auth\RegisterController::class, 'isAccountVerified']) -> name('profile.create');
     Route::post('/create_profile', [App\Http\Controllers\Api\Auth\RegisterController::class, 'createProfile']) -> name('profile.create');
@@ -44,7 +44,6 @@ Route::middleware(['auth:api']) -> group(function(){
     });
 
     Route::group(['prefix' => 'offer'], function(){
-
         Route::post('/pull', [App\Http\Controllers\Api\Offer\MainController::class, 'pull']) -> name('offer.pull');
         Route::get('/get_mine', [App\Http\Controllers\Api\Offer\MainController::class, 'getMine']) -> name('offer.get_mine');
         Route::post('/get_mine_paginated', [App\Http\Controllers\Api\Offer\MainController::class, 'getMinePaginated']) -> name('offer.get_mine_paginated');
@@ -68,9 +67,9 @@ Route::middleware(['auth:api']) -> group(function(){
         Route::post('/get_available_for_bidding_paginated', [App\Http\Controllers\Api\Task\FetchController::class, 'getAllAvailableForBiddingPaginated']) -> name('task.get_all_available_for_bidding');
         
         Route::get('/get_availability_details', [App\Http\Controllers\Api\Task\FetchController::class, 'getAvailabilityDetails']) -> name('task.get_availability_details')
-            ->withoutMiddleware(['auth:api']);
+            ->withoutMiddleware(['auth:api', 'RecordLastActivity']);
         Route::post('/get_for_bidding', [App\Http\Controllers\Api\Task\FetchController::class, 'getTaskForBidding']) -> name('task.get_for_bidding')
-            ->withoutMiddleware(['auth:api']);
+            ->withoutMiddleware(['auth:api', 'RecordLastActivity']);
         
         Route::post('/get_messages', [App\Http\Controllers\Api\Task\MessageController::class, 'getMessages']) -> name('task.get_messages');
         Route::post('/send_message', [App\Http\Controllers\Api\Task\MessageController::class, 'sendMessage']) -> name('task.send_message');
@@ -94,7 +93,7 @@ Route::middleware(['auth:api']) -> group(function(){
         Route::get('/get_mine_paginated', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'getTransactionsPaginated']) -> name('transactions.get_paginated');
         Route::post('/claim', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'claimTransaction']) -> name('transaction.claim');
         Route::post('/depositFromMpesa', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'depositFromMpesa']) -> name('transaction.deposit');
-        Route::post('/recordTransaction', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'recordTransaction']) -> name('transaction.record')->withoutMiddleware(['auth:api']);
+        Route::post('/recordTransaction', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'recordTransaction']) -> name('transaction.record')->withoutMiddleware(['auth:api', 'RecordLastActivity']);
         Route::post('/get_all_done_by_me_from_from_broker_for_creating_invoice', 
                 [
                     App\Http\Controllers\Api\Task\FetchController::class, 

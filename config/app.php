@@ -162,7 +162,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        BotMan\Tinker\TinkerServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -234,6 +234,7 @@ return [
         'OwnershipCheck' => App\Http\Middleware\OwnershipCheck::class,
         'OfferOwnershipCheck' => App\Http\Middleware\OfferOwnershipCheck::class,
         'canInitiateVerification' => App\Http\Middleware\canInitiateVerification::class,
+        'RecordLastActivity' => App\Http\Middleware\RecordLastActivity::class,
         'Telegram' => Telegram\Bot\Laravel\Facades\Telegram::class,
     ],
 

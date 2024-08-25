@@ -32,7 +32,8 @@ class Task extends Model
         'code',
         'expiry_time',
         'pay_day',
-        'verified_only'
+        'verified_only',
+        'telegram_message_id'
     ];
 
     public function Files(): HasMany

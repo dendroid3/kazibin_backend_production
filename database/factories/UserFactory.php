@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class UserFactory extends Factory
 {
@@ -24,8 +25,8 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'broker_score' => floor(rand(4,2000)),
             'writer_score' => floor(rand(4,2000)),
-            'code' => strtoupper(Str::random(2)) . '-' . strtoupper(Str::random(3))
-
+            'code' => strtoupper(Str::random(2)) . '-' . strtoupper(Str::random(3)),
+            'last_activity' => Carbon::now()
         ];
     }
 

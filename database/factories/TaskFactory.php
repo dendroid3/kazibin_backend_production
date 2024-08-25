@@ -445,7 +445,7 @@ class TaskFactory extends Factory
             'difficulty' => Floor(rand(1,9)),
             'verified_only' => (Floor(rand(1,9)) > 2) ? true : false,
             'status' => Floor(rand(0,5)),
-            'code' => $this->fakeCode(),
+            'code' => $this->fakeCode()
         ];
     }
 

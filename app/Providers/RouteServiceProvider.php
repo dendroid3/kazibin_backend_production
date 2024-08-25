@@ -37,6 +37,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
 
+        require(base_path('routes/botman.php'));
+
         $this->routes(function () {
             Route::prefix('api')
                 ->middleware('api')
@@ -47,6 +49,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
         });
+
     }
 
     /**

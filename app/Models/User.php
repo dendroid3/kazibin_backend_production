@@ -37,7 +37,8 @@ class User extends Authenticatable
         'pay_day',
         'broker_score',
         'writer_score',
-        'code'
+        'code',
+        'last_activity'
     ];
 
     /**

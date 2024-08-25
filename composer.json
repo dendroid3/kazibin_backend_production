@@ -9,6 +9,8 @@
         "barryvdh/laravel-cors": "^2.0",
         "barryvdh/laravel-dompdf": "^2.0",
         "beyondcode/laravel-websockets": "^1.13",
+        "botman/driver-telegram": "^2.0",
+        "botman/tinker": "dev-master",
         "cloudinary-labs/cloudinary-laravel": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

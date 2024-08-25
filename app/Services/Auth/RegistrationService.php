@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 use App\Mail\VerificationEmail;
 
@@ -37,6 +38,7 @@ class RegistrationService {
     $user -> broker_score = 1;
     $user -> writer_score = 1;
     $user -> password = Hash::make($request['pass']);
+    $user -> last_activity = Carbon::now();
     $user -> save();
 
     
