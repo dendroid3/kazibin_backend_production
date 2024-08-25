@@ -122,7 +122,7 @@
                                         </svg>
                                     </div>
 
-                                  Hello {{$user->username}} , Welcome!
+                                  HELLO {{$user->username}}, WELCOME!
                                 </div>
                             </div>
                             <div class="mt-12">

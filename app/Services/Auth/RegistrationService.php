@@ -8,9 +8,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
+// use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Mail;
 
 use App\Mail\VerificationEmail;
 
@@ -53,7 +54,7 @@ class RegistrationService {
       $user -> push(); 
     }
 
-    // $verification_email = $this->sendVerificationEmail($user);
+    $verification_email = $this->sendVerificationEmail($user);
     $user -> writer;
     $user -> broker;
 
@@ -65,7 +66,20 @@ class RegistrationService {
   }
 
   public function sendVerificationEmail($user){
-      \Mail::to($user -> email)->send(new \App\Mail\VerficationOfAccount($user));
+    Log::info("called");
+    Mail::to($user -> email)->send(new \App\Mail\VerficationOfAccount($user));
+
+
+    // Mail::send('mail.verification-email', [
+    //   'username' => $user -> username,
+    //   'email_verification' => $user -> email_verification,
+    //   'email' => 'kazibin66@gmail.com',
+    // ],
+    // function ($message) {
+    //   $message->from('accounts@api.kazibin.adilirealestate.com');
+    //   $message->to('kazibin66@gmail.com', 'Your Name')
+    //   ->subject('Verify Email');
+    // });
   }
 
   public function isAccountVerified(){
