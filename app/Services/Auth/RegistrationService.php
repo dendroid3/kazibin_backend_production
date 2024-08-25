@@ -66,7 +66,6 @@ class RegistrationService {
   }
 
   public function sendVerificationEmail($user){
-    Log::info("called");
     Mail::to($user -> email)->send(new \App\Mail\VerficationOfAccount($user));
 
 

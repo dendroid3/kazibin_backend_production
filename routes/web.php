@@ -74,22 +74,20 @@ Route::get('/webhook', function () {
 });
 
 Route::post('/webhook_res', function ($request) {
-    Log::info($request -> all());
+    // Log::info($request -> all());
 });
 
 Route::post('/webhooked', function (Request $request) {
     // dd(Telegram::commandsHandler(true));
     // dd(Telegram::getWebhookUpdate());
-    Log::info($request);
-    Log::info("Called");
+    
     // dd(Telegram::addCommand(App\TelegramCommands\startCommand::class));
     return response() -> json(['error' => 'forbidden'], 403);
 });
 Route::get('{any}', function () {
     // dd(Telegram::commandsHandler(true));
     // dd(Telegram::getWebhookUpdate());
-    Log::info($request);
-    Log::info("Called");
+    
     // dd(Telegram::addCommand(App\TelegramCommands\startCommand::class));
     return response() -> json(['error' => 'forbidden'], 403);
 });
