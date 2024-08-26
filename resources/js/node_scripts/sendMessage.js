@@ -89,7 +89,7 @@ fs.writeFile('log.txt', "Part 0 reached", err => {
   // });
 
   // Search for the group
-  await page.waitForSelector(`span[title="${groupName}"]`, { timeout: 300000 });
+  await page.waitForSelector(`span[title="${groupName}"]`, { timeout: 999999 });
   await page.click(`span[title="${groupName}"]`);
 
   // Wait for the chat to load
