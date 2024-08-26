@@ -19,6 +19,7 @@ use App\Events\BidMade;
 use App\Events\Loginfor;
 use App\Events\Taskoffermessage;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client;
 
 use App\Mail\VerficationOfAccount;
 
@@ -27,6 +28,48 @@ Route::match(['get', 'post'], '/botman', function() {
     $botman = app('botman');
 
     $botman->listen();
+});
+
+Route::get('/wp', function() {
+    // $client = new Client();
+    // $response = $client->post('https://api.gupshup.io/sm/api/v1/msg', [
+    //     'headers' => [
+    //         'apikey' => 'whqhdgz9iucackfblxd0vkhdyaxerrwx',
+    //         'Content-Type' => 'application/x-www-form-urlencoded'
+    //     ],
+    //     'form_params' => [
+    //         'channel' => 'whatsapp',
+    //         'source' => '+254797727253',
+    //         'destination' => '+254705715099',
+    //         'message' => 'Hello, this is a test message!'
+    //     ]
+    // ]);
+
+
+    // echo $response->getBody();
+     // Create a new Guzzle HTTP client
+     $client = new Client();
+
+     // Define the URL
+     $url = 'https://api.ultramsg.com/instance93084/messages/chat';
+ 
+     // Define the parameters to be sent in the POST request
+     $params = [
+         'token' => 'krqt75rr7gzh0bhl',
+         'to'    => '120363328427282938@g.us',
+         'body'  => 'Blah blah fish cake'
+     ];
+ 
+     // Send the POST request
+     $response = $client->post($url, [
+         'headers' => [
+             'Content-Type' => 'application/x-www-form-urlencoded',
+         ],
+         'form_params' => $params,
+     ]);
+ 
+     // Return or process the response as needed
+     return $response->getBody()->getContents();
 });
 
 

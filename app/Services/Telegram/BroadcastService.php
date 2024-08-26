@@ -6,6 +6,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 use Carbon\CarbonInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 use Carbon\Carbon;
 
 class BroadcastService {
@@ -29,6 +30,52 @@ class BroadcastService {
     ]);
   }
 
+  public function broadcatToWhatsAppGroup($task) {
+    $task_url = env('APP_CLIENT', "https://app.kazibin.com") 
+    . "/t/"
+    . $task -> code;
+
+    $text = "*" . $task->code .": " 
+    . $task->unit . " " . strtoupper($task->type) . "* -- --"
+    . "Due on: *" 
+    . $this -> checkDueTimeOn($task -> expiry_time) . "* --"
+    . "Time left: *"
+    . $this -> checkDueTimeIn($task -> expiry_time) . "* -- --"
+    . "Payment: *"
+    . $this -> checkPayDay($task -> pay_day) . ".* --"
+    . ($task -> pages ?  "Pages: *" . $task -> pages . "* --" : '')
+    . ($task -> pages ?  "Cost Per Page: *" . $task -> page_cost . "* --" : '')
+    . "Amount: "
+    . "*" . $task->full_pay . "*--  --"
+    . $task_url;
+
+    $command = 'whatsapp:send "' . $text . '"';
+    Log::info($command);
+
+    Artisan::call($command);
+
+    // $client = new Client();
+
+    // // Define the URL
+    // $url = 'https://api.ultramsg.com/instance93084/messages/chat';
+
+    // // Define the parameters to be sent in the POST request
+    // $params = [
+    //     'token' => 'krqt75rr7gzh0bhl',
+    //     'to'    => '120363328427282938@g.us',
+    //     'body'  => $text
+    // ];
+
+    // // Send the POST request
+    // $response = $client->post($url, [
+    //     'headers' => [
+    //         'Content-Type' => 'application/x-www-form-urlencoded',
+    //     ],
+    //     'form_params' => $params,
+    // ]);
+
+  }
+
   public function prepareForBroadcasting($task){
     $task_url = env('APP_CLIENT', "https://app.kazibin.com") 
     . "/t/"
@@ -48,7 +95,8 @@ class BroadcastService {
     . "<b>" . $task->full_pay . "</b> \n  \n"
     . '<a href="' . $task_url. '">View Task</a>';
 
-    $this -> braodcastToTaskChannel($text);
+    // $this -> braodcastToTaskChannel($text);
+    $this -> broadcatToWhatsAppGroup($task);
   }
 
   public function checkDueTimeOn($date){

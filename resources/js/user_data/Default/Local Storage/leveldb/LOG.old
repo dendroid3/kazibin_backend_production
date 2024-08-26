@@ -1,0 +1,8 @@
+2024/08/26-16:14:44.147 2a2c Reusing MANIFEST C:\xampp\htdocs\active\kazibin\api\resources\js\user_data\Default\Local Storage\leveldb/MANIFEST-000001
+2024/08/26-16:14:44.158 2a2c Recovering log #6
+2024/08/26-16:14:44.158 2a2c Level-0 table #8: started
+2024/08/26-16:14:44.257 2a2c Level-0 table #8: 12109 bytes OK
+2024/08/26-16:14:44.258 2a2c Recovering log #8
+2024/08/26-16:14:44.262 2a2c Reusing old log C:\xampp\htdocs\active\kazibin\api\resources\js\user_data\Default\Local Storage\leveldb/000008.log 
+2024/08/26-16:14:44.419 2a2c Delete type=0 #6
+2024/08/26-16:14:44.419 2a2c Delete type=2 #9
