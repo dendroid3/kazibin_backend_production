@@ -28,13 +28,16 @@ class sendWhatsAppMessage extends Command
      */
     public function handle()
     {
-        $group = env('WHATSAPP_NOTIFICATIONS_GROUP');
+        $groupName = env('WHATSAPP_NOTIFICATIONS_GROUP');
         $message = $this->argument('message');
 
         // Run the Puppeteer script with the group name and message as arguments
-        $command = "node resources/js/sendMessage.js \"$group\" \"$message\"";
-        Log::info($command);
-        shell_exec($command);
+        // $command = "node resources/js/node_scripts/sendMessage.js \"$groupName\" \"$message\"";
+        // Log::info($command);
+        // shell_exec($command);
+
+        $command = escapeshellcmd("resources/js/node_scripts/run_puppeteer.sh '$groupName' '$message'");
+        $output = shell_exec($command);
 
         $this->info('Message sent!');
 

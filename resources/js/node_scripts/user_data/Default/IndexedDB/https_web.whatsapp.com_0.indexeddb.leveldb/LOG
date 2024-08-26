@@ -1,0 +1,20 @@
+2024/08/26-20:23:29.644 2a48 Reusing MANIFEST C:\xampp\htdocs\active\kazibin\api\resources\js\node_scripts\user_data\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/08/26-20:23:29.646 2a48 Recovering log #437
+2024/08/26-20:23:29.822 2a48 Reusing old log C:\xampp\htdocs\active\kazibin\api\resources\js\node_scripts\user_data\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000437.log 
+2024/08/26-20:23:29.823 2a48 Delete type=2 #433
+2024/08/26-20:23:29.823 2a48 Delete type=2 #434
+2024/08/26-20:23:29.823 2a48 Delete type=2 #435
+2024/08/26-20:23:32.800 3f2c Level-0 table #444: started
+2024/08/26-20:23:33.029 3f2c Level-0 table #444: 1322637 bytes OK
+2024/08/26-20:23:33.091 3f2c Delete type=0 #437
+2024/08/26-20:23:33.093 3a90 Manual compaction at level-0 from '\x00h\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00i\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/08/26-20:23:36.176 308c Compacting 1@1 + 3@2 files
+2024/08/26-20:23:37.258 308c Generated table #445@1: 74199 keys, 2227805 bytes
+2024/08/26-20:23:37.824 308c Generated table #446@1: 21470 keys, 2185896 bytes
+2024/08/26-20:23:38.242 308c Generated table #447@1: 68193 keys, 2176663 bytes
+2024/08/26-20:23:38.242 308c Compacted 1@1 + 3@2 files => 6590364 bytes
+2024/08/26-20:23:38.373 308c compacted to: files[ 0 0 3 0 0 0 0 ]
+2024/08/26-20:23:38.374 308c Delete type=2 #439
+2024/08/26-20:23:38.375 308c Delete type=2 #440
+2024/08/26-20:23:38.375 308c Delete type=2 #441
+2024/08/26-20:23:38.375 308c Delete type=2 #444
