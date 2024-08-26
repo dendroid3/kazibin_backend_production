@@ -38,68 +38,80 @@ fs.writeFile('log.txt', "Part 0 reached", err => {
     }
   });
   const page = await browser.newPage();
+  fs.writeFile('log.txt', "Part 3 reached", err => {
+    if (err) {
+      console.error(err);
+    } else {
+      // file written successfully
+    }
+  });
+  // Navigate to WhatsApp Web
+  await page.goto('https://web.whatsapp.com');
+  fs.writeFile('log.txt', "Part 4 reached", err => {
+    if (err) {
+      console.error(err);
+    } else {
+      // file written successfully
+    }
+  });
+  page.setDefaultTimeout(0)
+  // Delay to ensure elements are fully loaded
+  // await page.waitForTimeout(5000);
 
-  // // Navigate to WhatsApp Web
-  // await page.goto('https://web.whatsapp.com');
-  // fs.writeFile('log.txt', "Part 3 reached", err => {
-  //   if (err) {
-  //     console.error(err);
-  //   } else {
-  //     // file written successfully
-  //   }
-  // });
-  // page.setDefaultTimeout(0)
-  // // Delay to ensure elements are fully loaded
-  // // await page.waitForTimeout(5000);
+  // Check if already logged in
+  if (!page.$(`span[title="${groupName}"]`)) {
+    console.log('Please scan the QR code to login.');
+    fs.writeFile('log.txt', "Please scan the QR code to login.", err => {
+      if (err) {
+        console.error(err);
+      } else {
+        // file written successfully
+      }
+    });
+    await page.waitForSelector(`span[title="${groupName}"]`);
+  } else {
+    console.log('Logged in.');
+    fs.writeFile('log.txt', "Logged in.", err => {
+      if (err) {
+        console.error(err);
+      } else {
+        // file written successfully
+      }
+    });
+  }
 
-  // // Check if already logged in
-  // if (!page.$(`span[title="${groupName}"]`)) {
-  //   console.log('Please scan the QR code to login.');
-  //   fs.writeFile('log.txt', "Please scan the QR code to login.", err => {
-  //     if (err) {
-  //       console.error(err);
-  //     } else {
-  //       // file written successfully
-  //     }
-  //   });
-  //   await page.waitForSelector(`span[title="${groupName}"]`);
-  // } else {
-  //   console.log('Logged in.');
-  //   fs.writeFile('log.txt', "Logged in.", err => {
-  //     if (err) {
-  //       console.error(err);
-  //     } else {
-  //       // file written successfully
-  //     }
-  //   });
-  // }
+  // Search for the group
+  await page.waitForSelector(`span[title="${groupName}"]`, { timeout: 300000 });
+  await page.click(`span[title="${groupName}"]`);
 
-  // // Search for the group
-  // await page.waitForSelector(`span[title="${groupName}"]`, { timeout: 300000 });
-  // await page.click(`span[title="${groupName}"]`);
-
-  // // Wait for the chat to load
-  // await page.waitForSelector('._ak1r');
+  // Wait for the chat to load
+  await page.waitForSelector('._ak1r');
   
-  // // Type the message in the message box
-  // const messageBox = await page.$('._ak1r');
+  // Type the message in the message box
+  const messageBox = await page.$('._ak1r');
   
-  // const lines = message.split('--');
+  const lines = message.split('--');
 
-  // for (let i = 0; i < lines.length; i++) {
-  //     await messageBox.type(lines[i]);
-  //     if (i < lines.length - 1) {
-  //     // await messageBox.type(lines[1]);
+  for (let i = 0; i < lines.length; i++) {
+      await messageBox.type(lines[i]);
+      if (i < lines.length - 1) {
+      // await messageBox.type(lines[1]);
 
-  //       await page.keyboard.down('Shift');
-  //       await page.keyboard.press('Enter');
-  //       await page.keyboard.up('Shift');
-  //   }
-  // }
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('Enter');
+        await page.keyboard.up('Shift');
+    }
+  }
 
   // Send the message
   await page.keyboard.press('Enter');
-
+  fs.writeFile('log.txt', page, err => {
+    if (err) {
+      console.error(err);
+    } else {
+      // file written successfully
+    }
+  });
   // Close the browser
   setTimeout(() => {
     browser.close();
