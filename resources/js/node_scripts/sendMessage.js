@@ -32,7 +32,7 @@ const message = args[1];
   }
 
   // Search for the group
-  await page.waitForSelector(`span[title="${groupName} + 'Hello'"]`, { timeout: 30000 });
+  await page.waitForSelector(`span[title="${groupName}"]`, { timeout: 300000 });
   await page.click(`span[title="${groupName}"]`);
 
   // Wait for the chat to load
