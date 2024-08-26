@@ -58,14 +58,23 @@ fs.writeFile('log.txt', "Part 0 reached", err => {
   // Delay to ensure elements are fully loaded
   // await page.waitForTimeout(5000);
   if (page.$$('#app')) {
-       fs.writeFile('log.txt', "Page opened", err => {
-      if (err) {
-        console.error(err);
-      } else {
-        // file written successfully
-      }
-    });
-  }
+    fs.writeFile('log.txt', "Page opened", err => {
+   if (err) {
+     console.error(err);
+   } else {
+     // file written successfully
+   }
+ });
+}
+if (page.$$('._akaz')) {
+     fs.writeFile('log.txt', "Needs logging in", err => {
+    if (err) {
+      console.error(err);
+    } else {
+      // file written successfully
+    }
+  });
+}
   // Check if already logged in
   // if (!page.$(`span[title="${groupName}"]`)) {
   //   console.log('Please scan the QR code to login.');
