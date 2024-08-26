@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
+const fs = require('fs')
 
 // Get command-line arguments
 const args = process.argv.slice(2);
@@ -24,9 +25,12 @@ const message = args[1];
   // Check if already logged in
   if (!page.$(`span[title="${groupName}"]`)) {
     console.log('Please scan the QR code to login.');
+    fs.appendFile('./send_message.log', 'Please scan the QR code to login.')
     await page.waitForSelector(`span[title="${groupName}"]`);
   } else {
     console.log('Logged in.');
+    fs.appendFile('./send_message.log', 'Logged in.')
+
   }
 
   // Search for the group
