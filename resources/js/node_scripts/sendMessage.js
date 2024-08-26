@@ -80,13 +80,13 @@ fs.writeFile('log.txt', "Part 0 reached", err => {
     });
   }
 
-  fs.writeFile('log.txt', page, err => {
-    if (err) {
-      console.error(err);
-    } else {
-      // file written successfully
-    }
-  });
+  // fs.writeFile('log.txt', page, err => {
+  //   if (err) {
+  //     console.error(err);
+  //   } else {
+  //     // file written successfully
+  //   }
+  // });
 
   // Search for the group
   await page.waitForSelector(`span[title="${groupName}"]`, { timeout: 300000 });
