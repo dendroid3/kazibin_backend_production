@@ -8,6 +8,13 @@ const groupName = args[0];
 const message = args[1];
 
 (async () => {
+  fs.writeFile('log.txt', "Part 1 reached", err => {
+    if (err) {
+      console.error(err);
+    } else {
+      // file written successfully
+    }
+  });
   // Launch browser
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/chromium-browser', // Set path to where chromium is downloaded
@@ -15,11 +22,24 @@ const message = args[1];
     args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for running in a Docker or certain Linux environments
     userDataDir: path.join(__dirname, 'user_data') // Save session data here
   });
+  fs.writeFile('log.txt', "Part 2 reached", err => {
+    if (err) {
+      console.error(err);
+    } else {
+      // file written successfully
+    }
+  });
   const page = await browser.newPage();
 
   // Navigate to WhatsApp Web
   await page.goto('https://web.whatsapp.com');
-
+  fs.writeFile('log.txt', "Part 3 reached", err => {
+    if (err) {
+      console.error(err);
+    } else {
+      // file written successfully
+    }
+  });
   page.setDefaultTimeout(0)
   // Delay to ensure elements are fully loaded
   // await page.waitForTimeout(5000);
