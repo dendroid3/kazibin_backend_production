@@ -30,6 +30,13 @@ Route::match(['get', 'post'], '/botman', function() {
     $botman->listen();
 });
 
+Route::get('/link_whatsApp', function() {
+    $command = escapeshellcmd("resources/js/node_scripts/linkWhatsApp.sh");
+    $output = shell_exec($command);
+
+    return response()->json(['output' => $output, 'message' => 'WhatsApp linking process started.']);
+});
+
 Route::get('/wp', function() {
     // $client = new Client();
     // $response = $client->post('https://api.gupshup.io/sm/api/v1/msg', [

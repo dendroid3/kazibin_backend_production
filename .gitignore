@@ -13,3 +13,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+log.txt
+resources/js/node_scripts/user_data

@@ -10,7 +10,7 @@ const message = args[1];
 (async () => {
   // Launch browser
   const browser = await puppeteer.launch({
-    executablePath: '/usr/bin/chromium-browser', // Set path to where chromium is downloaded
+    // executablePath: '/usr/bin/chromium-browser', // Set path to where chromium is downloaded
     headless: false,  // Run headless for server environment
     args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for running in a Docker or certain Linux environments
     userDataDir: path.join(__dirname, 'user_data') // Save session data here
