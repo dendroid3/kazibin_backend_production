@@ -54,10 +54,10 @@ fs.writeFile('log.txt', "Part 0 reached", err => {
       // file written successfully
     }
   });
-  page.setDefaultTimeout(0)
+  // page.setDefaultTimeout(0)
   // Delay to ensure elements are fully loaded
   // await page.waitForTimeout(5000);
-  if (!page.$$('#app')) {
+  if (page.$$('#app')) {
        fs.writeFile('log.txt', "Page opened", err => {
       if (err) {
         console.error(err);
