@@ -37,7 +37,7 @@ fs.writeFile('log.txt', "Part 0 reached", err => {
       // file written successfully
     }
   });
-  // const page = await browser.newPage();
+  const page = await browser.newPage();
 
   // // Navigate to WhatsApp Web
   // await page.goto('https://web.whatsapp.com');
