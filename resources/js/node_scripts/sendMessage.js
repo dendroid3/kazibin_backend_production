@@ -24,15 +24,15 @@ const message = args[1];
   // await page.waitForTimeout(5000);
 
   // Check if already logged in
-  if (!page.$(`span[title="${groupName}"]`)) {
-    console.log('Please scan the QR code to login.');
-    await page.waitForSelector(`span[title="${groupName}"]`);
-  } else {
-    console.log('Logged in.');
-  }
+  // if (!page.$(`span[title="${groupName}"]`)) {
+  //   console.log('Please scan the QR code to login.');
+  //   await page.waitForSelector(`span[title="${groupName}"]`);
+  // } else {
+  //   console.log('Logged in.');
+  // }
 
   // Search for the group
-  await page.waitForSelector(`span[title="${groupName}"]`);
+  await page.waitForSelector(`span[title="${groupName}"]`, { timeout: 30000 });
   await page.click(`span[title="${groupName}"]`);
 
   // Wait for the chat to load
