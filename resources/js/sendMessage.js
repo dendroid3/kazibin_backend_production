@@ -19,9 +19,9 @@ const message = args[1];
   // Navigate to WhatsApp Web
   await page.goto('https://web.whatsapp.com');
 
-  page.setDefaultTimeout(0)
+  page.setDefaultTimeout(600000)
   // Delay to ensure elements are fully loaded
-  await page.waitForTimeout(5000);
+  // await page.waitForTimeout(5000);
 
   // Check if already logged in
   if (!page.$(`span[title="${groupName}"]`)) {
