@@ -36,7 +36,7 @@ class sendWhatsAppMessage extends Command
         // Log::info($command);
         // shell_exec($command);
 
-        $command = escapeshellcmd("resources/js/node_scripts/run_puppeteer.sh '$groupName' '$message'");
+        $command = escapeshellcmd("resources/js/node_scripts/startXFB.sh '$groupName' '$message'");
         $output = shell_exec($command);
 
         $this->info('Message sent!');
