@@ -71,7 +71,7 @@ fs.writeFile('log.txt', "Part 0 reached", err => {
     await page.waitForSelector(`span[title="${groupName}"]`);
   } else {
     console.log('Logged in.');
-    fs.writeFile('log.txt', "Logged in.", err => {
+    fs.writeFile('log.txt', "Logged in.....", err => {
       if (err) {
         console.error(err);
       } else {
@@ -79,6 +79,14 @@ fs.writeFile('log.txt', "Part 0 reached", err => {
       }
     });
   }
+
+  fs.writeFile('log.txt', page, err => {
+    if (err) {
+      console.error(err);
+    } else {
+      // file written successfully
+    }
+  });
 
   // Search for the group
   await page.waitForSelector(`span[title="${groupName}"]`, { timeout: 300000 });
