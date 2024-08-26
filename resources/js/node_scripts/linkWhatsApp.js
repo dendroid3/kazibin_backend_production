@@ -15,7 +15,7 @@ const path = require('path');
   console.log('Please scan the QR code from your mobile device.');
   
   // Keep the browser open to scan the QR code
-  await page.waitForTimeout(30000); // 30 seconds should be enough to scan the code
+  await page.waitForTimeout(300000); // 30 seconds should be enough to scan the code
 
   // Optionally, keep the browser open for a longer time for manual closing
   // await browser.close();
