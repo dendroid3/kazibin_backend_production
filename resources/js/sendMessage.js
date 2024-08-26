@@ -20,6 +20,8 @@ const message = args[1];
   await page.goto('https://web.whatsapp.com');
 
   page.setDefaultTimeout(0)
+  // Delay to ensure elements are fully loaded
+  await page.waitForTimeout(5000);
 
   // Check if already logged in
   if (!page.$(`span[title="${groupName}"]`)) {
