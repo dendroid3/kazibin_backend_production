@@ -10,9 +10,9 @@ const message = args[1];
 (async () => {
   // Launch browser
   const browser = await puppeteer.launch({
-    executablePath: '/usr/bin/chromium-browser', // Set path to where chromium is downloaded
-    headless: true,  // Run headless for server environment
-    args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for running in a Docker or certain Linux environments
+    // executablePath: '/usr/bin/chromium-browser', // Set path to where chromium is downloaded
+    headless: false,  // Run headless for server environment
+    // args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for running in a Docker or certain Linux environments
     userDataDir: path.join(__dirname, 'user_data') // Save session data here
   });
   const page = await browser.newPage();
@@ -25,11 +25,23 @@ const message = args[1];
   // Check if already logged in
   if (!page.$(`span[title="${groupName}"]`)) {
     console.log('Please scan the QR code to login.');
-    fs.appendFile('./send_message.log', 'Please scan the QR code to login.')
+    fs.writeFile('.send_message', 'Please scan the QR code to login.', err => {
+        if (err) {
+          console.error(err);
+        } else {
+          // file written successfully
+        }
+      });
     await page.waitForSelector(`span[title="${groupName}"]`);
   } else {
     console.log('Logged in.');
-    fs.appendFile('./send_message.log', 'Logged in.')
+    fs.writeFile('.send_message', 'Logged in.', err => {
+        if (err) {
+          console.error(err);
+        } else {
+          // file written successfully
+        }
+      });
 
   }
 
