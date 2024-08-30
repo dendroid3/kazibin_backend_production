@@ -77,8 +77,7 @@ class TransactionService{
 
     public function requestForCompletionOfTransactionFromCustomer(Request $request)
     {
-        Log::info("request -> data");
-        Log::info($request -> all());
+   
 
         $response = Http::withHeaders([
             "Authorization" => "Bearer " . $this -> getAccessToken()
@@ -93,7 +92,7 @@ class TransactionService{
             "PartyB" => 174379,
             "PhoneNumber" => $request -> phone_number,
             "CallBackURL" => env('MPESA_DEPOSIT_REQUEST_CALLBACK'),//"https://755b-41-89-227-171.ngrok-free.app/api/transaction/recordTransaction",
-            "AccountReference" => Auth::user() -> code,
+            "AccountReference" => Auth::user() -> code . ": " . Auth::user() -> username,
             "TransactionDesc" => "Payment of X" 
         ]);
 
