@@ -20,6 +20,7 @@ class CreateVerificationsTable extends Migration
             $table->string('front_id_url');
             $table->string('back_id_url');
             $table->string('passport_url');
+            // 1 = unresolved, 2 = accepted, 3 = rejected
             $table->integer('status')->default(1);
             $table->timestamps();
         });

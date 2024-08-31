@@ -77,8 +77,6 @@ class TransactionService{
 
     public function requestForCompletionOfTransactionFromCustomer(Request $request)
     {
-   
-
         $response = Http::withHeaders([
             "Authorization" => "Bearer " . $this -> getAccessToken()
         ])

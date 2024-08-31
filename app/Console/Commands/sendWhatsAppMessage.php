@@ -32,12 +32,12 @@ class sendWhatsAppMessage extends Command
         $message = $this->argument('message');
 
         // Run the Puppeteer script with the group name and message as arguments
-        // $command = "node resources/js/node_scripts/sendMessage.js \"$groupName\" \"$message\"";
-        // Log::info($command);
-        // shell_exec($command);
+        $command = "node resources/js/node_scripts/sendMessage.js \"$groupName\" \"$message\"";
+        Log::info($command);
+        shell_exec($command);
 
-        $command = escapeshellcmd("resources/js/node_scripts/startXFB.sh '$groupName' '$message'");
-        $output = shell_exec($command);
+        // $command = escapeshellcmd("resources/js/node_scripts/startXFB.sh '$groupName' '$message'");
+        // $output = shell_exec($command);
 
         $this->info('Message sent!');
 
