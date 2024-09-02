@@ -56,11 +56,10 @@ class AdditionService
     $file_urls = array();
     $i = 0;
     foreach ($files as $file) {
-        // $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
+        $uploadedFileUrl = Storage::disk('digitalocean')->putFile(Auth::user() -> code, $request->file('documents')[$i], 'public');
         $task_file = new Taskfile;
         $task_file -> task_id = $request -> task_id;
-        $task_file -> url = 'one';//env('DIGITALOCEAN_SPACES_ENDPOINT');
-        // $task_file -> url = env('DIGITALOCEAN_SPACES_ENDPOINT') .  $uploadedFileUrl;
+        $task_file -> url = env('DIGITALOCEAN_SPACES_ENDPOINT') .  $uploadedFileUrl;
         $task_file -> name =  $request -> file('documents')[$i] -> getClientOriginalName();
         $task_file -> save();
 

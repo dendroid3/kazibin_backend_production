@@ -126,6 +126,10 @@ class ProfileService {
         $total_credit = Auth::user() -> transactions() -> where('type', 'Credit') -> sum('amount');
         $balance = $total_debit - $total_credit;
 
+        $total_accounts = Auth::user() -> accounts -> count();
+        $total_accounts_on_display = Auth::user() -> accounts -> where('display', 1) -> count();
+        $total_accounts_off_display = Auth::user() -> accounts -> where('display', 0) -> count();
+
         return [
             'posted' => [
                 'posted_all' => $posted_all,
@@ -192,6 +196,12 @@ class ProfileService {
                 'total_debit' => $total_debit,
                 'total_credit' => $total_credit,
                 'count' => $transactions_count
+            ],
+
+            'accounts' => [
+                'total' => $total_accounts,
+                'on_display' => $total_accounts_on_display,
+                'off_display' => $total_accounts_off_display
             ]
         ];
     }

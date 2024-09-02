@@ -21,11 +21,16 @@ class Account extends Model
         'pending_orders',
         'cost',
         'negotiable',
-        'display'
+        'display',
+        'expiry'
     ];
 
     public function User() {
         return $this -> belongsTo(User::class) -> select('username', 'code', 'email', 'phone_number');
+    }
+
+    public function Files() {
+        return $this -> hasMany(Accountfile::class) -> select('url', 'name');
     }
 
 }

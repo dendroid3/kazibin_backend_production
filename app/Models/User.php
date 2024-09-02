@@ -115,7 +115,7 @@ class User extends Authenticatable
         return $this -> hasMany(Verification::class);
     }
 
-    public function account(){
+    public function accounts(){
         return $this -> hasMany(Account::class);
     }
 

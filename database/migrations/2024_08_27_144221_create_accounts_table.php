@@ -24,8 +24,9 @@ class CreateAccountsTable extends Migration
             $table->integer('pending_orders');
             $table->integer('cost');
             $table->integer('rating');
-            $table->boolean('negotiable');
-            $table->boolean('display');
+            $table->boolean('negotiable')->default(true);
+            $table->boolean('display')->dafault(true);
+            $table->dateTime('expiry');
             $table->timestamps();
         });
     }

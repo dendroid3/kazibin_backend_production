@@ -13,6 +13,6 @@ class AccountSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Account::factory(5)->create();
+        \App\Models\Account::factory(50)->create();
     }
 }

@@ -121,6 +121,7 @@ class AdditionTest extends TestCase
 
      public function test_full_flow_with_pages()
      {
+        // dd(config('filesystems.disks'));
          $this -> withoutExceptionHandling();
 
          $token = 'Bearer ' . $this -> createToken();
