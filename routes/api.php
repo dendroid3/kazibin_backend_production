@@ -164,5 +164,6 @@ Route::middleware(['auth:api', 'RecordLastActivity']) -> group(function(){
         Route::get('/get_mine', [App\Http\Controllers\Api\Account\AccountsController::class, 'getMine']) -> name('accounts.get_mine');
         Route::get('/get_for_display', [App\Http\Controllers\Api\Account\AccountsController::class, 'getSomeForDisplay']) -> name('accounts.get_for_display');
         Route::get('/get_paginated', [App\Http\Controllers\Api\Account\AccountsController::class, 'getAllPaginated']) -> name('accounts.get_paginated');
+        Route::post('/get_current', [App\Http\Controllers\Api\Account\AccountsController::class, 'getCurrentAccount']) -> name('accounts.get_account');
     });
 });

@@ -7,6 +7,7 @@ use App\Models\Accountfile;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
@@ -67,6 +68,7 @@ class AccountsService
 
         foreach ($accounts as $account) {
             $account -> User;
+            $account -> Files;
         }
 
         return $accounts;
@@ -77,8 +79,22 @@ class AccountsService
 
         foreach ($accounts as $account) {
             $account -> User;
+            $account -> Files;
         }
 
         return $accounts;
+    }
+
+    public function getCurrentAccount(Request $request) {
+        $account = Account::query() -> where('code', $request -> account_code) -> first();
+        
+        if(!$account){
+            return 404;
+        }
+
+        $account -> User;
+        $account -> Files;
+
+        return $account;
     }
 }

@@ -33,4 +33,19 @@ class AccountsController extends Controller
             'accounts' => $accounts_service -> getAllPaginated()
         ]);
     }
+
+    public function getCurrentAccount(Request $request, AccountsService $accounts_service) {
+        $account = $accounts_service -> getCurrentAccount($request);
+
+        if($account == 404){
+            return response() -> json([
+                'message' => 'Account not found'
+            ], 404);
+        }
+
+        return response() -> json([
+            'account' => $account
+        ]);
+    }
+    
 }
