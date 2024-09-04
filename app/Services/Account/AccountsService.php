@@ -99,7 +99,7 @@ class AccountsService
     }
 
     public function getSomeForDisplay() {
-        $accounts = Account::query() -> where('display', true) -> take(10) -> get();
+        $accounts = Account::query() -> where('display', true) -> where('user_id', '!=', Auth::user() ->id) -> take(10) -> get();
 
         foreach ($accounts as $account) {
             $account -> User;
@@ -110,7 +110,7 @@ class AccountsService
     }
 
     public function getAllPaginated() {
-        $accounts = Account::query() -> where('display', true) -> paginate(10);
+        $accounts = Account::query() -> where('display', true) -> where('user_id', '!=', Auth::user() ->id) -> paginate(10);
 
         foreach ($accounts as $account) {
             $account -> User;
