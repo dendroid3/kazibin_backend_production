@@ -2,8 +2,6 @@
 
 namespace App\Services\Account;
 
-use App\Models\Account;
-use App\Models\Accountfile;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -11,11 +9,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
+use App\Services\SystemLog\LogCreationService;
+
+use App\Models\Account;
+use App\Models\Accountfile;
+use App\Models\Revenue;
+use App\Models\Transaction;
 // use Illuminate\Support\Facades\Log;
 
 class AccountsService
 {
-    public function create($request) {
+    public function create($request, $log_service) {
         $account_details = json_decode($request -> account, true);
         $account = new Account;
         $account -> user_id = Auth::user() -> id;
@@ -50,11 +54,42 @@ class AccountsService
             }
         }
 
+        // transaction and revenue
+
+        $transaction = new Transaction;
+        $transaction -> user_id = Auth::user() -> id;
+        $transaction -> type = "Credit";
+        $transaction -> account_id = $account -> id;
+        $transaction -> description = 'Amount charged to display '. $account -> code . ": " . $account -> title . " writing account";
+        $transaction -> amount = env('PAYMENT_ACCOUNT_DISPLAY_COST');
+        $transaction -> save();
+    
+        $revenue = new Revenue;
+        $revenue -> transaction_id = $transaction -> id;
+        $revenue -> type = "displayAccount";
+        $revenue -> amount = env('PAYMENT_ACCOUNT_DISPLAY_COST');
+        $revenue -> save();
+
+        $log_message = $account -> code . ": " . $account -> title . " writing account successfully posted and forwarded to kazibin's groups.";
+
+        $log_service -> createSystemMessage(
+            Auth::user() -> id, 
+            $log_message,
+            $account -> id,
+            'Account Posted'
+        );
+
         return $account -> title . " writing account successfully posted.";
     }
 
-    public function getMine() {
-        $accounts = Auth::user() -> accounts() -> paginate(10);
+    public function getMine($request) {
+        Log::info($request);
+
+        if($request -> is_filtered){
+            $accounts = Auth::user() -> accounts() -> where('display', $request -> filter_code) -> paginate(10);
+        } else {
+            $accounts = Auth::user() -> accounts() -> paginate(10);
+        }
 
         foreach ($accounts as $account) {
             $account -> Files;
@@ -87,6 +122,8 @@ class AccountsService
 
     public function getCurrentAccount(Request $request) {
         $account = Account::query() -> where('code', $request -> account_code) -> first();
+        $account -> User;
+        $account -> Files;
         
         if(!$account){
             return 404;

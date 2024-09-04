@@ -19,6 +19,7 @@ class Transaction extends Model
         'bid_id',
         'task_id',
         'service_id',
+        'account_id',
         'description',
         'type',
         'amount'

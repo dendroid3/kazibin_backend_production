@@ -33,4 +33,5 @@ class Account extends Model
         return $this -> hasMany(Accountfile::class) -> select('url', 'name');
     }
 
+
 }

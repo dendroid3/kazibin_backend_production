@@ -32,7 +32,7 @@ class VerificationsController extends Controller
         $transaction -> user_id = Auth::user() -> id;
         $transaction -> type = "Credit";
         $transaction -> description = "Amount charged to initialise the verification process";
-        $transaction -> amount = 500;
+        $transaction -> amount = env('PAYMENT_VERIFICATION_COST');
         $transaction -> save();
 
         $verification = new Verification;
@@ -46,7 +46,7 @@ class VerificationsController extends Controller
         $revenue = new Revenue;
         $revenue -> transaction_id = $transaction -> id;
         $revenue -> type = "Verification";
-        $revenue -> amount = 500;
+        $revenue -> amount = env('PAYMENT_VERIFICATION_COST');
         $revenue -> save();
 
         $user_message = 'You successfully initialised the verification process, the admins will go through your application and resolve in, at most, 72 hours.';

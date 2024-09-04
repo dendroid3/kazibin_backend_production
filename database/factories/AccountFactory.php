@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use Illuminate\Support\Str;
-
+use Carbon\Carbon;
 
 class AccountFactory extends Factory
 {
@@ -40,7 +40,8 @@ class AccountFactory extends Factory
             'cost' => rand(15000,200000),
             'negotiable' => rand()&1,
             'display' => rand()&1,
-            'rating' => rand(75,98)
+            'rating' => rand(75,98),
+            'expiry' => Carbon::now() -> addDays(7)
         ];
     }
 

@@ -53,7 +53,8 @@ class TransactionService{
 
     }
 
-    public function getTransactions(Request $request){
+    public function getTransactions(Request $request)
+    {
         $transactions = Auth::user() -> transactions() -> orderBy('created_at', 'DESC') -> take(10) -> get();
 
         return $transactions;

@@ -20,6 +20,7 @@ class CreateTransactionsTable extends Migration
             $table->uuid('bid_id') -> nullable();
             $table->uuid('service_id') -> nullable();
             $table->uuid('task_id') -> nullable();
+            $table->uuid('account_id') -> nullable();
             $table->string('type');
             $table->string('description');
             $table->integer('amount');
