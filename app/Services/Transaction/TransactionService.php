@@ -77,13 +77,13 @@ class TransactionService{
 
         Log::info(base64_encode( env('MPESA_CONSUMER_KEY') . ':' . env('MPESA_CONSUMER_SECRET') ));
 
-        Log::info($reponse);
+        Log::info($response);
         return $response['access_token'];
     }
 
     public function requestForCompletionOfTransactionFromCustomer(Request $request)
     {
-        $this -> getAccessToken();
+        
         // $response = Http::withHeaders([
         //     "Authorization" => "Bearer " . $this -> getAccessToken()
         // ])
@@ -139,7 +139,8 @@ class TransactionService{
         // // request for MPesa PIN made successfully : the status will be the default 0!
         // $Mpesa -> save();
 
-        return true;
+        // return true;
+        return $this -> getAccessToken();
     }
 
     public function recordTransaction(Request $request)
