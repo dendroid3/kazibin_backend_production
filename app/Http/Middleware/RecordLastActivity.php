@@ -25,7 +25,6 @@ class RecordLastActivity
         Log::info("Called");
         if($difference_in_time_in_minutes > 5) {
             $user = Auth::user();
-            $user -> username = Auth::user() -> username . rand(1,1000);
             $user -> last_activity = Carbon::now();
             $user -> push();
         }
