@@ -31,10 +31,12 @@ Route::match(['get', 'post'], '/botman', function() {
 });
 
 Route::get('/link_whatsApp', function() {
-    $command = escapeshellcmd("resources/js/node_scripts/linkWhatsApp.sh");
-    $output = shell_exec($command);
+    Log::info(Carbon::now() -> format('YmdHis'));
 
-    return response()->json(['output' => $output, 'message' => 'WhatsApp linking process started.']);
+    // $command = escapeshellcmd("resources/js/node_scripts/linkWhatsApp.sh");
+    // $output = shell_exec($command);
+
+    // return response()->json(['output' => $output, 'message' => 'WhatsApp linking process started.']);
 });
 
 Route::get('/wp', function() {

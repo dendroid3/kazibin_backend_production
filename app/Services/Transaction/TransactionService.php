@@ -7,6 +7,7 @@ use App\Services\SystemLog\LogCreationService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use App\Models\Mpesa;
 use App\Models\Transaction;
@@ -71,66 +72,72 @@ class TransactionService{
         $response = Http::withHeaders([
             "Authorization" => "Basic " . base64_encode( env('MPESA_CONSUMER_KEY') .':'.env('MPESA_CONSUMER_SECRET') )
         ])
-        -> get("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials");
+        -> get("https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials");
+        Log::info('access token');
 
+        Log::info(base64_encode( env('MPESA_CONSUMER_KEY') . ':' . env('MPESA_CONSUMER_SECRET') ));
+
+        Log::info($reponse);
         return $response['access_token'];
     }
 
     public function requestForCompletionOfTransactionFromCustomer(Request $request)
     {
-        $response = Http::withHeaders([
-            "Authorization" => "Bearer " . $this -> getAccessToken()
-        ])
-        -> post('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', [
-            "BusinessShortCode" => 174379,
-            "Password" => "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjQwNzE2MTg0ODUy",
-            "Timestamp" => "20240716184852",
-            "TransactionType" => "CustomerPayBillOnline",
-            "Amount" => $request -> amount,
-            "PartyA" => $request -> phone_number,
-            "PartyB" => 174379,
-            "PhoneNumber" => $request -> phone_number,
-            "CallBackURL" => env('MPESA_DEPOSIT_REQUEST_CALLBACK'),//"https://755b-41-89-227-171.ngrok-free.app/api/transaction/recordTransaction",
-            "AccountReference" => Auth::user() -> code . ": " . Auth::user() -> username,
-            "TransactionDesc" => "Payment of X" 
-        ]);
+        $this -> getAccessToken();
+        // $response = Http::withHeaders([
+        //     "Authorization" => "Bearer " . $this -> getAccessToken()
+        // ])
+        // -> post(' https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest', [
+        //     "BusinessShortCode" => env('MPESA_SHORTCODE'),
+        //     // "Password" => base64_encode(env('MPESA_SHORTCODE') . env('MPESA_PASSKEY') . Carbon::now() -> format('YmdHis')),//"MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjQwNzE2MTg0ODUy",
+        //     "Timestamp" => "20240716184852",
+        //     "TransactionType" => "CustomerPayBillOnline",
+        //     // "Amount" => $request -> amount,
+        //     "Amount" => 1,
+        //     "PartyA" => $request -> phone_number,
+        //     "PartyB" => env('MPESA_SHORTCODE'),
+        //     "PhoneNumber" => $request -> phone_number,
+        //     "CallBackURL" => env('MPESA_DEPOSIT_REQUEST_CALLBACK'),//"https://755b-41-89-227-171.ngrok-free.app/api/transaction/recordTransaction",
+        //     "AccountReference" => Auth::user() -> code . ": " . Auth::user() -> username,
+        //     "TransactionDesc" => "Payment of X" 
+        // ]);
 
-        Log::info($response);
+        // Log::info($response);
 
-        $decoded_response = json_decode($response);
+        // $decoded_response = json_decode($response);
 
-        if(isset($decoded_response -> errorCode))
-        {
-            if($decoded_response -> errorCode)
-            {
-                return [
-                    'message' => 'Could not initiate transaction, kindly try again after a few minutes'
-                ];
-            }
-        }
+        // if(isset($decoded_response -> errorCode))
+        // {
+        //     if($decoded_response -> errorCode)
+        //     {
+        //         return [
+        //             'message' => 'Could not initiate transaction, kindly try again after a few minutes'
+        //         ];
+        //     }
+        // }
 
-        $Mpesa = new Mpesa;
-        $Mpesa -> checkout_request_id = $response['CheckoutRequestID'];
-        $Mpesa -> user_id = Auth::user() -> id;
-        $Mpesa -> amount = $request['amount'];
-        $Mpesa -> paying_phone_number = $request['phone_number'];
+        // $Mpesa = new Mpesa;
+        // $Mpesa -> checkout_request_id = $response['CheckoutRequestID'];
+        // $Mpesa -> user_id = Auth::user() -> id;
+        // $Mpesa -> amount = $request['amount'];
+        // $Mpesa -> paying_phone_number = $request['phone_number'];
 
-        // request for MPesa PIN not made
-        if(isset($decoded_response -> ResponseCode))
-        {
-            if($decoded_response -> ResponseCode > 0)
-            {
-                Log::info("ResponseCode more than 0");
-                $Mpesa -> status = 1;
-                $Mpesa -> save();
-                return [
-                    'message' => 'Could not initiate transaction, kindly try again after a few minutes'
-                ];
-            }   
-        }
+        // // request for MPesa PIN not made
+        // if(isset($decoded_response -> ResponseCode))
+        // {
+        //     if($decoded_response -> ResponseCode > 0)
+        //     {
+        //         Log::info("ResponseCode more than 0");
+        //         $Mpesa -> status = 1;
+        //         $Mpesa -> save();
+        //         return [
+        //             'message' => 'Could not initiate transaction, kindly try again after a few minutes'
+        //         ];
+        //     }   
+        // }
 
-        // request for MPesa PIN made successfully : the status will be the default 0!
-        $Mpesa -> save();
+        // // request for MPesa PIN made successfully : the status will be the default 0!
+        // $Mpesa -> save();
 
         return true;
     }

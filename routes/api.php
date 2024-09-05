@@ -92,8 +92,8 @@ Route::middleware(['auth:api', 'RecordLastActivity']) -> group(function(){
         Route::get('/get_mine', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'getTransactions']) -> name('transactions.get');
         Route::get('/get_mine_paginated', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'getTransactionsPaginated']) -> name('transactions.get_paginated');
         Route::post('/claim', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'claimTransaction']) -> name('transaction.claim');
-        Route::post('/depositFromMpesa', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'depositFromMpesa']) -> name('transaction.deposit');
-        Route::post('/recordTransaction', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'recordTransaction']) -> name('transaction.record')->withoutMiddleware(['auth:api', 'RecordLastActivity']);
+        Route::post('/deposit_from_mpesa', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'depositFromMpesa']) -> name('transaction.deposit');
+        Route::post('/record_transaction', [App\Http\Controllers\Api\Transaction\TransactionsController::class, 'recordTransaction']) -> name('transaction.record')->withoutMiddleware(['auth:api', 'RecordLastActivity']);
         Route::post('/get_all_done_by_me_from_from_broker_for_creating_invoice', 
                 [
                     App\Http\Controllers\Api\Task\FetchController::class, 
