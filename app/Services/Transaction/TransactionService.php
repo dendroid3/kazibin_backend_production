@@ -141,8 +141,11 @@ class TransactionService{
     public function recordTransaction(Request $request)
     {
         \Illuminate\Support\Facades\Log::info($request -> all());
-        $Mpesa = Mpesa::query() -> where('checkout_request_id', $request['Body']['stkCallback']['CheckoutRequestID']) -> first();
+        $Mpesa = Mpesa::query() -> where('checkout_request_id', $request['Body']['stkCallback']['CheckoutRequestID']) -> where('status', 0)-> first();
 
+        if(!$Mpesa){
+            return;
+        }
         if($request['Body']['stkCallback']['ResultCode'] > 0)
         {
             $Mpesa -> status = 1;
