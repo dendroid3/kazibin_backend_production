@@ -180,7 +180,7 @@ class TransactionService{
         $transaction -> description = "Deposit from Mpesa, reference code: " . $Mpesa -> receipt_number . ".";
         $transaction ->save();
 
-        $Message = $Mpesa -> receipt_number . ' Confirmed! Deposit of ' . $Mpesa -> amount . ' from MPesa made successfully.';
+        $Message = $Mpesa -> receipt_number . ' Confirmed! Deposit of ' . $Mpesa -> amount . ' KES from MPesa made successfully.';
 
         $log = new Log;
         $log -> user_id = $Mpesa -> user_id;
