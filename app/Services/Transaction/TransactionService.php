@@ -151,7 +151,7 @@ class TransactionService{
             $Mpesa -> status = 1;
             $Mpesa -> push();
 
-            $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa was unsuccessful.';
+            $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa was unsuccessful. Reason: ' . $request['Body']['stkCallback']['ResultDesc'];
 
             $log = new Log;
             $log -> user_id = $Mpesa -> user_id;
