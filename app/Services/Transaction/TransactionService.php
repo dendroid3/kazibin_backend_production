@@ -5,7 +5,6 @@ namespace App\Services\Transaction;
 use Illuminate\Support\Facades\Auth;
 use App\Services\SystemLog\LogCreationService;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -13,6 +12,7 @@ use Carbon\Carbon;
 
 use App\Models\Mpesa;
 use App\Models\Transaction;
+use App\Models\Log;
 
 class TransactionService{
     public function claimTransaction(Request $request, LogCreationService $log_service)
@@ -140,6 +140,7 @@ class TransactionService{
 
     public function recordTransaction(Request $request)
     {
+        Illuminate\Support\Facades\Log::info($request -> all());
         $Mpesa = Mpesa::query() -> where('checkout_request_id', $request['Body']['stkCallback']['CheckoutRequestID']) -> first();
 
         if($request['Body']['stkCallback']['ResultCode'] > 0)
@@ -149,7 +150,12 @@ class TransactionService{
 
             $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa was unsuccessful.';
 
-            LogCreationService -> createSystemMessage($Mpesa -> user_id, $Message, $Mpesa -> id, "Deposit Unsuccessful", 'error');
+            $log = new Log;
+            $log -> user_id = $Mpesa -> user_id;
+            $log -> message = $Message;
+            $log -> foreign_id = $Mpesa -> id;
+            $log -> code = "Deposit Failed";
+            $log -> save();
 
             // event(new MpesaTransactionComplete($Message, Auth::user() -> id));
 
@@ -173,7 +179,12 @@ class TransactionService{
 
         $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa made successfully.';
 
-        LogCreationService -> createSystemMessage($Mpesa -> user_id, $Message, $Mpesa -> id, "Deposit Unsuccessful");
+        $log = new Log;
+        $log -> user_id = $Mpesa -> user_id;
+        $log -> message = $Message;
+        $log -> foreign_id = $Mpesa -> id;
+        $log -> code = "Deposit Successful";
+        $log -> save();
 
         // event(new MpesaTransactionComplete($Message, Auth::user() -> id, 'success'));
 
