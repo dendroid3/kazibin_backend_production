@@ -73,36 +73,30 @@ class TransactionService{
             "Authorization" => "Basic " . base64_encode( env('MPESA_CONSUMER_KEY') .':'.env('MPESA_CONSUMER_SECRET') )
         ])
         -> get(env('MPESA_AUTH_ENDPOINT'));
-        
-        Log::info('HTTP Status Code: ' . $response->status());
-        Log::info('Response Body: ' . $response->body());
-        // return $response;
-        // Log::info($response);
+     
         return $response['access_token'];
     }
 
     public function requestForCompletionOfTransactionFromCustomer(Request $request)
     {
         $time_now = Carbon::now() -> format('YmdHis');
-        $response = Http::withHeaders([
-            "Authorization" => "Bearer " . $this -> getAccessToken()
-        ])
-        -> post(env('MPESA_STK_ENDPOINT'), [
+        $data = [
             "BusinessShortCode" => env('MPESA_SHORTCODE'),
             "Password" => base64_encode(env('MPESA_SHORTCODE') . env('MPESA_PASSKEY') . $time_now),
             "Timestamp" => $time_now,
             "TransactionType" => "CustomerPayBillOnline",
-            // "Amount" => $request -> amount,
-            "Amount" => 1,
+            "Amount" => $request -> amount,
             "PartyA" => $request -> phone_number,
             "PartyB" => env('MPESA_SHORTCODE'),
             "PhoneNumber" => $request -> phone_number,
             "CallBackURL" => env('MPESA_DEPOSIT_REQUEST_CALLBACK'),
             "AccountReference" => strtoupper(Auth::user() -> code . ": " . Auth::user() -> username),
             "TransactionDesc" => "Payment of X" 
-        ]);
-
-        Log::info("requestForCompletionOfTransactionFromCustomer: " . $response);
+        ];
+        $response = Http::withHeaders([
+            "Authorization" => "Bearer " . $this -> getAccessToken()
+        ])
+        -> post(env('MPESA_STK_ENDPOINT'), $data);
 
         $decoded_response = json_decode($response);
 
@@ -127,7 +121,6 @@ class TransactionService{
         {
             if($decoded_response -> ResponseCode > 0)
             {
-                Log::info("ResponseCode more than 0");
                 $Mpesa -> status = 1;
                 $Mpesa -> save();
                 return [
@@ -145,13 +138,7 @@ class TransactionService{
 
     public function recordTransaction(Request $request)
     {
-        Log::info("recordTransaction");
-        Log::info($request ->all());
-
         $Mpesa = Mpesa::query() -> where('checkout_request_id', $request['Body']['stkCallback']['CheckoutRequestID']) -> first();
-
-        Log::info("Mpesa");
-        Log::info($Mpesa);
 
         if($request['Body']['stkCallback']['ResultCode'] > 0)
         {
