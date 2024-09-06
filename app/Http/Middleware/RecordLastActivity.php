@@ -21,8 +21,6 @@ class RecordLastActivity
     public function handle(Request $request, Closure $next)
     {
         $difference_in_time_in_minutes = (strtotime(Carbon::now()) - strtotime(Auth::user() -> last_activity)) / 60;
-
-        Log::info("Called");
         if($difference_in_time_in_minutes > 5) {
             $user = Auth::user();
             $user -> last_activity = Carbon::now();

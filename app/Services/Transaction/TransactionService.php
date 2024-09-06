@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
+// use App\Events\MpesaTransactionComplete;
+
 use App\Models\Mpesa;
 use App\Models\Transaction;
 
@@ -136,7 +138,7 @@ class TransactionService{
         // return $this -> getAccessToken();
     }
 
-    public function recordTransaction(Request $request)
+    public function recordTransaction(Request $request, LogCreationService $log_service)
     {
         $Mpesa = Mpesa::query() -> where('checkout_request_id', $request['Body']['stkCallback']['CheckoutRequestID']) -> first();
 
@@ -144,6 +146,13 @@ class TransactionService{
         {
             $Mpesa -> status = 1;
             $Mpesa -> push();
+
+            $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa was unsuccessful.';
+
+            $log_service -> createSystemMessage(Auth::user() -> id, $Message, $Mpesa -> id, "Deposit Unsuccessful", 'error');
+
+            // event(new MpesaTransactionComplete($Message, Auth::user() -> id));
+
             return false;
         }
 
@@ -162,10 +171,13 @@ class TransactionService{
         $transaction -> description = "Deposit from Mpesa, reference code: " . $Mpesa -> receipt_number . ".";
         $transaction ->save();
 
-        return [
-            "success" => true,
-            "message" => "Kes " . $transaction -> amount . " has been debited to your account"
-        ];
+        $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa made successfully.';
+
+        $log_service -> createSystemMessage(Auth::user() -> id, $Message, $Mpesa -> id, "Deposit Unsuccessful");
+
+        // event(new MpesaTransactionComplete($Message, Auth::user() -> id, 'success'));
+
+        return;
 
     }
 }
