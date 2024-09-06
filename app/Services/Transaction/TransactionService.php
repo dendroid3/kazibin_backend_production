@@ -149,7 +149,7 @@ class TransactionService{
 
             $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa was unsuccessful.';
 
-            LogCreationService -> createSystemMessage(Auth::user() -> id, $Message, $Mpesa -> id, "Deposit Unsuccessful", 'error');
+            LogCreationService -> createSystemMessage($Mpesa -> user_id, $Message, $Mpesa -> id, "Deposit Unsuccessful", 'error');
 
             // event(new MpesaTransactionComplete($Message, Auth::user() -> id));
 
@@ -173,7 +173,7 @@ class TransactionService{
 
         $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa made successfully.';
 
-        LogCreationService -> createSystemMessage(Auth::user() -> id, $Message, $Mpesa -> id, "Deposit Unsuccessful");
+        LogCreationService -> createSystemMessage($Mpesa -> user_id, $Message, $Mpesa -> id, "Deposit Unsuccessful");
 
         // event(new MpesaTransactionComplete($Message, Auth::user() -> id, 'success'));
 
