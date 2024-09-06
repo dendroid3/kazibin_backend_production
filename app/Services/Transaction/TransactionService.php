@@ -138,7 +138,7 @@ class TransactionService{
         // return $this -> getAccessToken();
     }
 
-    public function recordTransaction(Request $request, LogCreationService $log_service)
+    public function recordTransaction(Request $request)
     {
         $Mpesa = Mpesa::query() -> where('checkout_request_id', $request['Body']['stkCallback']['CheckoutRequestID']) -> first();
 
@@ -149,7 +149,7 @@ class TransactionService{
 
             $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa was unsuccessful.';
 
-            $log_service -> createSystemMessage(Auth::user() -> id, $Message, $Mpesa -> id, "Deposit Unsuccessful", 'error');
+            LogCreationService -> createSystemMessage(Auth::user() -> id, $Message, $Mpesa -> id, "Deposit Unsuccessful", 'error');
 
             // event(new MpesaTransactionComplete($Message, Auth::user() -> id));
 
@@ -173,7 +173,7 @@ class TransactionService{
 
         $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa made successfully.';
 
-        $log_service -> createSystemMessage(Auth::user() -> id, $Message, $Mpesa -> id, "Deposit Unsuccessful");
+        LogCreationService -> createSystemMessage(Auth::user() -> id, $Message, $Mpesa -> id, "Deposit Unsuccessful");
 
         // event(new MpesaTransactionComplete($Message, Auth::user() -> id, 'success'));
 
