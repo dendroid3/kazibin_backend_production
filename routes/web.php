@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 
 use App\Mail\VerficationOfAccount;
-
+use App\Events\MpesaTransactionComplete;
 
 Route::match(['get', 'post'], '/botman', function() {
     $botman = app('botman');
@@ -30,8 +30,11 @@ Route::match(['get', 'post'], '/botman', function() {
     $botman->listen();
 });
 
-Route::get('/link_whatsApp', function() {
-    Log::info(Carbon::now() -> format('YmdHis'));
+Route::get('/event', function() {
+    // event(new BidMade('Success', 'Hello', '9cee3126-3546-4d50-ae78-cfb653a15195'));
+    event(new MpesaTransactionComplete('Succesadfghjkljhgfdsadfghjk asdfghjmkmhgfdsadf gbvasdfghjss', '9cee3126-3546-4d50-ae78-cfb653a15195', 'success'));
+
+    // Log::info(Carbon::now() -> format('YmdHis'));
 
     // $command = escapeshellcmd("resources/js/node_scripts/linkWhatsApp.sh");
     // $output = shell_exec($command);

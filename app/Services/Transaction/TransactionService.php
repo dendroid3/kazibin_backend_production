@@ -157,7 +157,7 @@ class TransactionService{
             $log -> code = "Deposit Failed";
             $log -> save();
 
-            // event(new MpesaTransactionComplete($Message, Auth::user() -> id));
+            event(new MpesaTransactionComplete($Message, $Mpesa -> user_id, 'error'));
 
             return false;
         }
@@ -177,7 +177,7 @@ class TransactionService{
         $transaction -> description = "Deposit from Mpesa, reference code: " . $Mpesa -> receipt_number . ".";
         $transaction ->save();
 
-        $Message = 'Deposit of ' . $Mpesa -> amount . ' from MPesa made successfully.';
+        $Message = $Mpesa -> receipt_number . ' Confirmed! Deposit of ' . $Mpesa -> amount . ' from MPesa made successfully.';
 
         $log = new Log;
         $log -> user_id = $Mpesa -> user_id;
@@ -186,7 +186,7 @@ class TransactionService{
         $log -> code = "Deposit Successful";
         $log -> save();
 
-        // event(new MpesaTransactionComplete($Message, Auth::user() -> id, 'success'));
+        event(new MpesaTransactionComplete($Message, $Mpesa -> user_id, 'error', 'success'));
 
         return;
 

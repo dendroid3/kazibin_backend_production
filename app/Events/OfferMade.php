@@ -20,12 +20,8 @@ class OfferMade implements ShouldBroadcast
 
     public function __construct($reciever_id, $system_message)
     {
-
         $this -> reciever_id = $reciever_id;
         $this -> system_message = $system_message;
-
-        Log::info("In");
-        Log::info($this -> reciever_id);
     }
 
     public function broadcastWith()
