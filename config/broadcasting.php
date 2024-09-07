@@ -41,7 +41,11 @@ return [
                 'encrypted' => true,
                 'host' => '127.0.0.1',
                 'port' => 6001,
-                'scheme' => 'http',
+                'scheme' => 'https',
+                'curl_options' => [
+                    CURLOPT_SSL_VERIFYHOST => (int) env('WEBSOCKETS_CURLOPT_SSL_VERIFYHOST', 2), // also tried 0
+                    CURLOPT_SSL_VERIFYPEER => (int) env('WEBSOCKETS_CURLOPT_SSL_VERIFYPEER', 1), // also tried 0
+                ]
             ],
         ],
 
