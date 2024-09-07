@@ -189,7 +189,7 @@ class TransactionService{
         $log -> code = "Deposit Successful";
         $log -> save();
 
-        event(new MpesaTransactionComplete($Message, $Mpesa -> user_id, 'error', 'success'));
+        event(new MpesaTransactionComplete($Message, $Mpesa -> user_id, 'success'));
 
         return;
 
