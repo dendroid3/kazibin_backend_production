@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-// use App\Events\MpesaTransactionComplete;
+use App\Events\MpesaTransactionComplete;
 
 use App\Models\Mpesa;
 use App\Models\Transaction;
