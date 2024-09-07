@@ -30,7 +30,7 @@ class MpesaTransactionComplete implements ShouldBroadcast
     public function broadcastWith(){
         return [
             'message' => $this -> message,
-            'title' => 'TransactionComplete',
+            'title' => 'Transaction Complete',
             'code' => $this -> code
         ];
     }
