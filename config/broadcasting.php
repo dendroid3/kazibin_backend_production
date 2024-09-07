@@ -40,7 +40,7 @@ return [
                 'useTLS' => true,
                 'encrypted' => true,
                 'host' => 'api.kazibin.adilirealestate.com',//env('LARAVEL_WEBSOCKETS_HOST', '127.0.0.1'),
-                'port' => null, //env('LARAVEL_WEBSOCKETS_PORT', 6001),
+                'port' => env('LARAVEL_WEBSOCKETS_PORT', 6001),
                 'scheme' => 'https', // Secure connection
             ],
         ],
