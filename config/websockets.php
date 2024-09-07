@@ -67,8 +67,8 @@ return [
      * the existing middleware. Or, you can simply stick with this list.
      */
     'middleware' => [
-        'web',
-        Authorize::class,
+        // 'web',
+        // Authorize::class,
     ],
 
     'statistics' => [
