@@ -32,7 +32,11 @@ Route::match(['get', 'post'], '/botman', function() {
 
 Route::get('/event', function() {
     // event(new BidMade('Success', 'Hello', '9cee3126-3546-4d50-ae78-cfb653a15195'));
-    event(new MpesaTransactionComplete('Succesadfghjkljhgfdsadfghjk asdfghjmkmhgfdsadf gbvasdfghjss', '9cee4ab2-e4f5-4ae9-9242-cd2acd968d0b', 'success'));
+    $users = User::all();
+
+    foreach ($users as $user) {
+        event(new MpesaTransactionComplete('Succesadfghjkljhgfdsadfghjk asdfghjmkmhgfdsadf gbvasdfghjss', $user ->id , 'success'));
+    }
 
     // Log::info(Carbon::now() -> format('YmdHis'));
 
