@@ -36,7 +36,7 @@ class MpesaTransactionComplete implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new PrivateChannel('private_notification_' . $user_id);
+        return new PrivateChannel('private_notification_' . $this -> user_id);
         // return new Channel('public_notifications');
         // return new PrivateChannel('private_notification_9cee3126-3546-4d50-ae78-cfb653a15195');
     }

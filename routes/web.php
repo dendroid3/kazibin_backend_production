@@ -35,8 +35,8 @@ Route::get('/event', function() {
     // event(new BidMade('Success', 'Hello', '9cee3126-3546-4d50-ae78-cfb653a15195'));
     $users = User::all();
     $task = Task::first();
-    event(new TaskAdded($task));
-    event(new MpesaTransactionComplete('Succesadfghjkljhgfdsadfghjk asdfghjmkmhgfdsadf gbvasdfghjss', '9cee4ab2-e4f5-4ae9-9242-cd2acd968d0b', 'success'));
+    event(new TaskAdded("Hello"));
+    event(new MpesaTransactionComplete('Succesadfghjkljhgfdsadfghjk asdfghjmkmhgfdsadf gbvasdfghjss', '9Blahdsjceeaesrdtfyg3126-3546-4d50-ae78-cfb653a15195', 'success'));
 
     // Log::info(Carbon::now() -> format('YmdHis'));
 
