@@ -21,6 +21,7 @@ class MpesaTransactionComplete implements ShouldBroadcast
 
     public function __construct($message, $user_id, $code)
     {
+        Log::info("called in event");
         $this -> message = $message;
         $this -> user_id = $user_id;
         $this -> code = $code;
