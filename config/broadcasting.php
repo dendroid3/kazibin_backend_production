@@ -43,8 +43,8 @@ return [
                 'port' => 6001,
                 'scheme' => 'https',
                 'curl_options' => [
-                    CURLOPT_SSL_VERIFYHOST => (int) env('WEBSOCKETS_CURLOPT_SSL_VERIFYHOST', 2), // also tried 0
-                    CURLOPT_SSL_VERIFYPEER => (int) env('WEBSOCKETS_CURLOPT_SSL_VERIFYPEER', 1), // also tried 0
+                    CURLOPT_SSL_VERIFYHOST => (int) env('WEBSOCKETS_CURLOPT_SSL_VERIFYHOST', 0), // also tried 0
+                    CURLOPT_SSL_VERIFYPEER => (int) env('WEBSOCKETS_CURLOPT_SSL_VERIFYPEER', 0), // also tried 0
                 ]
             ],
         ],
