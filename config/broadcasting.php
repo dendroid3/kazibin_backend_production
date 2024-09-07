@@ -38,14 +38,10 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'useTLS' => true,
-                'encrypted' => true,
+                'encrypted' => false,
                 'host' => '127.0.0.1',
                 'port' => 6001,
-                'scheme' => 'https',
-                'curl_options' => [
-                    CURLOPT_SSL_VERIFYHOST => (int) env('WEBSOCKETS_CURLOPT_SSL_VERIFYHOST', 2), // also tried 0
-                    CURLOPT_SSL_VERIFYPEER => (int) env('WEBSOCKETS_CURLOPT_SSL_VERIFYPEER', 1), // also tried 0
-                ]
+                'scheme' => 'http'
             ],
         ],
 
