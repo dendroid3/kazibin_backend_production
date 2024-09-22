@@ -16,6 +16,10 @@ Route::post('/get_one_broker', [App\Http\Controllers\Api\Liaison\BrokersControll
 Route::get('/get_available_for_bidding_landing', [App\Http\Controllers\Api\Task\FetchController::class, 'getAllAvailableForBiddingLanding']) -> name('task.get_all_available_for_bidding_landing');
 Route::get('/get_total_available_tasks', [App\Http\Controllers\Api\Task\FetchController::class, 'getTotalAvailableTasks']) -> name('task.get_total_available_tasks');
 
+
+Route::post('/trans', [App\Http\Controllers\Api\Profile\ProfileController::class, 'trans']) -> name('profidle.change_my_bio');
+
+
 Route::middleware(['auth:api', 'RecordLastActivity']) -> group(function(){
     Route::get('/resend_verification_email', [App\Http\Controllers\Api\Auth\RegisterController::class, 'resendVerificationEmail']) -> name('profile.create');
     Route::get('/is_account_verified', [App\Http\Controllers\Api\Auth\RegisterController::class, 'isAccountVerified']) -> name('profile.create');
@@ -165,5 +169,9 @@ Route::middleware(['auth:api', 'RecordLastActivity']) -> group(function(){
         Route::get('/get_for_display', [App\Http\Controllers\Api\Account\AccountsController::class, 'getSomeForDisplay']) -> name('accounts.get_for_display');
         Route::post('/get_paginated', [App\Http\Controllers\Api\Account\AccountsController::class, 'getAllPaginated']) -> name('accounts.get_paginated');
         Route::post('/get_current', [App\Http\Controllers\Api\Account\AccountsController::class, 'getCurrentAccount']) -> name('accounts.get_account');
+    });
+
+    Route::group(['prefix' => 'admin'], function(){
+        Route::post('/create', [App\Http\Controllers\Api\Admin\AdminController::class, 'create']) -> name('accounts.create');
     });
 });

@@ -7,15 +7,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
 use App\Models\Liaisonrequest;
+use App\Models\Rating;
 use App\Models\Task;
-use Illuminate\Support\Facades\DB;
+use App\Models\Broker;
+use App\Models\Writer;
 
 class ProfileService {
     public function getDashboardDetails(Request $request){
         $posted_all = Task::where('broker_id', Auth::user() -> broker -> id) -> count();
+
+        $writer_rating = round(Rating::query() -> where('writer_id', Auth::user() -> writer -> id) -> avg('rating'));
+        $writer_ratings_total_ratings = Rating::query() -> where('writer_id', Auth::user() -> writer -> id) -> count();
+
+        $broker_rating = round(Rating::query() -> where('broker_id', Auth::user() -> broker -> id) -> avg('rating'));
+        $broker_ratings_total_ratings = Rating::query() -> where('broker_id', Auth::user() -> broker -> id) -> count();
         
         $posted_unassigned = Task::where([
             ['broker_id', Auth::user() -> broker -> id],
@@ -202,6 +211,13 @@ class ProfileService {
                 'total' => $total_accounts,
                 'on_display' => $total_accounts_on_display,
                 'off_display' => $total_accounts_off_display
+            ],
+
+            'ratings' => [
+                'writer_rating' => $writer_rating,
+                'writer_ratings_total_ratings' => $writer_ratings_total_ratings,
+                'broker_rating' => $broker_rating,
+                'broker_ratings_total_ratings' => $broker_ratings_total_ratings,
             ]
         ];
     }
@@ -218,6 +234,10 @@ class ProfileService {
         $paid_tasks =  count($broker -> tasks -> where('status', 6));
         $invoices_count = count($broker-> Invoices);
 
+        foreach ($broker -> ratings as $rating) {
+            $rating -> writer = Writer::where('id', $rating -> writer_id) -> first()  -> user() -> select('code', 'username') -> first();
+        }
+
         return [
             'writers_count' => $writers_count,
             'total_tasks' => $total_tasks,
@@ -225,7 +245,7 @@ class ProfileService {
             'cancelled_tasks' => $cancelled_tasks,
             'paid_tasks' => $paid_tasks,
             'invoices_count' => $invoices_count,
-            'broker' => $user
+            'broker' => $broker
         ];
     }
 
@@ -234,6 +254,10 @@ class ProfileService {
         $writer = $user -> writer;
         $writer -> average_rating = round($writer -> ratings() -> avg('rating'), 1);
         $writer -> number_of_reviews = $writer -> ratings -> count();
+
+        foreach ($writer -> ratings as $rating) {
+            $rating -> broker = Broker::where('id', $rating -> broker_id) -> first()  -> user() -> select('code', 'username') -> first();
+        }
 
         $brokers_count = count($writer -> brokers); # -> count;
         $total_tasks =  count($writer -> tasks);
@@ -249,7 +273,7 @@ class ProfileService {
             'cancelled_tasks' => $cancelled_tasks,
             'paid_tasks' => $paid_tasks,
             'invoices_count' => $invoices_count,
-            'writer' => $writer
+            'writer' => $writer,
         ];
     }
 
