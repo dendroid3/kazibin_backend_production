@@ -99,22 +99,22 @@ class AccountsService
     }
 
     public function getSomeForDisplay($request) {
-        // $query = Account::query() -> where('display', true);
+        $query = Account::query() -> where('display', true);
         
-        // $fullPath = $request -> path();
-        // $exploded_url = last(explode('/', $fullPath));
+        $fullPath = $request -> path();
+        $exploded_url = last(explode('/', $fullPath));
 
-        // if($exploded_url != "get_for_display_guest") {
-        //     $query -> where('user_id', '!=', Auth::user() ->id);
-        // }
+        if($exploded_url != "get_for_display_guest") {
+            $query -> where('user_id', '!=', Auth::user() ->id);
+        }
 
-        // $accounts = $query -> take(10) -> get();
-        // foreach ($accounts as $account) {
-        //     $account -> User;
-        //     $account -> Files;
-        // }
+        $accounts = $query -> take(10) -> get();
+        foreach ($accounts as $account) {
+            $account -> User;
+            $account -> Files;
+        }
 
-        return $exploded_url;
+        return $accounts;
     }
 
     public function getAllPaginated() {
