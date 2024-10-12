@@ -169,6 +169,11 @@ Route::middleware(['auth:api', 'RecordLastActivity']) -> group(function(){
         Route::get('/get_for_display', [App\Http\Controllers\Api\Account\AccountsController::class, 'getSomeForDisplay']) -> name('accounts.get_for_display');
         Route::post('/get_paginated', [App\Http\Controllers\Api\Account\AccountsController::class, 'getAllPaginated']) -> name('accounts.get_paginated');
         Route::post('/get_current', [App\Http\Controllers\Api\Account\AccountsController::class, 'getCurrentAccount']) -> name('accounts.get_account');
+
+        
+        Route::get('/get_for_display_guest', [App\Http\Controllers\Api\Account\AccountsController::class, 'getSomeForDisplay']) -> name('accounts.get_for_display') -> withoutMiddleware(['auth:api', 'RecordLastActivity']);
+        Route::post('/get_paginated_guest', [App\Http\Controllers\Api\Account\AccountsController::class, 'getAllPaginated']) -> name('accounts.get_paginated') -> withoutMiddleware(['auth:api', 'RecordLastActivity']);
+        Route::post('/get_current_guest', [App\Http\Controllers\Api\Account\AccountsController::class, 'getCurrentAccount']) -> name('accounts.get_account')-> withoutMiddleware(['auth:api', 'RecordLastActivity']);
     });
 
     Route::group(['prefix' => 'admin'], function(){

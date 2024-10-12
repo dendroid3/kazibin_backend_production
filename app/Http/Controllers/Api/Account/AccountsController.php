@@ -25,7 +25,7 @@ class AccountsController extends Controller
 
     public function getSomeForDisplay(Request $request, AccountsService $accounts_service) {
         return response() -> json([
-            'accounts' => $accounts_service -> getSomeForDisplay()
+            'accounts' => $accounts_service -> getSomeForDisplay($request)
         ]);
     }
 
