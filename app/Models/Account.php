@@ -12,6 +12,7 @@ class Account extends Model
 
     protected $fillable = [
         'user_id',
+        'type',
         'code',
         'title',
         'rating',
@@ -19,6 +20,7 @@ class Account extends Model
         'profile_gender',
         'total_orders',
         'pending_orders',
+        'amount_earned',
         'cost',
         'negotiable',
         'display',

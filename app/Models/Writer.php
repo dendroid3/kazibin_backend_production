@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use \App\Traits\TraitUuid;
 
 
@@ -45,7 +46,7 @@ class Writer extends Model
     }
     
     public function ratings(){
-        return $this-> hasMany(Rating::class);
+        return $this-> hasMany(Rating::class) -> where('initiator_id', '!=', Auth::user() -> id);
     }
 
 

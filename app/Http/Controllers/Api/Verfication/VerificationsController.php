@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\SystemLog\LogCreationService;
 use App\Services\Transaction\TransactionService;
+use App\Services\Telegram\BroadcastService;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Transaction;
 use App\Models\Verification;
@@ -16,7 +17,7 @@ class VerificationsController extends Controller
 {
     //there should be a part to send samples
     //additionally, they should be able to check graduation credentials
-    public function initiateVerification(Request $request, LogCreationService $log_service, TransactionService $transaction_service)
+    public function initiateVerification(Request $request, LogCreationService $log_service, TransactionService $transaction_service, BroadcastService $broadcast_service)
     {
         // Change this destination to Digital Ocean Spaces.
 
@@ -57,6 +58,8 @@ class VerificationsController extends Controller
             $verification -> id,
             'Verification Initialised'
         );
+
+        $broadcast_service -> broadcastToVerificationsChannel(Auth::user());
 
         return response() -> json(
             $user_message

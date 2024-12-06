@@ -3,6 +3,7 @@
 namespace App\Services\Telegram;
 
 use Telegram\Bot\Laravel\Facades\Telegram;
+
 use Carbon\CarbonInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Log;
@@ -10,27 +11,38 @@ use Illuminate\Support\Facades\Artisan;
 use Carbon\Carbon;
 
 class BroadcastService {
-  public function braodcastToTaskChannel($text){
+  public function broadcastToTaskChannel($text){
     Telegram::sendMessage([
-      'chat_id' => env('TELEGRAM_CHANNEL_ID'),
+      'chat_id' => env('TELEGRAM_TASK_CHANNEL_ID'),
       'parse_mode' => 'HTML',
       'text' => $text
     ]);
   }
   
-  public function braodcastToErrorChannel($error){
+  public function broadcastToErrorChannel($error){
     $text = "<u><b> Error Code: " . $error['error_code'] . "</b></u>\n" .
     "Error Message: " . $error['message'] . "\n" .
     "User Phone Number: " . $error['user_phone_number'];
     Telegram::sendMessage([
-      'chat_id' => env('TELEGRAM_CHANNEL_ID'),
-      'thread_id' => 3,
+      'chat_id' => env('TELEGRAM_ADMIN_GROUP_ID'),
+      'message_thread_id' => env('TELEGRAM_ADMIN_GROUP_ERRORS_THREAD'),
       'parse_mode' => 'HTML',
       'text' => $text
     ]);
   }
 
-  public function broadcatToWhatsAppGroup($task) {
+  public function broadcastToVerificationsChannel($user){
+    $text = "<u><b> Vertification Application </b></u>\n" .
+    $user -> code . ": " . $user -> username .  " has requested for verification.\n";
+    Telegram::sendMessage([
+      'chat_id' => env('TELEGRAM_ADMIN_GROUP_ID'),
+      'message_thread_id' => env('TELEGRAM_ADMIN_GROUP_VERIFICATIONS_THREAD'),
+      'parse_mode' => 'HTML',
+      'text' => $text
+    ]);
+  }
+
+  public function broadcastToWhatsAppGroup($task) {
     $task_url = env('APP_CLIENT', "https://app.kazibin.com") 
     . "/t/"
     . $task -> code;
@@ -95,8 +107,8 @@ class BroadcastService {
     . "<b>" . $task->full_pay . "</b> \n  \n"
     . '<a href="' . $task_url. '">View Task</a>';
 
-    // $this -> braodcastToTaskChannel($text);
-    $this -> broadcatToWhatsAppGroup($task);
+    $this -> broadcastToTaskChannel($text);
+    $this -> broadcastToWhatsAppGroup($task);
   }
 
   public function checkDueTimeOn($date){

@@ -119,4 +119,8 @@ class User extends Authenticatable
         return $this -> hasMany(Account::class);
     }
 
+    public function managedaccounts(){
+        return $this -> hasMany(Managedaccount::class);
+    }
+
 }

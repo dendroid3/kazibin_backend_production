@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Api\Profile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Profile\ProfileService;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
+    public function trans(Request $request){
+        Log::info($request -> all());
+    }
     public function getDashboardDetails(Request $request, ProfileService $profile_service){
 
         return response() -> json([

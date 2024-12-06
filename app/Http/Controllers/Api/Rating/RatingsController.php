@@ -32,7 +32,7 @@ class RatingsController extends Controller
 
         if(Auth::user() -> writer -> id == $request -> writer_id){
             $broker = Broker::find($request -> broker_id) -> user;
-            $broker_message = Auth::user() ->username . ' rated you ' . $request -> rating . '/5 stars on task code: ' . $task -> code;
+            $broker_message = Auth::user() ->username . ' rated you ' . $request -> rating . '/10 stars on task code: ' . $task -> code;
             $log_service -> createSystemMessage(
                 $broker -> id, 
                 $broker_message,
@@ -40,7 +40,7 @@ class RatingsController extends Controller
                 'Rating Made'
             ); 
     
-            $writer_message = 'You rated ' . $broker -> username . " " . $request -> rating . '/5 stars on task code: ' . $task ->code;
+            $writer_message = 'You rated ' . $broker -> username . " " . $request -> rating . '/10 stars on task code: ' . $task ->code;
             $log_service -> createSystemMessage(
                 Auth::user() -> id,
                 $writer_message,
@@ -52,7 +52,7 @@ class RatingsController extends Controller
             $task_message -> id = Str::orderedUuid() -> toString();
             $task_message -> user_id = 1;
             $task_message -> task_id = $request -> task_id;
-            $task_message -> message = '---' . Auth::user() -> username . ' rated ' . $broker -> username . "'s perfomance on this task as " . $request -> rating . "/5 ---";
+            $task_message -> message = '---' . Auth::user() -> username . ' rated ' . $broker -> username . "'s perfomance on this task as " . $request -> rating . "/10 ---";
             $task_message -> save();
 
             return response() -> json(
@@ -61,7 +61,7 @@ class RatingsController extends Controller
             
         } else {
             $writer = Writer::find($request -> writer_id) -> user;
-            $writer_message = Auth::user() ->username . ' rated you ' . $request -> rating . '/5 stars on task code: ' . $task -> code;
+            $writer_message = Auth::user() ->username . ' rated you ' . $request -> rating . '/10 stars on task code: ' . $task -> code;
             $log_service -> createSystemMessage(
                 $writer -> id, 
                 $writer_message,
@@ -69,7 +69,7 @@ class RatingsController extends Controller
                 'Rating Made'
             ); 
     
-            $broker_message = 'You rated ' . $writer -> username . " " . $request -> rating . '/5 stars on task code: ' . $task ->code;
+            $broker_message = 'You rated ' . $writer -> username . " " . $request -> rating . '/10 stars on task code: ' . $task ->code;
             $log_service -> createSystemMessage(
                 Auth::user() -> id,
                 $broker_message,
@@ -80,7 +80,7 @@ class RatingsController extends Controller
             $task_message -> id = Str::orderedUuid() -> toString();
             $task_message -> user_id = 1;
             $task_message -> task_id = $request -> task_id;
-            $task_message -> message = '---' . Auth::user() -> username . ' rated ' . $writer -> username . "'s perfomance on this task as " . $request -> rating . "/5 ---";
+            $task_message -> message = '---' . Auth::user() -> username . ' rated ' . $writer -> username . "'s perfomance on this task as " . $request -> rating . "/10 ---";
             $task_message -> save();
 
             return response() -> json(

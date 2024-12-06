@@ -18,12 +18,14 @@ class CreateAccountsTable extends Migration
             $table->uuid('user_id');
             $table->string('code');
             $table->string('title');
+            $table->string('type');
             $table->string('profile_origin');
             $table->string('profile_gender');
             $table->integer('total_orders');
             $table->integer('pending_orders');
+            $table->integer('amount_earned');
             $table->integer('cost');
-            $table->integer('rating');
+            $table->string('rating');
             $table->boolean('negotiable')->default(true);
             $table->boolean('display')->dafault(true);
             $table->dateTime('expiry');

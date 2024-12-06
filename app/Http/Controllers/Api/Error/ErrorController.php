@@ -22,7 +22,7 @@ class ErrorController extends Controller
         $error -> url = $request -> url;
         $error -> save();
 
-        // $broadcast_channel -> braodcastToErrorChannel($request -> all());
+        $broadcast_channel -> broadcastToErrorChannel($request -> all());
 
     }
 }

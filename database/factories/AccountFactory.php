@@ -12,6 +12,13 @@ class AccountFactory extends Factory
    
     public function definition()
     {
+        $types = [
+            'Writing',
+            'Transcription',
+            'Bidding',
+            'Chat Moderation'
+        ];
+
         $origins = [
             'Kenyan',
             'US',
@@ -32,16 +39,18 @@ class AccountFactory extends Factory
         return [
             'user_id' => $this -> getUserId(),
             'code' => $this -> fakeCode(),
+            'type' => $types[rand()&3],
             'title' => $titles[rand()&6],
             'profile_origin' => $origins[rand()&3],
             'profile_gender' => (rand()&1 == 1 ? 'Female' : 'Male'),
             'total_orders' => rand(200,2000),
             'pending_orders' => rand()&20,
+            'amount_earned' => (rand(1, 1000) * 1000),
             'cost' => rand(15000,200000),
             'negotiable' => rand()&1,
             'display' => rand()&1,
             'rating' => rand(75,98),
-            'expiry' => Carbon::now() -> addDays(7)
+            'expiry' => Carbon::now() -> addDays(7) -> toDateTimeString()
         ];
     }
 

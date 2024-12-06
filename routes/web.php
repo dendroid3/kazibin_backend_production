@@ -46,6 +46,14 @@ Route::get('/event', function() {
     // return response()->json(['output' => $output, 'message' => 'WhatsApp linking process started.']);
 });
 
+Route::get('/telegram', function() {
+    Telegram::sendMessage([
+        'chat_id' => env('TELEGRAM_TASK_CHANNEL_ID'),
+        'parse_mode' => 'HTML',
+        'text' => "Hello now!"
+    ]);
+});
+
 Route::get('/wp', function() {
     // $client = new Client();
     // $response = $client->post('https://api.gupshup.io/sm/api/v1/msg', [

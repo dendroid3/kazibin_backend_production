@@ -13,6 +13,7 @@ class Rating extends Model
         'task_id',
         'writers-id',
         'broker_id',
+        'initiator_id',
         'rating',
         'review'
     ];

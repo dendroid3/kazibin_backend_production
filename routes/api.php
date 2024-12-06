@@ -163,17 +163,19 @@ Route::middleware(['auth:api', 'RecordLastActivity']) -> group(function(){
         Route::post('/pull', [App\Http\Controllers\Api\Bid\MainController::class, 'pullBid']) -> name('bid.pull');
     });
 
-    Route::group(['prefix' => 'account'], function(){
-        Route::post('/create', [App\Http\Controllers\Api\Account\AccountsController::class, 'create']) -> name('accounts.create');
-        Route::post('/get_mine', [App\Http\Controllers\Api\Account\AccountsController::class, 'getMine']) -> name('accounts.get_mine');
-        Route::get('/get_for_display', [App\Http\Controllers\Api\Account\AccountsController::class, 'getSomeForDisplay']) -> name('accounts.get_for_display');
-        Route::post('/get_paginated', [App\Http\Controllers\Api\Account\AccountsController::class, 'getAllPaginated']) -> name('accounts.get_paginated');
-        Route::post('/get_current', [App\Http\Controllers\Api\Account\AccountsController::class, 'getCurrentAccount']) -> name('accounts.get_account');
+    Route::group(['prefix' => 'marketplace'], function(){
+        Route::post('/create', [App\Http\Controllers\Api\Marketplace\MarketplaceController::class, 'create']) -> name('marketplace.create');
+        Route::post('/update', [App\Http\Controllers\Api\Marketplace\MarketplaceController::class, 'update']) -> name('marketplace.update');
+        Route::delete('/delete', [App\Http\Controllers\Api\Marketplace\MarketplaceController::class, 'delete']) -> name('marketplace.delete');
+        Route::post('/get_current', [App\Http\Controllers\Api\Marketplace\MarketplaceController::class, 'getCurrentAccount']) -> name('marketplace.get_account') -> withoutMiddleware(['auth:api', 'RecordLastActivity']);
 
-        
-        Route::get('/get_for_display_guest', [App\Http\Controllers\Api\Account\AccountsController::class, 'getSomeForDisplay']) -> name('accounts.get_for_display') -> withoutMiddleware(['auth:api', 'RecordLastActivity']);
-        Route::post('/get_paginated_guest', [App\Http\Controllers\Api\Account\AccountsController::class, 'getAllPaginated']) -> name('accounts.get_paginated') -> withoutMiddleware(['auth:api', 'RecordLastActivity']);
-        Route::post('/get_current_guest', [App\Http\Controllers\Api\Account\AccountsController::class, 'getCurrentAccount']) -> name('accounts.get_account')-> withoutMiddleware(['auth:api', 'RecordLastActivity']);
+
+        Route::post('/get_mine', [App\Http\Controllers\Api\Marketplace\MarketplaceController::class, 'getMine']) -> name('marketplace.get_mine');
+        Route::get('/get_for_display', [App\Http\Controllers\Api\Marketplace\MarketplaceController::class, 'getSomeForDisplay']) -> name('marketplace.get_for_display');
+        Route::get('/get_paginated', [App\Http\Controllers\Api\Marketplace\MarketplaceController::class, 'getAllPaginated']) -> name('marketplace.get_paginated');
+
+        Route::get('/get_for_display_guest', [App\Http\Controllers\Api\Marketplace\MarketplaceController::class, 'getSomeForDisplay']) -> name('marketplace.get_for_display') -> withoutMiddleware(['auth:api', 'RecordLastActivity']);
+        Route::get('/get_paginated_guest', [App\Http\Controllers\Api\Marketplace\MarketplaceController::class, 'getAllPaginated']) -> name('marketplace.get_paginated') -> withoutMiddleware(['auth:api', 'RecordLastActivity']);
     });
 
     Route::group(['prefix' => 'admin'], function(){
