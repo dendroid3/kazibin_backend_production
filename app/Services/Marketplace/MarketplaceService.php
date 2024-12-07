@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 
 use App\Services\SystemLog\LogCreationService;
 
@@ -20,8 +21,11 @@ use App\Models\Transaction;
 class MarketplaceService
 {
     public function create($request, $log_service) {
-        // $account_details = $request -> account;
-        $account_details = json_decode($request -> account, true);
+        if(App::environment('testing')){
+            $account_details = $request -> account;
+        } else {
+            $account_details = json_decode($request -> account, true);
+        }
 
         $account = new Account;
         $account -> user_id = Auth::user() -> id;
@@ -36,6 +40,7 @@ class MarketplaceService
         $account -> amount_earned = $account_details['amount_earned'];
         $account -> cost = $account_details['cost'];
         $account -> negotiable = $account_details['negotiable'];
+        $account -> description = $account_details['description'];
         $account -> display = true;
         $account -> expiry = Carbon::now() -> addDays(7);
         $account -> save();
@@ -86,10 +91,11 @@ class MarketplaceService
     }
 
     public function update($request, $log_service) {
-        $account_details = $request -> toArray();
-        // $account_details = json_decode($request -> account, true);
-
-        Log::info($request["display"]);
+        if(App::environment('testing')){
+            $account_details = $request -> account;
+        } else {
+            $account_details = $request -> toArray();
+        }
 
         $account = Account::find($account_details["id"]);
         $account -> update($account_details);

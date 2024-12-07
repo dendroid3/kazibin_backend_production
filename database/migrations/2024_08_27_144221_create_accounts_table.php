@@ -29,6 +29,7 @@ class CreateAccountsTable extends Migration
             $table->boolean('negotiable')->default(true);
             $table->boolean('display')->dafault(true);
             $table->dateTime('expiry');
+            $table->longText('description')->nullable();
             $table->timestamps();
         });
     }
