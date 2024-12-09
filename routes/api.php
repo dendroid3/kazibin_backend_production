@@ -178,6 +178,10 @@ Route::middleware(['auth:api', 'RecordLastActivity']) -> group(function(){
         Route::get('/get_paginated_guest', [App\Http\Controllers\Api\Marketplace\MarketplaceController::class, 'getAllPaginated']) -> name('marketplace.get_paginated') -> withoutMiddleware(['auth:api', 'RecordLastActivity']);
     });
 
+    Route::group(['prefix' => 'services'], function(){
+        Route::get('/get', [App\Http\Controllers\Api\Service\ServicesController::class, 'get']) -> name('service.get') -> withoutMiddleware(['auth:api', 'RecordLastActivity']);
+    });
+
     Route::group(['prefix' => 'admin'], function(){
         Route::post('/create', [App\Http\Controllers\Api\Admin\AdminController::class, 'create']) -> name('accounts.create');
     });
