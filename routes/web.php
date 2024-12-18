@@ -151,6 +151,21 @@ Route::post('/webhooked', function (Request $request) {
     // dd(Telegram::addCommand(App\TelegramCommands\startCommand::class));
     return response() -> json(['error' => 'forbidden'], 403);
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(['prefix' => 'admin'], function(){
+    Route::get('/verifications', [App\Http\Controllers\AdminController::class, 'taskers'])->name('home');
+    Route::get('/taskers', [App\Http\Controllers\AdminController::class, 'taskers'])->name('home');
+    Route::get('/managed accounts', [App\Http\Controllers\AdminController::class, 'taskers'])->name('home');
+    Route::get('/services', [App\Http\Controllers\AdminController::class, 'taskers'])->name('home');
+    Route::post('/create_tasker', [App\Http\Controllers\AdminController::class, 'createTasker'])->name('createTasker');
+
+});
+
+
 Route::get('{any}', function () {
     // dd(Telegram::commandsHandler(true));
     // dd(Telegram::getWebhookUpdate());
@@ -158,4 +173,3 @@ Route::get('{any}', function () {
     // dd(Telegram::addCommand(App\TelegramCommands\startCommand::class));
     return response() -> json(['error' => 'forbidden'], 403);
 });
-

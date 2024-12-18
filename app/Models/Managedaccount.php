@@ -15,18 +15,27 @@ class Managedaccount extends Model
         'user_id',
         'email',
         'provider',
-        'provider_identifier'
+        'provider_identifier',
+        'tasker_id',
+        'tasker_rate',
+        'owner_rate',
+        'jobraq_rate',
+        'proxy'
     ];
 
-    public function User() {
+    public function user() {
         return $this -> belongsTo(User::class);
     }
 
-    public function Details() {
+    public function details() {
         return $this -> hasMany(Managedaccountdetail::class);
     }
 
-    public function Revenue() {
+    public function tasker() {
+        return $this -> belongsTo(Tasker::class);
+    }
+
+    public function revenue() {
         return $this -> hasMany(Managedaccountrevenue::class);
     }
 }

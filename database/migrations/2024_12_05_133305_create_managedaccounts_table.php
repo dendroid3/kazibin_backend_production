@@ -19,6 +19,11 @@ class CreateManagedaccountsTable extends Migration
             $table->string('provider');
             $table->string('email');
             $table->string('provider_identifier')->nullable();
+            $table->string('tasker_id')->nullable();
+            $table->string('tasker_rate')->nullable();
+            $table->string('owner_rate')->nullable();
+            $table->string('jobraq_rate')->nullable();
+            $table->string('proxy')->nullable();
             $table->timestamps();
         });
     }
