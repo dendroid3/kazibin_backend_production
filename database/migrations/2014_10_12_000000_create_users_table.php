@@ -32,6 +32,7 @@ class CreateUsersTable extends Migration
             $table->string('phone_verification')->nullable();
             $table->boolean('credential_verification')->nullable();
             $table->longText('password');
+            $table->string('role')->default('User');
             $table->dateTime('last_activity');
             $table->rememberToken();
             $table->timestamps();

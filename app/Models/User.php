@@ -38,7 +38,8 @@ class User extends Authenticatable
         'broker_score',
         'writer_score',
         'code',
-        'last_activity'
+        'last_activity',
+        'role'
     ];
 
     /**
@@ -123,4 +124,7 @@ class User extends Authenticatable
         return $this -> hasMany(Managedaccount::class);
     }
 
+    public function tasker(){
+        return $this -> hasOne(Tasker::class);
+    }
 }

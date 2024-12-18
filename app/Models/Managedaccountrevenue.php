@@ -17,7 +17,7 @@ class Managedaccountrevenue extends Model
         'amount',
     ];
 
-    public function Managedaccount() {
+    public function managedAccount() {
         return $this -> belongsTo(Managedaccount::class);
     }
 }
