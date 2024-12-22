@@ -158,7 +158,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['prefix' => 'admin'], function(){
     Route::get('/verifications', [App\Http\Controllers\AdminController::class, 'taskers'])->name('home');
-    Route::get('/taskers', [App\Http\Controllers\AdminController::class, 'taskers'])->name('home');
+    Route::get('/taskers', [App\Http\Controllers\AdminController::class, 'getTaskers'])->name('home');
+    Route::get('/tasker', [App\Http\Controllers\AdminController::class, 'getTasker'])->name('home');
     Route::get('/managed accounts', [App\Http\Controllers\AdminController::class, 'taskers'])->name('home');
     Route::get('/services', [App\Http\Controllers\AdminController::class, 'taskers'])->name('home');
     Route::post('/create_tasker', [App\Http\Controllers\AdminController::class, 'createTasker'])->name('createTasker');
