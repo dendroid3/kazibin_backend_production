@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Models\Managedaccount;
 use App\Models\Service;
+use App\Models\Tasker;
 use App\Models\User;
 
 class HomeController extends Controller
@@ -34,8 +36,8 @@ class HomeController extends Controller
     public function getStatistics()
     {
         $verifications = 1;
-        $taskers = 2;
-        $managed_accounts = 3;
+        $taskers = Tasker::count();
+        $managed_accounts = Managedaccount::count();
         $services = Service::count();
         $users = User::query() -> where('role', "User") -> count();
         $total_revenue = "40,000,000";

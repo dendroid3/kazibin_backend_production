@@ -14,7 +14,10 @@ class CreateManagedaccountrevenuesTable extends Migration
     public function up()
     {
         Schema::create('managedaccountrevenues', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id') ->primary()->unique();
+            $table->uuid('managedaccount_id')->index();
+            $table->integer('amount');
+            $table->string('type');
             $table->timestamps();
         });
     }

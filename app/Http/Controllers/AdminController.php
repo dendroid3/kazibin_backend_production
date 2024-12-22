@@ -10,11 +10,9 @@ use App\Models\Tasker;
 
 class AdminController extends Controller
 {
-    public function taskers(Request $request)
+    public function getTaskers(Request $request)
     {
         $status = request()->get('status');
-
-        Log::info($status);
 
         $taskers = User::query()
         ->where('role', 'tasker')
@@ -45,9 +43,6 @@ class AdminController extends Controller
 
             return $tasker;
         });
-
-
-
 
 
         $total_taskers = User::query() -> where('role', 'tasker') -> count();
@@ -81,5 +76,34 @@ class AdminController extends Controller
         $tasker -> save();
 
         return response() -> json($tasker);
+    }
+
+    public function getTasker(Request $request)
+    {
+        $tasker = Tasker::query() -> where('id', $request -> tasker_id) 
+        -> with('user')
+        -> first();
+
+        $managedAccounts = $tasker->managedAccounts()
+        ->with([
+            'user',
+        ])
+        ->withSum(['revenue as debit_revenue_sum' => function ($query) {
+            $query->where('type', 'Debit');
+        }], 'amount') 
+        ->paginate(10);  
+
+        $tasker_statistics = [
+            'total accounts' => $tasker->managedAccounts->count(),
+            'total revenue' => $tasker->managedAccounts->flatMap(function ($managedAccount) {
+                return $managedAccount->revenue;
+            })->where('type', 'Debit')->sum('amount'),
+        ];
+
+        return view('admin/tasker', [
+            'tasker' => $tasker,
+            'managedAccounts' => $managedAccounts,
+            'taskerStatistics' => $tasker_statistics,
+        ]);
     }
 }

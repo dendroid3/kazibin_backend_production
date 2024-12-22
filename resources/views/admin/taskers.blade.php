@@ -41,12 +41,12 @@
                         <td>{{ $tasker->email }}</td>
                         <td>{{ $tasker->tasker->status }}</td>
                         <td>{{ $tasker->tasker->score }}</td>
-                        <td>{{ 0 }}</td>
+                         <td>{{ $tasker['tasker']['managedAccounts'] -> count() }}</td>
                         <td>{{ $tasker->total_revenue }}</td>
                         <td>{{ \Carbon\Carbon::parse($tasker->tasker->created_at)->diffForHumans() }}</td>
                         <td>{{ \Carbon\Carbon::parse($tasker->last_activity)->diffForHumans() }}</td>
                         <td>
-                        <button class="btn btn-success btn-sm">View</button>
+                        <a class="btn btn-success btn-sm" href="/admin/tasker?tasker_id={{$tasker->tasker->id}}">View</a>
                         </td>
                     </tr>
                 @empty
