@@ -13,6 +13,8 @@ class Managedaccount extends Model
     protected $fillable = [
         'status',
         'user_id',
+        'code',
+        'status',
         'email',
         'provider',
         'provider_identifier',

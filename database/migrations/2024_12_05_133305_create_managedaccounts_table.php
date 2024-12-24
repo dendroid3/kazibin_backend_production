@@ -16,6 +16,8 @@ class CreateManagedaccountsTable extends Migration
         Schema::create('managedaccounts', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
             $table->uuid('user_id')->index();
+            $table->string('code')->unique();
+            $table->string('status')->default('pending');
             $table->string('provider');
             $table->string('email');
             $table->string('provider_identifier')->nullable();

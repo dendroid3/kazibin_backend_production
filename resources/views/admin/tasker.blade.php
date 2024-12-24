@@ -23,6 +23,8 @@
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">Managed Since</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Owner</th>
                         <th scope="col">Provider</th>
                         <th scope="col">Owner Rate</th>
@@ -34,7 +36,9 @@
                 <tbody>
                     @forelse ($managedAccounts as $account)
                         <tr>
-                        <td>{{ \Carbon\Carbon::parse($account->created_at)->format("d M Y") }}</td>
+                            <td>{{ \Carbon\Carbon::parse($account->created_at)->format("d M Y") }}</td>
+                            <td>{{ $account->code }}</td>
+                            <td>{{ $account->status }}</td>
                             <td>
                             {{ $account->user -> username }} <br>
                             {{ $account->user -> email }} <br>
