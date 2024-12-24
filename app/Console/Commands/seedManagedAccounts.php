@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class seedManagedAccounts extends Command
 {
@@ -47,6 +48,7 @@ class seedManagedAccounts extends Command
             for ($i = 0; $i < rand(5, 10); $i++) {
                 $managedAccount = \App\Models\Managedaccount::create([
                     'user_id' => $userIds[array_rand($userIds)],
+                    'code' => strtoupper(Str::random(3)) . '-' . strtoupper(Str::random(3)),
                     'tasker_id' => $tasker->tasker->id,
                     'email' => 'user' . rand(1, 1000) . '@example.com',
                     'provider' => 'provider' . rand(1, 1000),
@@ -54,22 +56,23 @@ class seedManagedAccounts extends Command
                     'tasker_rate' => $taskerRate = rand(10, 80),
                     'owner_rate' => $ownerRate = rand(10, 100 - $taskerRate),
                     'jobraq_rate' => 100 - $taskerRate - $ownerRate,
-
-
-
+                    'status' => ['pending', 'active', 'closed'][array_rand(['pending', 'active', 'closed'])],
                 ]);
 
                 $this->line('<fg=green;> Account' . $i . ': ' . $managedAccount -> provider . ' Created </>');
 
-                for ($j = 0; $j < rand(4, 10); $j++) {
-                    $revenue = \App\Models\Managedaccountrevenue::create([
-                        'managedaccount_id' => $managedAccount->id,
-                        'amount' => rand(100, 1000),
-                        'type' => ['Debit', 'Credit'][array_rand(['Debit', 'Credit'])],
-                    ]);
+                if($managedAccount -> status == 'pending'){
+                    $this->line('<fg=red;> No Revenue added since the account is pending. </>');
+                } else {
+                    for ($j = 0; $j < rand(4, 10); $j++) {
+                        $revenue = \App\Models\Managedaccountrevenue::create([
+                            'managedaccount_id' => $managedAccount->id,
+                            'amount' => rand(100, 1000),
+                            'type' => ['Debit', 'Credit'][array_rand(['Debit', 'Credit'])],
+                        ]);
 
-                    $this->line('<fg=blue;> Revenue' . $i . ': ' . $revenue -> amount . '(' . $revenue -> type . ') Created </>');
-
+                        $this->line('<fg=blue;> Revenue' . $j . ': ' . $revenue -> amount . '(' . $revenue -> type . ') Created </>');
+                    }
                 }
             }
         }
