@@ -52,6 +52,7 @@ class seedManagedAccounts extends Command
                     'tasker_id' => $tasker->tasker->id,
                     'email' => 'user' . rand(1, 1000) . '@example.com',
                     'provider' => 'provider' . rand(1, 1000),
+                    'payday' => rand(1, 30),
                     'provider_identifier' => 'provider_identifier' . rand(1, 1000),
                     'tasker_rate' => $taskerRate = rand(10, 80),
                     'owner_rate' => $ownerRate = rand(10, 100 - $taskerRate),

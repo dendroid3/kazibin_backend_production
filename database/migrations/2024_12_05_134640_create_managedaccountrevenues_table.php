@@ -18,6 +18,7 @@ class CreateManagedaccountrevenuesTable extends Migration
             $table->uuid('managedaccount_id')->index();
             $table->integer('amount');
             $table->string('type');
+            $table->string('description');
             $table->timestamps();
         });
     }

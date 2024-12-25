@@ -14,6 +14,7 @@ class Managedaccountrevenue extends Model
         'status',
         'managedaccount_id',
         'type',
+        'description',
         'amount',
     ];
 

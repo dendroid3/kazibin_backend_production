@@ -139,6 +139,11 @@ class ProfileService {
         $total_accounts_on_display = Auth::user() -> accounts -> where('display', 1) -> count();
         $total_accounts_off_display = Auth::user() -> accounts -> where('display', 0) -> count();
 
+        $total_managed_accounts = Auth::user() -> managedaccounts -> count();
+        $total_pending_managed_accounts = Auth::user() -> managedaccounts -> where('status', 'pending') -> count();
+        $total_active_managed_accounts = Auth::user() -> managedaccounts -> where('status', 'active') -> count();
+        $total_closed_managed_accounts = Auth::user() -> managedaccounts -> where('status', 'closed') -> count();
+
         return [
             'posted' => [
                 'posted_all' => $posted_all,
@@ -218,6 +223,13 @@ class ProfileService {
                 'writer_ratings_total_ratings' => $writer_ratings_total_ratings,
                 'broker_rating' => $broker_rating,
                 'broker_ratings_total_ratings' => $broker_ratings_total_ratings,
+            ],
+
+            'managed_accounts' => [
+                'total' => $total_managed_accounts,
+                'pending' => $total_pending_managed_accounts,
+                'active' => $total_active_managed_accounts,
+                'closed' => $total_closed_managed_accounts
             ]
         ];
     }
