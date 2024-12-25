@@ -20,6 +20,7 @@ use App\Models\User;
 class RegistrationService {
   public function create(Request $request)
   {
+    Log::info($request -> email);
     $validator = Validator::make($request->all(), [
       'username' => ['required', 'max:25', 'bail'],
       'phone_number' => ['required', 'unique:users', 'between:9,10', 'bail'],

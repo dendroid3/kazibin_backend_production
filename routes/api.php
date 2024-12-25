@@ -179,7 +179,8 @@ Route::middleware(['auth:api', 'RecordLastActivity']) -> group(function(){
     });
 
     Route::group(['prefix' => 'managed'], function(){
-        Route::get('/get', [App\Http\Controllers\Api\ManagedAccounts\ManagedAccountsController::class, 'get']) -> name('managed.get');
+        Route::post('/create', [App\Http\Controllers\Api\ManagedAccounts\ManagedAccountsController::class, 'create']) -> name('managed.create');
+        Route::post('/get', [App\Http\Controllers\Api\ManagedAccounts\ManagedAccountsController::class, 'get']) -> name('managed.get');
     });
 
     Route::group(['prefix' => 'services'], function(){

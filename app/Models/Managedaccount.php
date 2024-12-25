@@ -15,6 +15,7 @@ class Managedaccount extends Model
         'user_id',
         'code',
         'status',
+        'payday',
         'email',
         'provider',
         'provider_identifier',

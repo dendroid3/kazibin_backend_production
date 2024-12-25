@@ -18,6 +18,7 @@ class CreateManagedaccountsTable extends Migration
             $table->uuid('user_id')->index();
             $table->string('code')->unique();
             $table->string('status')->default('pending');
+            $table->integer('payday')->default(1);
             $table->string('provider');
             $table->string('email');
             $table->string('provider_identifier')->nullable();

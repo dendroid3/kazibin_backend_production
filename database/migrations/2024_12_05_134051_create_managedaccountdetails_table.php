@@ -14,7 +14,10 @@ class CreateManagedaccountdetailsTable extends Migration
     public function up()
     {
         Schema::create('managedaccountdetails', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary()->unique();
+            $table->uuid('managedaccount_id')->index();
+            $table->string('title');   
+            $table->string('description');
             $table->timestamps();
         });
     }
