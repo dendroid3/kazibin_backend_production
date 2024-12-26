@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 use App\Models\Tasker;
+use App\Models\ManagedAccount;
+use App\Models\Managedaccountrevenue;
+use Mail;
+
+use App\Services\SystemLog\LogCreationService;
 
 class AdminController extends Controller
 {
@@ -105,5 +110,107 @@ class AdminController extends Controller
             'managedAccounts' => $managedAccounts,
             'taskerStatistics' => $tasker_statistics,
         ]);
+    }
+
+    public function getManagedAccounts(Request $request)
+    {
+        $status = request()->get('status');
+
+        $accounts = ManagedAccount::query()
+        ->when($status, function ($query) use ($status) {
+            $query->where('status', $status); 
+        })
+        -> with([
+            'tasker',
+            'user',
+            'details',
+            'revenue'
+        ])
+        ->withSum(['revenue as debit_revenue_sum' => function ($query) {
+            $query->where('type', 'Debit');
+        }], 'amount')
+        -> paginate(10);
+
+        Log::info($accounts);
+        $managed_accounts_statistics = [
+            // 'total_accounts' => ManagedAccount::query() -> count(),
+            'pending' => ManagedAccount::query() -> where('status', 'pending') -> count(),
+            'active' => ManagedAccount::query() -> where('status', 'active') -> count(),
+            'closed' => ManagedAccount::query() -> where('status', 'closed') -> count(),
+        ];
+
+        return view('admin/managed_accounts', [
+            'accounts' => $accounts,
+            'managed_accounts_statistics' => $managed_accounts_statistics
+        ]);
+    }
+
+    public function getManagedAccount(Request $request)
+    {
+        $account = ManagedAccount::query() -> where('id', $request -> account_id) 
+        -> with([
+            'tasker',
+            'user',
+            'details',
+        ])
+        -> first();
+
+        $account -> revenue = Managedaccountrevenue::query() -> where('managedaccount_id', $account -> id) -> paginate(10);
+        
+        $total_revenue = $account->revenue->where('type', 'Debit')->sum('amount');
+
+        $account_statistics = [
+            "owner`s" => '$' . ($total_revenue * $account->owner_rate / 100) . " (" . $account->owner_rate . "%)",
+            "tasker`s" => '$' . ($total_revenue * $account->tasker_rate / 100) . " (" . $account->tasker_rate . "%)",
+            "jobraq`s" => '$' . ($total_revenue * $account->jobraq_rate / 100) . " (" . $account->jobraq_rate . "%)",
+        ];
+
+        return view('admin/managed_account', [
+            'account' => $account,
+            'account_statistics' => $account_statistics
+        ]);
+    }   
+
+    public function updateManagedAccount(Request $request, LogCreationService $log_creation_service)
+    {
+        // Get tasker by user_id
+        $user = User::where('code', $request -> tasker) -> first();
+        if(!$user) {
+            return response() -> json(['error' => 'Tasker not found'], 404);
+        }
+
+        $tasker = $user -> tasker;
+        $tasker_id = $tasker -> id;
+        $account = ManagedAccount::find($request -> account_id);
+
+        if(!$account -> tasker && $request -> tasker) {
+
+            $log_creation_service -> createSystemMessage(
+                $account -> user_id,
+                "Account Management Request Approved for " . $account -> provider . " with email " . $account -> email . " and code " 
+                . $account -> code . ". Jobraq will now manage this account at a rate of " . ($request -> jobraq_rate + $request -> tasker_rate) . "%.",
+                $account -> id, 
+                'Account Management Request Approved'
+            );
+
+            $username = $account -> user -> username;
+
+            $payday = $request -> payday;
+            $pay_cut = $request -> jobraq_rate + $request -> tasker_rate;
+            
+            Mail::to("kazibin66@gmail.com")->send(new \App\Mail\AccountManagementRequestApproved($username, $payday, $pay_cut));
+
+            Log::info("username" . $username);
+        }
+
+        $account -> status = $request -> status;
+        $account -> payday = $request -> payday;
+        $account -> tasker_id = $tasker_id;
+        $account -> tasker_rate = $request -> tasker_rate;
+        $account -> owner_rate = $request -> owner_rate;
+        $account -> jobraq_rate = $request -> jobraq_rate;
+        $account -> push();
+
+        return redirect()->back();
     }
 }

@@ -69,7 +69,8 @@ class seedManagedAccounts extends Command
                         $revenue = \App\Models\Managedaccountrevenue::create([
                             'managedaccount_id' => $managedAccount->id,
                             'amount' => rand(100, 1000),
-                            'type' => ['Debit', 'Credit'][array_rand(['Debit', 'Credit'])],
+                            'type' => 'Debit',
+                            'description' => 'Revenue ' . $j,
                         ]);
 
                         $this->line('<fg=blue;> Revenue' . $j . ': ' . $revenue -> amount . '(' . $revenue -> type . ') Created </>');
