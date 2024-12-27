@@ -168,6 +168,10 @@ Route::group(['prefix' => 'admin'], function(){
 
 });
 
+Route::group(['prefix' => 'tasker'], function(){
+    Route::get('/managed accounts', [App\Http\Controllers\TaskerController::class, 'getManagedAccounts'])->name('managed_accounts');
+    Route::post('/managed account/add_earning', [App\Http\Controllers\TaskerController::class, 'addEarning'])->name('managed_accounts.add_earning');
+});
 
 Route::get('{any}', function () {
     // dd(Telegram::commandsHandler(true));
