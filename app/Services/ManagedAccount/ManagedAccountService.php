@@ -17,7 +17,7 @@ use App\Models\ManagedAccount;
 
 class ManagedAccountService
 {
-    public function create ($request)
+    public function create ($request, $log_creation_service)
     {
         $account = new ManagedAccount();
         $account -> user_id = Auth::user() -> id;
@@ -28,6 +28,13 @@ class ManagedAccountService
         $account -> provider_identifier = $request -> provider_identifier ?? null;
         $account -> proxy = $request -> proxy ?? null;
         $account -> save();
+
+        $log_creation_service -> createSystemMessage(
+            Auth::user() -> id,
+            "Account Management Request Created for " . $account -> provider . " with email " . $account -> email . " and code " . $account -> code . ". Waiting for approval.",
+            $account -> id, 
+            'Account Management Request Created'
+        );
 
         return "Request submitted successfully. We will get back to you shortly.";
     }
@@ -48,9 +55,12 @@ class ManagedAccountService
         -> paginate(10);
 
         $accounts -> getCollection() -> transform(function ($account) {
-            $totalRevenue = $account -> revenue -> where('type', 'Debit') -> sum('amount');
+            // $totalRevenue = $account -> revenue -> where('type', 'Debit') -> sum('amount');
+            $totalOwing = $account -> revenue -> where('type', 'Credit') -> sum('amount'); //($totalRevenue - $account -> revenue -> where('type', 'Credit') -> sum('amount')) * (($account -> tasker_rate + $account -> jobraq_rate) / 100);
 
-            $account -> total_revenue = $totalRevenue;
+            Log::info("totalOwing" . $totalOwing);
+            // $account -> total_revenue = $totalRevenue;
+            $account -> total_owing = $totalOwing . " (" . $account -> tasker_rate + $account -> jobraq_rate . "%)";
 
             return $account;
         });
