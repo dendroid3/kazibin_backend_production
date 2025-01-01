@@ -41,7 +41,7 @@ class seedManagedAccounts extends Command
         $taskers = \App\Models\User::query() -> where('role', 'tasker') -> get();
 
         foreach ($taskers as $tasker) {
-            // create 5 - 10 managed accounts for each tasker
+            // create 5 - 10 managed_accounts for each tasker
             $users = \App\Models\User::query()->where('role', 'user')->get();
             $userIds = $users->pluck('id')->toArray();
 

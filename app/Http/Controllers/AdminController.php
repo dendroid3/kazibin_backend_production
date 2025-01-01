@@ -33,8 +33,9 @@ class AdminController extends Controller
                 $query->where('type', 'Debit'); // Filter by "Debit" type for revenue
             },
         ])
+        ->orderBy('last_activity', 'desc')
         // ->withCount('tasker.user') // Count Managedaccounts related to Tasker
-        ->paginate(1);
+        ->paginate(10);
 
         // Calculate total revenue for each tasker
         $taskers->getCollection()->transform(function ($tasker) {

@@ -53,7 +53,7 @@ class HomeController extends Controller
                 'users' => $users,
                 'verifications' => $verifications,
                 'taskers' => $taskers,
-                'managed accounts' => $managed_accounts,
+                'managed_accounts' => $managed_accounts,
                 'services' => $services,
                 'total revenue' => $total_revenue,
             ];
@@ -75,8 +75,9 @@ class HomeController extends Controller
             $total_revenue = "$" . $total_revenue;
 
             return [
-                'managed accounts' => $managed_accounts,
+                'managed_accounts' => $managed_accounts,
                 'total revenue' => $total_revenue,
+                'invoices' => 0
             ];
         } 
     }
