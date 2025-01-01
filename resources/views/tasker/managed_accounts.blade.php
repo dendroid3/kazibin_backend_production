@@ -21,7 +21,7 @@
                     <th scope="col">Total Earning</th>
                     <th scope="col">Managed Since</th>
                     <th scope="col">Payday</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,12 +35,18 @@
                         <td>{{ $account -> owner_rate ?? "N/A" }}</td>
                         <td>{{ $account -> tasker_rate ?? "N/A" }}</td>
                         <td>{{ $account -> jobraq_rate ?? "N/A" }}</td>
-                        <td>{{ $account -> debit_revenue_sum ?? 0 }}</td>
+                        <td>{{"$"}}{{ $account -> debit_revenue_sum ?? 0 }}</td>
                         <td>{{ \Carbon\Carbon::parse($account->created_at)->diffForHumans() }}</td>
                         <td>{{ $account -> payday }}</td>
                         <td>
                         <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addEarningModal-{{ $account->id }}">
                             Add Earning
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addEarningModal-{{ $account->id }}">
+                            Create Invoice
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addEarningModal-{{ $account->id }}">
+                            View
                         </button>
 
                         <!-- Modal -->
@@ -52,7 +58,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/tasker/managed account/add_earning" method="POST">
+                                        <form action="/tasker/managed_account/add_earning" method="POST">
                                             @csrf
                                             <input type="hidden" name="managed_account_id" value="{{ $account->id }}">
                                             <div class="mb-3">

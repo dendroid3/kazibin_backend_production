@@ -160,7 +160,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('/verifications', [App\Http\Controllers\AdminController::class, 'taskers'])->name('verifications');
     Route::get('/taskers', [App\Http\Controllers\AdminController::class, 'getTaskers'])->name('taskers');
     Route::get('/tasker', [App\Http\Controllers\AdminController::class, 'getTasker'])->name('tasker');
-    Route::get('/managed accounts', [App\Http\Controllers\AdminController::class, 'getManagedAccounts'])->name('managed_accounts');
+    Route::get('/managed_accounts', [App\Http\Controllers\AdminController::class, 'getManagedAccounts'])->name('managed_accounts');
     Route::get('/managed_account', [App\Http\Controllers\AdminController::class, 'getManagedAccount'])->name('managed_account');
     Route::post('/managed_account/update', [App\Http\Controllers\AdminController::class, 'updateManagedAccount'])->name('managed_account.update');
     Route::get('/services', [App\Http\Controllers\AdminController::class, 'taskers'])->name('services');
@@ -168,9 +168,9 @@ Route::group(['prefix' => 'admin'], function(){
 
 });
 
-Route::group(['prefix' => 'tasker'], function(){
-    Route::get('/managed accounts', [App\Http\Controllers\TaskerController::class, 'getManagedAccounts'])->name('managed_accounts');
-    Route::post('/managed account/add_earning', [App\Http\Controllers\TaskerController::class, 'addEarning'])->name('managed_accounts.add_earning');
+Route::group(['prefix' => 'tasker', 'middleware' => ['RecordLastActivity']], function(){
+    Route::get('/managed_accounts', [App\Http\Controllers\TaskerController::class, 'getManagedAccounts'])->name('managed_accounts');
+    Route::post('/managed_account/add_earning', [App\Http\Controllers\TaskerController::class, 'addEarning'])->name('managed_accounts.add_earning');
 });
 
 Route::get('{any}', function () {

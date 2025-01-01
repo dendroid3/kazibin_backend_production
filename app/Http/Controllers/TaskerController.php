@@ -19,7 +19,7 @@ class TaskerController extends Controller
         ->withSum(['revenue as debit_revenue_sum' => function ($query) {
             $query->where('type', 'Debit');
         }], 'amount') 
-        ->paginate(1);
+        ->paginate(10);
 
         Log::info($accounts);
         return view('tasker/managed_accounts', [
@@ -29,6 +29,25 @@ class TaskerController extends Controller
 
     public function addEarning(Request $request)
     {
+        $tasker = Auth::user() -> tasker;
+        $tasker -> score = ($tasker -> score) + 1;
+
+        $totalRevenue = $tasker -> managedAccounts -> flatMap(function ($managedAccount) {
+            return $managedAccount -> revenue;
+        }) -> where('type', 'Debit') -> sum('amount');
+
+        if($totalRevenue > 100 && $totalRevenue < 1000)
+        {
+            $tasker -> status = "Standard";
+        }
+
+        if($totalRevenue > 1000)
+        {
+            $tasker -> status = "Premium";
+        }
+
+        $tasker -> push();
+
         $revenue = new Managedaccountrevenue;
         $revenue -> type = "Debit";
         $revenue -> amount = $request -> amount;
